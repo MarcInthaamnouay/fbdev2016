@@ -28,5 +28,5 @@ if (isset($accessToken)) {
 } elseif ($helper->getError()) {
   echo "error";
 }
-//header('Location: index.php');
+header('Location: index.php');
  
