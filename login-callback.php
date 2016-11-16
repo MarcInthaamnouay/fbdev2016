@@ -25,6 +25,7 @@ try {
 if (isset($accessToken)) {
   echo "login";
   $_SESSION['facebook_access_token'] = (string) $accessToken;
+  $fb ->setDefaultAccessToken($_SESSION['facebook_access_token']);
 } elseif ($helper->getError()) {
   echo "error";
 }
