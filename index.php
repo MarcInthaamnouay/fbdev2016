@@ -14,19 +14,16 @@
   	
   	// Récupération du nom utilisateur
 	try {
-  		$response = $fb->get('/me?fields=id,name,age_rank,link,gender,locale,picture');
+  		$response = $fb->get('/me?fields=id,name,link,gender,locale,picture');
   		$user = $response->getGraphUser();
   		$userName = $user['name'];
   		$userID = $user['id'];
-  		$userAge = $user['age_rank'];
   		$userLink = $user['link'];
   		$userGender = $user['gender'];
   		$userLocale = $user['locale'];
   		$userPicture = $user['picture'];
   		$userAccessToken = $_SESSION['facebook_access_token'];
   		$isConnect = true;
-
-  	 	var_dump($user['name']);
 
 	} catch(Facebook\Exceptions\FacebookResponseException $e) {
 		$isConnect = false;
@@ -36,14 +33,21 @@
   		array_push($messageError,'Facebook SDK returned an error: ' . $e->getMessage());
 	}
 	
+	
 	//get login URL
 	$helper = $fb->getRedirectLoginHelper();
 	$loginUrl = $helper->getLoginUrl('http://berseck.fbdev.fr/fb/login-callback.php', $permissions);
+	$rerequestUrl = $helper->getReRequestUrl('http://berseck.fbdev.fr/fb/login-callback.php', $permissions);
+	$logoutUrl = $helper->getLogoutUrl('http://berseck.fbdev.fr/fb/logout.php', $permissions);
+
+	//Now if we are connect
+	if($userName != null) echo "Bienvenue ". $userName;
+	else echo '<a href="'.$loginUrl.'"> Login </a><br />';
 
 	//get photos
     $pagesEdge = $fb->get('/me/photos?access_token=' . $_SESSION['facebook_access_token'])->getGraphEdge();
    
-   	echo '<a href="'.$loginUrl.'"> Login </a><br />';
+   	
     
     //Check permissions
     $lackPermission=false; //On suppose qu'au départ les permissions sont mauvaises.
@@ -51,23 +55,23 @@
 	try {
 	    $response = $fb->get('/me/permissions');
 	    $perms = $response->getDecodedBody();
-	    
+
         foreach($permissions AS $myPerm){//Pour chacune de mes perms, je vérifie que l'utilisateur à la perm
-        	$permExist = false;
         	foreach($perms['data'] AS $perm)
-            	if($perm['permission'] == $myPerm && $perm['status']=='granted') $permExist=true;
-            if(!$permExist) $lackPermission = true;
+            	if($perm['permission'] == $myPerm && $perm['status']!='granted') $lackPermission = true;
         }
 
 	} catch(Facebook\Exceptions\FacebookResponseException $e) {
-	    log("MSG-received facebook Response exception!! ".$e->getMessage());
+	    array_push($messageError,"Erreur facebook : ".$e->getMessage());
 	} catch(Facebook\Exceptions\FacebookSDKException $e) {
-	    log("MSG-received facebook SDK exception!! ".$e->getMessage());
+	    array_push($messageError,"erreur SDlL ".$e->getMessage());
 	}
 
-	if($lackPermission) {
-	    echo "Il manque une permission !";
-	}
+	if($lackPermission && $userName != null) // connecté avec manque de permission
+		echo '<a href="'.$loginUrl.'"> Login </a><br />';
+	else if(!$lackPermission && $userName != null) // connecté sans manque de permission
+		echo "Bienvenue ". $userName;
+	else echo '<a href="'.$rerequestUrl.'"> Login </a><br />';
 
 
 ?>
