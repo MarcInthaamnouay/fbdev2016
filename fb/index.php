@@ -10,6 +10,7 @@ session_start();
 include('vendor/autoload.php');
 require_once __DIR__ . '/Autoload/autoload.php';
 require_once __DIR__ . '/Services/getphoto.php';
+require_once __DIR__ . '/Services/cron.php';
 
 // Configure the framework to show the error in DEV
 $config['displayErrorDetails'] = true;
@@ -18,61 +19,44 @@ $config['addContentLengthHeader'] = false;
 // Slim app
 
 $app = new Slim\App(["settings" => $config]);
-$url = checkAccessToken();
 
-$app->get('/api/v1.0/auth', function($request, $response, $args){
-  $isAuth = array('auth_status' => false, 'auth_url' => null);
-  if(isset($_SESSION['facebook_access_token'])){
-    $isAuth['auth_status'] = true;
-    return $response->withJson($isAuth, 201);
-  } else {
-    $url = initFacebookSDK();
-    $isAuth['auth_url'] = $url;
-    return $response->withJson($isAuth, 201);
-  }
-});
-
-$app->get('/api/v1.0/albums/', function($request, $response, $args){
-//  $app = \Slim\Slim::getInstance();
+$app->post('/api/v1.0/albums/', function($request, $response, $args){
+  //  $app = \Slim\Slim::getInstance();
   // Get the list of the albums
-  $haveToken = checkAccessToken();
-  if(isset($_SESSION['facebook_access_token'])){
+  $data = $request->getParsedBody();
+  $token = filter_var($data['token']);
+
+  if($token){
     // Call the getListOfAlbums function by passing the fb variable
-    $internFB = newFBService();
-    $data = getListOfAlbums($internFB);
+    $data = getListOfAlbums($token);
     $newdata = $response->withJson($data, 201);
 
     return $newdata;
+  } else {
+    return $response->withJson(array('nodata' => 'no data'), 404);
   }
 });
 
-$app->get('/api/v1.0/photos/{album-id}', function($request, $response, $args){
-  $album_id = $request->getAttribute('album-id');
-  $photos = getListOfPhotosFromAlbum($album_id);
+$app->post('/api/v1.0/photos/', function($request, $response, $args){
+  $data = $request->getParsedBody();
+  $token = filter_var($data['token']);
+  $id = filter_var($data['albumID']);
 
-  return $response->writeJson($photos, 201);
+  $photos = getListOfPhotosFromAlbum($id, $token);
+
+  return $response->withJson($photos, 201);
 });
 
 $app->get('/api/v1.0/crons', function($request, $response, $args){
 
 });
 
+$app->get('/api/v1.0/contest/{id}', function($request, $response, $args){
+
+});
+
+$app->post('/api/v1.0/contest/create', function($request, $response, $args){
+
+});
+
 $app->run();
-
-function checkAccessToken(){
-  if(isset($_SESSION['facebook_access_token'])){
-    return;
-  } else{
-    return initFacebookSDK();
-  }
-}
-
-function newFBService(){
-  $fb = new Facebook\Facebook([
-    'app_id' => '1418106458217541',
-    'app_secret' => '951fc8f75cad3716a15efd1f4f053647',
-    'default_graph_version' => 'v2.8',
-  ]);
-
-  return $fb;
-}

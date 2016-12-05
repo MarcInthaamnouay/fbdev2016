@@ -1,79 +1,160 @@
-// TESTING THE API OF OUR PROJECT
+  // TESTING THE API OF OUR PROJECT
 
-class makeRequest{
-  constructor(request = "", httpMethod = "GET", params = null){
-    this.request = request;
-    this.httpMethod = httpMethod;
-    this.params = params;
-  }
-
-  /**
-   * Preparing a request to our TEST API
-   * @return {Request} request
-   */
-  Prepare() {
-    // Init our headers
-    const headers = new Headers();
-    // Precise that we want a JSON back to the front
-    headers.append('Content-type','application/json');
-    // Init our API
-    const config = {
-      method : this.httpMethod,
-      headers : headers,
-      mode : 'cors',
-      cache : 'default',
+class makeRequest {
+    constructor(request = "", httpMethod = "GET", params = null) {
+        this.request = request;
+        this.httpMethod = httpMethod;
+        this.params = params;
     }
 
-    // Check if there're param in our request constructor ...
-    if(!this.params === null) {
-      config.body = this.params;
-    }
-    // Prepare the request
-    let request = new Request('http://berseck.fbdev.fr/'+this.request, config);
-    return request;
-  }
+    /**
+     * Preparing a request to our TEST API
+     * @return {Request} request
+     */
+    Prepare() {
+        // Init our headers
+        const headers = new Headers();
+        // Precise that we want a JSON back to the front
+        headers.append('Content-type', 'application/json');
+        // Init our API
+        const config = {
+            method: this.httpMethod,
+            headers: headers,
+            mode: 'cors',
+            cache: 'default',
+        }
 
-  /**
-   * Execute a request to our TEST API
-   * @Params {Request} req
-   * @Return {promise} promise
-   */
-  Execute(req) {
-    let q = new Promise(function(resolve, reject){
-      fetch(req)
-        .then((response) => {
-          response.json()
-            .then(json => {
-              resolve(json);
-            })
-        })
-        .catch((error) => {
-          reject(error);
+        // Check if there're param in our request constructor ...
+        console.log(this.params);
+        if (this.params != null) {
+            config.body = JSON.stringify(this.params);
+        }
+
+        console.log(config);
+        // Prepare the request
+        let request = new Request('http://berseck.fbdev.fr/' + this.request, config);
+        return request;
+    }
+
+    /**
+     * Execute a request to our TEST API
+     * @Params {Request} req
+     * @Return {promise} promise
+     */
+    Execute(req) {
+        let q = new Promise(function(resolve, reject) {
+            fetch(req)
+                .then((response) => {
+                    response.json()
+                        .then(json => {
+                            resolve(json);
+                        })
+                })
+                .catch((error) => {
+                    reject(error);
+                });
         });
-    });
 
-    return q;
-  }
+        return q;
+    }
 }
+
+// listener on auth button
 
 (function(){
   document.addEventListener('DOMContentLoaded', () => {
-    // Test our API
-    let auth_API = new makeRequest('api/v1.0/auth');
-    const auth_API_prepare = auth_API.Prepare();
+    document.getElementById('photoAlbum').addEventListener('click', () => {
+      getAlbums();
+    });
 
-    auth_API.Execute(auth_API_prepare)
-    .then(response => {
-      if(!response.auth_status) {
-        document.getElementById('login-link').setAttribute('href',response.auth_url);
-      } else {
-        console.log('user already connected !');
+    document.getElementById('login').addEventListener('click', () => {
+      FBLog.login();
+    });
+  }, false);
+}.bind({}))();
+
+// test the access token
+
+function getAlbums() {
+    const storageValue = JSON.parse(localStorage.getItem('facebook_oauth_token'));
+    const authReq = new makeRequest('api/v1.0/albums/', "POST", {'token' : storageValue.token});
+    let reqPrepare = authReq.Prepare();
+
+    // Only for the test
+
+    let list = document.getElementById('albums-list');
+
+    // execute the request
+    authReq.Execute(reqPrepare)
+      .then(response => {
+        // list of album
+        console.log(response);
+        for(let i = 0; i < response.length; i++){
+          let template = `<a href="#!" class="collection-item" data-id="${response[i].id}">${response[i].name}</a>`;
+          list.insertAdjacentHTML('beforeend',template);
+        }
+
+        // Adding listener after inserting the choice
+        listener();
+      })
+      .catch(err => {
+        console.log(err);
+      })
+}
+
+
+function listener(){
+  const ln = document.getElementsByClassName('collection-item');
+
+  for(let c = 0; c < ln.length; c++){
+    ln[c].addEventListener('click', function(){
+      getPhotos(this.getAttribute('data-id'));
+    }, false);
+  }
+}
+
+function isLog(){
+  document.getElementById('login').style.display = 'none';
+}
+
+function getPhotos(id = null){
+  const storageValue = JSON.parse(localStorage.getItem('facebook_oauth_token'));
+
+  const photoRequest = new makeRequest('api/v1.0/photos/', 'POST', {'token' : storageValue.token, 'albumID' : id});
+  let req = photoRequest.Prepare();
+
+  let parentElement = document.getElementById('car');
+
+  photoRequest.Execute(req)
+    .then(res => {
+      console.log(res);
+      for(let u = 0; u < res.data.length; u++){
+          let tmpl = `<a class="carousel-item" href="#one!"><img src="${res.data[u].source}"></a>`;
+          parentElement.insertAdjacentHTML('beforeend', tmpl);
       }
 
+      $(document).ready(function(){
+        $('.carousel').carousel();
+      });
     })
-    .catch(error => {
-      console.log('error '+error);
+    .catch(err => {
+      console.log('error '+e);
     })
+}
+// Login and Logout
 
-  })
-})();
+const FBLog = {
+  login(){
+    FB.login(function(response) {
+      if (response.authResponse) {
+        console.log('log !');
+      } else {
+        console.log('not log');
+      }
+    });
+    return false;
+  },
+  logout : function(){
+
+  }
+}

@@ -7,12 +7,12 @@ $config = array();
 $config['app_id'] = '639819622867674';
 $config['app_secret'] = '505ddf28d58518809be301ac1e732393';
 $config['fileUpload'] = false; // optional
- 
+
 $fb = new Facebook\Facebook($config);
 
- 
+
 $params = array(
-  "access_token" => $_SESSION['facebook_access_token'], 
+  "access_token" => $_SESSION['facebook_access_token'],
   "message" => "Here is a blog post about auto posting on Facebook using PHP #php #facebook",
   "link" => "http://bambous-a-vapeur.com",
   "name" => "this is my test",
@@ -25,4 +25,3 @@ $params = array(
 } catch(Exception $e) {
   echo $e->getMessage();
 }
-?>

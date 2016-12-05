@@ -18,16 +18,17 @@ function instanceFBApp(){
   return $fbApp;
 }
 
-function getListOfAlbums($fb){
+function getListOfAlbums($token){
+  $fb = newFBService();
   $album_array = array();
-  $fb->setDefaultAccessToken($_SESSION['facebook_access_token']);
+  $fb->setDefaultAccessToken($token);
   try{
     $res = $fb->get('/me?fields=id,picture');
     $usr = $res->getGraphUser();
     $userID = $usr['id'];
     if(isset($userID)){
        $fbApp = instanceFBApp();
-       $request = new Facebook\FacebookRequest($fbApp, $_SESSION['facebook_access_token'] , 'GET', '/'.$userID.'/albums');
+       $request = new Facebook\FacebookRequest($fbApp, $token, 'GET', '/'.$userID.'/albums');
       try{
         $response = $fb->getClient()->sendRequest($request);
         $resBody = $response->getDecodedBody();
@@ -48,27 +49,28 @@ function getListOfAlbums($fb){
   }
 }
 
-function getListOfPhotosFromAlbum($albumID, $fb){
+function getListOfPhotosFromAlbum($albumID,$token){
   $fbApp = instanceFBApp();
-  $request = new Facebook\FacebookRequest($fbApp, $_SESSION['facebook_access_token'] , 'GET', '/'.$albumID.'/photos/uploaded?fields=source,images,name');
+  $request = new Facebook\FacebookRequest($fbApp, $token , 'GET', '/'.$albumID.'/photos/uploaded?fields=source,images,name');
 
   try{
+    $fb = newFBService();
     $response = $fb->getClient()->sendRequest($request);
     $resBody = $response->getDecodedBody();
-     echo 'Affichage de l"album : '.$albumID.'<br />';
-    foreach($resBody as $key => $value){
-        foreach($value as $v){
-          if(isset($v["id"]))
-          {
-          	if(isset($v["name"])) $name = $v["name"];
-          	else $name = 'Pas de nom';
-          	echo '<img src="'.$v["source"].'" width =50px/><br /> Name : '.$name.'<br />';
-          }
-        }
-      }
 
+    return $resBody;
   } catch(Facebook\Exceptions\FacebookResponseException $e){
     echo $e->getMessage();
   }
   echo $album_id;
+}
+
+function newFBService(){
+  $fb = new Facebook\Facebook([
+    'app_id' => '1418106458217541',
+    'app_secret' => '951fc8f75cad3716a15efd1f4f053647',
+    'default_graph_version' => 'v2.8',
+  ]);
+
+  return $fb;
 }

@@ -11,6 +11,7 @@ $fb = new Facebook\Facebook([
   ]);
 
 $helper = $fb->getRedirectLoginHelper();
+$_SESSION['FBRLH_state']=$_GET['state'];
 
 try {
   $accessToken = $helper->getAccessToken();
@@ -23,9 +24,10 @@ try {
 }
 
 if (isset($accessToken)) {
-  echo "login";
   $_SESSION['facebook_access_token'] = (string) $accessToken;
+
   $fb ->setDefaultAccessToken($_SESSION['facebook_access_token']);
-} elseif ($helper->getError()) {
+  header("Location: http://berseck.fbdev.fr/Test/index.html");
+} else if ($helper->getError()) {
   echo "error";
 }
