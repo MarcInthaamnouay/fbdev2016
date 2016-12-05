@@ -19,6 +19,11 @@ $config['addContentLengthHeader'] = false;
 
 $app = new Slim\App(["settings" => $config]);
 
+/*
+ * GetAlbums
+ * @params {Token} token
+ * @return {Json} album_data
+ */
 $app->post('/api/v1.0/albums/', function($request, $response, $args){
   //  $app = \Slim\Slim::getInstance();
   // Get the list of the albums
@@ -36,6 +41,12 @@ $app->post('/api/v1.0/albums/', function($request, $response, $args){
   }
 });
 
+/*
+ * GetPhotos
+ * @params {Token} token
+ * @params {AlbumID} Number
+ * @return {Json} photos
+ */
 $app->post('/api/v1.0/photos/', function($request, $response, $args){
   $data = $request->getParsedBody();
   $token = filter_var($data['token']);
@@ -46,15 +57,36 @@ $app->post('/api/v1.0/photos/', function($request, $response, $args){
   return $response->withJson($photos, 201);
 });
 
-$app->get('/api/v1.0/crons', function($request, $response, $args){
-
-});
-
+/*
+ * GetPhotos
+ * @params {ID} String
+ * @return {Json} contest
+ */
 $app->get('/api/v1.0/contest/{id}', function($request, $response, $args){
 
 });
 
 $app->post('/api/v1.0/contest/create', function($request, $response, $args){
+
+});
+
+$app->put('/api/v1.0/contest/subscribe', function($request, $response, $args){
+
+});
+
+$app->get('/api/v1.0/contest/result', function($request, $response, $args){
+
+});
+
+$app->get('/api/v1.0/contest/getStat', function($request, $response, $args){
+
+});
+
+$app->post('/api/v1.0/contest/crons', function($request, $response, $args){
+
+});
+
+$app->post('/api/v1.0/database', function($request, $response, $args){
 
 });
 
