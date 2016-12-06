@@ -62,9 +62,6 @@ $app->post('/api/v1.0/photos/', function($request, $response, $args){
  * @params {ID} String
  * @return {Json} contest
  */
-$app->get('/api/v1.0/contest/{id}', function($request, $response, $args){
-
-});
 
 $app->post('/api/v1.0/contest/create', function($request, $response, $args){
 
@@ -89,5 +86,10 @@ $app->post('/api/v1.0/contest/crons', function($request, $response, $args){
 $app->post('/api/v1.0/database', function($request, $response, $args){
 
 });
+
+$app->get('/api/v1.0/contest/{idContest}', function($request, $response, $args){
+
+});
+
 
 $app->run();
