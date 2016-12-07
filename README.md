@@ -14,4 +14,9 @@ Configure your host in order with the following configuration in the files **etc
 
 You should see the test bed page.
 
+### Contributor & Maintainer
+
+Marc Intha-amnouay 
+Fadyl belo 
+
 
