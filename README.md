@@ -3,6 +3,7 @@
 ### Installation 
 
 Create a folder within your local server.
+
 Configure your host in order with the following configuration in the files **etc/hosts/**
 
 **127.0.0.1 berseck.fbdev.fr** 
