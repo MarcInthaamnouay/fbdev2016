@@ -1,5 +1,8 @@
-  // TESTING THE API OF OUR PROJECT
-
+/*
+ *  MakeRequest
+ *      Type Class
+ *  @params{}
+ */
 class makeRequest {
     constructor(request = "", httpMethod = "GET", params = null) {
         this.request = request;
@@ -151,6 +154,9 @@ const FBLog = {
       } else {
         console.log('not log');
       }
+    },{
+      scope: 'email,user_likes,user_photos',
+      return_scopes: true
     });
     return false;
   },

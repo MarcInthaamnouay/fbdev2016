@@ -4,8 +4,6 @@ require_once __DIR__ . '/../fb_sdk/src/Facebook/autoload.php';
 
 use Facebook\FacebookRequest;
 
-session_start();
-
 /*
  * uploadPhotos
  * @Private

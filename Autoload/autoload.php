@@ -1,7 +1,5 @@
 <?php
 
-session_start();
-
 require_once __DIR__ . '/../fb_sdk/src/Facebook/autoload.php';
 
 /*
