@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../fb_sdk/src/Facebook/autoload.php';
+require_once __DIR__ . '/../Common/common.php';
 
 use Facebook\FacebookRequest;
 
@@ -10,11 +11,6 @@ use Facebook\FacebookRequest;
  * Void
  */
 
-function instanceFBApp(){
-  $fbApp = new Facebook\FacebookApp('1418106458217541', '951fc8f75cad3716a15efd1f4f053647');
-
-  return $fbApp;
-}
 
 function getListOfAlbums($token){
   $fb = newFBService();
@@ -61,14 +57,4 @@ function getListOfPhotosFromAlbum($albumID,$token){
     echo $e->getMessage();
   }
   echo $album_id;
-}
-
-function newFBService(){
-  $fb = new Facebook\Facebook([
-    'app_id' => '1418106458217541',
-    'app_secret' => '951fc8f75cad3716a15efd1f4f053647',
-    'default_graph_version' => 'v2.8',
-  ]);
-
-  return $fb;
 }

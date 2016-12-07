@@ -73,6 +73,10 @@ class makeRequest {
     document.getElementById('login').addEventListener('click', () => {
       FBLog.login();
     });
+
+    document.getElementById('logout').addEventListener('click', () => {
+      FBLog.logout();
+    });
   }, false);
 }.bind({}))();
 
@@ -144,6 +148,10 @@ function getPhotos(id = null){
       console.log('error '+e);
     })
 }
+
+function adminTest(){
+  
+}
 // Login and Logout
 
 const FBLog = {
@@ -161,6 +169,8 @@ const FBLog = {
     return false;
   },
   logout : function(){
-
+    FB.logout(() => {
+      localStorage.removeItem('facebook_oauth_token')
+    })
   }
 }

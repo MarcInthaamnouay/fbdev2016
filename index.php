@@ -10,14 +10,17 @@ session_start();
 include('vendor/autoload.php');
 require_once __DIR__ . '/Autoload/autoload.php';
 require_once __DIR__ . '/Services/getphoto.php';
+require_once __DIR__ . '/Services/admin.php';
 
 // Configure the framework to show the error in DEV
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
 
+
 // Slim app
 
 $app = new Slim\App(["settings" => $config]);
+// @TODO Define a constat for the API
 
 /*
  * GetAlbums
@@ -89,6 +92,32 @@ $app->post('/api/v1.0/database', function($request, $response, $args){
 
 $app->get('/api/v1.0/contest/{idContest}', function($request, $response, $args){
 
+});
+
+$app->post('/api/v1.0/admin/', function($request, $response, $args){
+  // Get the token
+  $token = getToken($request);
+  // Get the userID
+  $id = getUserID($request);
+
+  if($token != '' && $id != ''){
+    // Instantiate a new Admin class
+    $admin = new Admin($id,$token);
+    // Check if the user is an admin of the app
+    $isAdmin = $admin->isAdmin();
+
+    if(!$isAdmin){
+      $response->withJson(array('permission' => 'denied', 401));
+
+      return;
+    }
+  } else{
+    $response->withJson(array('permissions' => 'denied'), 401);
+  }
+
+  // Register other route
+
+  
 });
 
 
