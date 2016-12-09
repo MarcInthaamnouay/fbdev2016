@@ -30,7 +30,7 @@ $app = new Slim\App(["settings" => $config]);
  */
 $app->post(API_NAMESPACE.'albums/', function($request, $response, $args){
   // Get the list of the albums
-  $token = getToken($request)
+  $token = getToken($request);
 
   if($token){
     // Call the getListOfAlbums function by passing the fb variable
