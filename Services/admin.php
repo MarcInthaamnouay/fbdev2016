@@ -49,5 +49,28 @@ class Admin{
     }
   }
 
-  
+
+  /*
+   *
+   *
+   */
+  function isTokenValid(){
+    $fb = newFBService();
+    $fb->setDefaultAccessToken($this->tokenAdmin);
+
+    try{
+      $request = $fb->get('/me?access_token='.$this->tokenAdmin);
+      $res = $request->getGraphUser();
+    } catch (Facebook\Exceptions\FacebookResponseException $e){
+      var_dump($e->getMessage());
+      return false;
+    } catch(Facebook\Exceptions\FacebookResponseException $e){
+      var_dump($e->getMessage());
+    }
+
+    return true;
+
+  }
+
+
 }

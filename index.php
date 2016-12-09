@@ -15,6 +15,7 @@ require_once __DIR__ . '/Services/admin.php';
 // Configure the framework to show the error in DEV
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
+const API_NAMESPACE = '/api/v1.0/';
 
 
 // Slim app
@@ -27,7 +28,7 @@ $app = new Slim\App(["settings" => $config]);
  * @params {Token} token
  * @return {Json} album_data
  */
-$app->post('/api/v1.0/albums/', function($request, $response, $args){
+$app->post(API_NAMESPACE.'albums/', function($request, $response, $args){
   //  $app = \Slim\Slim::getInstance();
   // Get the list of the albums
   $data = $request->getParsedBody();
@@ -50,7 +51,7 @@ $app->post('/api/v1.0/albums/', function($request, $response, $args){
  * @params {AlbumID} Number
  * @return {Json} photos
  */
-$app->post('/api/v1.0/photos/', function($request, $response, $args){
+$app->post(API_NAMESPACE.'photos/', function($request, $response, $args){
   $data = $request->getParsedBody();
   $token = filter_var($data['token']);
   $id = filter_var($data['albumID']);
@@ -66,35 +67,58 @@ $app->post('/api/v1.0/photos/', function($request, $response, $args){
  * @return {Json} contest
  */
 
-$app->post('/api/v1.0/contest/create', function($request, $response, $args){
+$app->post(API_NAMESPACE.'contest/create', function($request, $response, $args){
+  // Checking the auth
+
+  $token = getToken($request);
+  $userID = getUserID($request);
+
+  if (isset($token) && isset($userID)){
+    // Checking if the user is an admin
+    $admin = new Admin($userID,$token);
+    $isGranted = $admin->isAdmin();
+
+    if($isGranted){
+      if($admin->isTokenValid()){
+          $response->withJson(array('status' => 'can create contest'), 200);
+      }
+      // Can create a contest
+    } else {
+      $response->withJson(array('status' => 'contest not created'), 401);
+    }
+  }
 
 });
 
-$app->put('/api/v1.0/contest/subscribe', function($request, $response, $args){
+$app->put(API_NAMESPACE.'contest/subscribe', function($request, $response, $args){
 
 });
 
-$app->get('/api/v1.0/contest/result', function($request, $response, $args){
+$app->get(API_NAMESPACE.'contest/result', function($request, $response, $args){
 
 });
 
-$app->get('/api/v1.0/contest/getStat', function($request, $response, $args){
+$app->get(API_NAMESPACE.'contest/getStat', function($request, $response, $args){
 
 });
 
-$app->post('/api/v1.0/contest/crons', function($request, $response, $args){
+$app->post(API_NAMESPACE.'contest/crons', function($request, $response, $args){
 
 });
 
-$app->post('/api/v1.0/database', function($request, $response, $args){
+$app->post(API_NAMESPACE.'database', function($request, $response, $args){
 
 });
 
-$app->get('/api/v1.0/contest/{idContest}', function($request, $response, $args){
+$app->get(API_NAMESPACE.'contest/{idContest}', function($request, $response, $args){
 
 });
 
-$app->post('/api/v1.0/admin/', function($request, $response, $args){
+/*
+ * /admin/auth
+ *
+ */
+$app->post(API_NAMESPACE.'admin/auth', function($request, $response, $args){
   // Get the token
   $token = getToken($request);
   // Get the userID
@@ -107,18 +131,39 @@ $app->post('/api/v1.0/admin/', function($request, $response, $args){
     $isAdmin = $admin->isAdmin();
 
     if(!$isAdmin){
-      $response->withJson(array('permission' => 'denied', 401));
-
+      $response->withJson(array('permission' => 'denied', 'code' => 401));
       return;
     }
+
+    if($admin->isTokenValid()){
+        $response->withJson(array('permission' => 'granted', 'code' => 200));
+    }
   } else{
-    $response->withJson(array('permissions' => 'denied'), 401);
+    $response->withJson(array('permissions' => 'denied', 'code' => 401));
   }
 
   // Register other route
-
-  
 });
 
+
+$app->post(API_NAMESPACE.'admin/config', function($request, $response, $args){
+
+
+});
+
+$app->post(API_NAMESPACE.'admin/analytics', function($request, $response, $args){
+
+
+});
+
+$app->post(API_NAMESPACE.'admin/pictures', function($request, $response, $args){
+
+
+});
+
+$app->post(API_NAMESPACE.'admin/views', function($request, $response, $args){
+  
+
+});
 
 $app->run();

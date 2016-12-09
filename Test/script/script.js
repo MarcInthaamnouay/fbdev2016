@@ -77,6 +77,10 @@ class makeRequest {
     document.getElementById('logout').addEventListener('click', () => {
       FBLog.logout();
     });
+
+    document.getElementById('admin').addEventListener('click', () => {
+      isAdmin();
+    })
   }, false);
 }.bind({}))();
 
@@ -120,8 +124,10 @@ function listener(){
   }
 }
 
-function isLog(){
+function isLog(token = "", userID = ""){
   document.getElementById('login').style.display = 'none';
+  document.getElementById('token').value = token;
+  document.getElementById('user_id').value = userID;
 }
 
 function getPhotos(id = null){
@@ -149,8 +155,20 @@ function getPhotos(id = null){
     })
 }
 
-function adminTest(){
-  
+function isAdmin(){
+  let storageValue = JSON.parse(localStorage.getItem('facebook_oauth_token'));
+  const adminReq = new makeRequest('api/v1.0/admin/auth', 'POST', {'token' : storageValue.token, 'userID' : storageValue.userID});
+
+  const prepReq = adminReq.Prepare();
+  adminReq.Execute(prepReq)
+    .then(response => {
+      console.log(response);
+      document.getElementById('adminvalue').value = response.permission;
+    })
+    .catch(err => {
+      console.log(err);
+      document.getElementById('adminvalue').value = err;
+    });
 }
 // Login and Logout
 
