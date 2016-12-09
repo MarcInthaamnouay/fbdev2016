@@ -24,15 +24,13 @@ $app = new Slim\App(["settings" => $config]);
 // @TODO Define a constat for the API
 
 /*
- * GetAlbums
- * @params {Token} token
- * @return {Json} album_data
+ * Albums/
+ *    Get the albums of the user
+ * @Params {token} String
  */
 $app->post(API_NAMESPACE.'albums/', function($request, $response, $args){
-  //  $app = \Slim\Slim::getInstance();
   // Get the list of the albums
-  $data = $request->getParsedBody();
-  $token = filter_var($data['token']);
+  $token = getToken($request)
 
   if($token){
     // Call the getListOfAlbums function by passing the fb variable
@@ -46,7 +44,7 @@ $app->post(API_NAMESPACE.'albums/', function($request, $response, $args){
 });
 
 /*
- * GetPhotos
+ * Photos
  * @params {Token} token
  * @params {AlbumID} Number
  * @return {Json} photos
@@ -62,11 +60,11 @@ $app->post(API_NAMESPACE.'photos/', function($request, $response, $args){
 });
 
 /*
- * GetPhotos
- * @params {ID} String
- * @return {Json} contest
+ * Contest/create
+ * @params {Token} string
+ * @params {UserID} string
+ * @Return {response} Json
  */
-
 $app->post(API_NAMESPACE.'contest/create', function($request, $response, $args){
   // Checking the auth
 
@@ -115,8 +113,10 @@ $app->get(API_NAMESPACE.'contest/{idContest}', function($request, $response, $ar
 });
 
 /*
- * /admin/auth
- *
+ * admin/auth
+ * @Params {Token} string
+ * @Params {UserID} string
+ * @Return {Response} Json
  */
 $app->post(API_NAMESPACE.'admin/auth', function($request, $response, $args){
   // Get the token
@@ -162,7 +162,7 @@ $app->post(API_NAMESPACE.'admin/pictures', function($request, $response, $args){
 });
 
 $app->post(API_NAMESPACE.'admin/views', function($request, $response, $args){
-  
+
 
 });
 

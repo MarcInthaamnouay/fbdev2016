@@ -1,5 +1,10 @@
 <?php
 
+/*
+ * newFBService
+ *    Return a new facebook service instance
+ * @Return {Facebook} fb
+ */
 function newFBService(){
   $fb = new Facebook\Facebook([
     'app_id' => '1418106458217541',
@@ -10,6 +15,11 @@ function newFBService(){
   return $fb;
 }
 
+/*
+ * GetToken
+ *    Return a token
+ * @Return {token} string
+ */
 function getToken($request){
   $data = $request->getParsedBody();
   $token = filter_var($data['token']);
@@ -17,6 +27,11 @@ function getToken($request){
   return $token;
 }
 
+/*
+ * GetUserID
+ *    Return the user id
+ * @Return {userID} string
+ */
 function getUserID($request){
   $data = $request->getParsedBody();
   $id = filter_var($data['userID']);

@@ -51,8 +51,9 @@ class Admin{
 
 
   /*
-   *
-   *
+   * IsTokenValid
+   *      Check if the token is valid
+   * @Return {bool} boolean
    */
   function isTokenValid(){
     $fb = newFBService();

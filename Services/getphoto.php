@@ -6,12 +6,11 @@ require_once __DIR__ . '/../Common/common.php';
 use Facebook\FacebookRequest;
 
 /*
- * uploadPhotos
- * @Private
- * Void
+ * GetListOfAlbums
+ *    return a list of albums
+ * @Params {token} string
+ * @Return {album_array} []Array
  */
-
-
 function getListOfAlbums($token){
   $fb = newFBService();
   $album_array = array();
@@ -43,6 +42,13 @@ function getListOfAlbums($token){
   }
 }
 
+/*
+ * GetListOfPhotosFromAlbum
+ *      Get a list of photo from your album
+ * @Params {albumID} Number
+ * @Params {token} string
+ * @Return {resBody} Array[]
+ */
 function getListOfPhotosFromAlbum($albumID,$token){
   $fbApp = instanceFBApp();
   $request = new Facebook\FacebookRequest($fbApp, $token , 'GET', '/'.$albumID.'/photos/uploaded?fields=source,images,name');
