@@ -55,13 +55,13 @@ Class Dbcon{
     // Get the connection
     // conn is private
     $conn = $this->OpenCon();
-    // $this->stmt = $conn->prepare($this->req);
-    //
-    // if(count($this->params)){
-    //   foreach($this->params as $value){
-    //     //$stmt->bindParam('')
-    //   }
-    // }
+    $this->stmt = $conn->prepare($this->req);
+
+    if(count($this->params)){
+      foreach($this->params as $value){
+        $stmt->bindParam('')
+      }
+    }
   }
 
   /*

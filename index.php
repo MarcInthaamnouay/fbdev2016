@@ -157,7 +157,7 @@ $app->post(API_NAMESPACE.'admin/analytics', function($request, $response, $args)
   if($token != ''){
     $analyticReq = new Dbcon($token, "berseck_dev", "SELECT * FROM concours", []);
     $analyticReq->PrepareReq();
-  //  $analyticReq->ExecuteReq();
+    $analyticReq->ExecuteReq();
   }
 });
 
