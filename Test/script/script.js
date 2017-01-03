@@ -181,7 +181,7 @@ const FBLog = {
         console.log('not log');
       }
     },{
-      scope: 'email,user_likes,user_photos',
+      scope: 'email,user_likes,user_photos,publish_actions',
       return_scopes: true
     });
     return false;
