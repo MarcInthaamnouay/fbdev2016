@@ -176,6 +176,7 @@ const FBLog = {
   login(){
     FB.login(function(response) {
       if (response.authResponse) {
+        console.log(response);
         console.log('log !');
       } else {
         console.log('not log');
