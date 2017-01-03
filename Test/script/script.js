@@ -180,7 +180,9 @@ const FBLog = {
       } else {
         console.log('not log');
       }
-    },{scope: 'email,user_likes,user_photos,publish_actions,publish_pages,manage_pages'});
+    },{scope: 'email,user_likes,user_photos,publish_actions,publish_pages,manage_pages',
+      return_scopes: true
+    });
     return false;
   },
   logout : function(){
