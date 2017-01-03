@@ -5,6 +5,8 @@ require_once __DIR__ . '/../Common/common.php';
 
 use Facebook\FacebookRequest;
 
+// @TODO Convert this function into a Class
+
 /*
  * GetListOfAlbums
  *    return a list of albums

@@ -39,11 +39,14 @@ class Admin{
     // If it's ok get the result of our request
 
     $result = $response->getDecodedBody();
+    $user_data = $result['data'];
 
-    foreach($result as $key => $value){
-      if(strcmp($this->adminID, $value['user'])){
-        if(strcmp($value['role'],"administrators")){
-          return true;
+    foreach($user_data as $key => $d){
+      if(strcmp($this->adminID, $d['user']) == 0){
+        if(strcmp($d['role'], 'administrators') == 0){
+          if($d['role'] == 'administrators'){
+            return true;
+          }
         }
       }
     }
