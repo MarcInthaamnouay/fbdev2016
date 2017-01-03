@@ -36,7 +36,7 @@ class makeRequest {
 
         console.log(config);
         // Prepare the request
-        let request = new Request('https://berseck.fbdev.fr/dev/' + this.request, config);
+        let request = new Request('https://berseck.fbdev.fr/' + this.request, config);
         return request;
     }
 
