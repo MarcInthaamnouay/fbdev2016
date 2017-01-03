@@ -35,7 +35,7 @@ class makeRequest {
 
         console.log(config);
         // Prepare the request
-        let request = new Request('http://berseck.fbdev.fr/' + this.request, config);
+        let request = new Request('https://berseck.fbdev.fr/dev/' + this.request, config);
         return request;
     }
 
@@ -180,10 +180,7 @@ const FBLog = {
       } else {
         console.log('not log');
       }
-    },{
-      scope: 'email,user_likes,user_photos,publish_actions',
-      return_scopes: true
-    });
+    },{scope: 'email,user_likes,user_photos,publish_actions'});
     return false;
   },
   logout : function(){
