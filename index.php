@@ -11,6 +11,7 @@ include('vendor/autoload.php');
 require_once __DIR__ . '/Autoload/autoload.php';
 require_once __DIR__ . '/Services/getphoto.php';
 require_once __DIR__ . '/Services/admin.php';
+require_once __DIR__ . '/Services/db.php';
 
 // Configure the framework to show the error in DEV
 $config['displayErrorDetails'] = true;
@@ -148,12 +149,16 @@ $app->post(API_NAMESPACE.'admin/auth', function($request, $response, $args){
 
 $app->post(API_NAMESPACE.'admin/config', function($request, $response, $args){
 
-
 });
 
 $app->post(API_NAMESPACE.'admin/analytics', function($request, $response, $args){
-
-
+  // Get the analytics of the contest
+  $token = getToken($request);
+  if($token != ''){
+    $analyticReq = new Dbcon($token, "berseck_dev", "SELECT * FROM concours", []);
+    $analyticReq->PrepareReq();
+  //  $analyticReq->ExecuteReq();
+  }
 });
 
 $app->post(API_NAMESPACE.'admin/pictures', function($request, $response, $args){
@@ -162,7 +167,6 @@ $app->post(API_NAMESPACE.'admin/pictures', function($request, $response, $args){
 });
 
 $app->post(API_NAMESPACE.'admin/views', function($request, $response, $args){
-
 
 });
 

@@ -1,3 +1,4 @@
+
 /*
  *  MakeRequest
  *      Type Class
@@ -35,7 +36,7 @@ class makeRequest {
 
         console.log(config);
         // Prepare the request
-        let request = new Request('https://berseck.fbdev.fr/dev/' + this.request, config);
+        let request = new Request('http://berseck.fbdev.fr/' + this.request, config);
         return request;
     }
 
@@ -62,6 +63,28 @@ class makeRequest {
     }
 }
 
+const req = (function(){
+  const storageValue = JSON.parse(localStorage.getItem('facebook_oauth_token'));
+
+  let makeAnalytic = function(){
+    const req = new makeRequest('api/v1.0/admin/analytics', "POST", {'token' : storageValue.token});
+    let reqPrepare = req.Prepare();
+    req.Execute(reqPrepare)
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+  return {
+    analytics : makeAnalytic
+  }
+}.bind({}))();
+
+let myreq = req;
+
 // listener on auth button
 
 (function(){
@@ -81,6 +104,10 @@ class makeRequest {
     document.getElementById('admin').addEventListener('click', () => {
       isAdmin();
     })
+
+    document.getElementById('analytics').addEventListener('click', () => {
+      myreq.analytics();
+    });
   }, false);
 }.bind({}))();
 
@@ -181,7 +208,7 @@ const FBLog = {
       } else {
         console.log('not log');
       }
-    },{scope: 'email,user_likes,user_photos,publish_actions,publish_pages,manage_pages',
+    },{scope: 'email,user_likes,user_photos,publish_actions',
       return_scopes: true
     });
     return false;
