@@ -1,19 +1,55 @@
 <?php
 
 require_once __DIR__.'/../service/photos.php';
+require_once __DIR__.'/../entity/Contest.php';
 
 Class UserController{
     private $token;
+    private $contest;
     private $photo;
 
     function __construct($token){
         $this->token = $token;
         $this->photo = new Photos($this->token);
+        $this->contest = new Contest();
     }
 
-    function getAlbums(){
-        $album = $this->photo->getAblums();
+    /**
+    /* Récupération des albums de l'utilisateur
+    /* @return les Albums de notre utilisateur
+    */
+    public function getAlbums(){
+        $album = $this->photo->getAlbums();
 
         return $album;
+    }
+
+    /**
+    /* Vérifie si l'utilisateur est dans le concours
+    /* @var idUser L'identifiant de l'utilisateur
+    /* @var idContest L'identifiant de notre concours
+    /* @return un boolean, vrai si l'utilisateur est dans le contest et faux sinon
+    */
+    public function inContest($idUser, $idContest){
+        $results = $this->contest->getContestOfUser();
+        foreach ($$results as $key => $value) {
+            if($value['id_user'] == $idContest) return true;
+        }
+        return false;
+    }
+
+    /**
+    /* Ajoute avec une vérification l'image de l'utilisateur dans le concours
+    /* @var idUser L'identifiant de l'utilisateur
+    /* @var idContest L'identifiant de notre concours
+    /* @var idPhoto L'identifiant de la photo a ajouté à notre concours
+    /* @return un boolean, vrai dans les cas
+    */
+    public function addToContest($idUser, $idContest, $idPhoto){
+        if($this->inContest($idUser,$idContest))
+            $this->contest->addPhotoToContest($idContest,$idUser,$idPhoto);
+        else
+            $this->contest->updatePhotoToContest($idContest,$idUser,$idPhoto);
+        return true;
     }
 }
