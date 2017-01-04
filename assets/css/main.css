@@ -23,38 +23,20 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 .icon-heart:before {
   content: "\e9da";
 }
-.icon-circle-up:before {
-  content: "\ea41";
+.icon-cancel-circle:before {
+  content: "\ea0d";
+}
+.icon-circle-right:before {
+  content: "\ea42";
+}
+.icon-circle-left:before {
+  content: "\ea44";
+}
+.icon-facebook:before {
+  content: "\ea90";
 }
 
 
-body{
-    max-width: 820px;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-.visuel{
-    width: 100%;
-}
-
-.grid-item{
-    width: 30%;
-    margin-bottom: 10px;
-    display: inline-block;
-    margin-left: 10px;
-    position: relative;
-}
-
-.grid-item:nth-child(3n+1){
-    margin-left: 0;
-}
-
-.hover-container{
-    position: absolute;
-    opacity: 0;
-}

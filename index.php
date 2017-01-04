@@ -40,7 +40,7 @@ $app->get('/', function($request, $response, $args){
     // Make a call to the contestController
     $this->logger->addInfo("Something interesting happened");
     $homeController = new ContestController();
-    return $this->view->render($response, 'test.twig', [
+    return $this->view->render($response, 'example.twig', [
         'controller' => $homeController
     ]);
 });
