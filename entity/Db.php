@@ -85,7 +85,27 @@ class Db {
         return "'" . $connection -> real_escape_string($value) . "'";
     }
 
+    public function selectUser($id) {
+        $connection = $this -> connect();
+        $result = $connection -> query("SELECT * FROM user_trace WHERE id_users = ".$id);
+        return $result;
+    }
    
+    public function UpdateUser($idUser,$token) {
+        $connection = $this -> connect();
+        $sql = "UPDATE user_trace SET token=".$token." WHERE id_user=".$idUser;
+        $req = $connection->prepare($sql);
+        $req->execute();
+    }
+
+    public function addUser($token,$idUser) {
+        $connection = $this -> connect();
+        $req = $connection->prepare("INSERT INTO user_trace (id_users, token) VALUES (?, ?)");
+        $req->bindParam(1, $idUser);
+        $req->bindParam(1, $token);
+        $req->execute();
+
+    }
 
 
 
