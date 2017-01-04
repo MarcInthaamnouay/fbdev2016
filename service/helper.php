@@ -18,10 +18,17 @@ Class Helper{
     * @Return {token} string
     */
     function getToken($request){
-        $data = $request->getParsedBody();
-        $token = filter_var($data['token']);
 
-        return $token;
+        $data = $request->getAttributes('user-param');
+        $token = filter_var($data['token']);
+        
+        if(isset($token)){
+            $_SESSION['token'] = $token;
+
+            return $token;
+        } else {
+            return false;
+        }
     }
 
     /*
@@ -42,3 +49,4 @@ Class Helper{
         return $fbApp;
     }
 }
+

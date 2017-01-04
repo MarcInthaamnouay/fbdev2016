@@ -1,5 +1,6 @@
 <?php
 
+
 require_once __DIR__ . '/../vendor/fb_sdk/src/Facebook/autoload.php';
 require_once __DIR__ . '/helper.php';
 
@@ -11,7 +12,7 @@ Class Photos{
     private $helper;
 
     function __construct($token){
-        $this->token = $token;
+        $this->token = "EAAUJwqOyHEUBAPSCJKJAt5QZBzVpJye10LQ1gkS5QAGiZBVPvpSmZBZAriwtsnS6K0Ptr0koAzSIYlgqg1XZAEBvVF0mSsz9aMuf93muoZCfMoISjOt8suC59fsIduvhIqCi2NF3UJS6p2W2Jsv4GquqdHnDUWEdmlRuZC6dSMdXAZDZD";
         $this->helper = new Helper();
     }
 
@@ -23,11 +24,11 @@ Class Photos{
         try{
             $res = $fb->get('/me?fields=id,picture');
             $usr = $res->getGraphUser();
-            $userID = $usr['id'];
+            $userID = "1176824679032398";
 
             if(isset($userID)){
                 $fbApp = $this->helper->instanceFBApp();
-                $request = new Facebook\FacebookRequest($fbApp, $token, 'GET', '/'.$userID.'/albums');
+                $request = new Facebook\FacebookRequest($fbApp, $this->token, 'GET', '/'.$userID.'/albums');
             try{
                 $response = $fb->getClient()->sendRequest($request);
                 $resBody = $response->getDecodedBody();

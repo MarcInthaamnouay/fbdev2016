@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'Slim\\Views\\' => array($vendorDir . '/slim/twig-view/src'),
     'Slim\\' => array($vendorDir . '/slim/slim/Slim'),
+    'RKA\\' => array($vendorDir . '/akrabat/rka-slim-session-middleware/RKA'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),

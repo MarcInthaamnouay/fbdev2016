@@ -1,4 +1,3 @@
-<?php require 'header.php'; ?>
 {% extends "layout.twig" %}
 {% block content %}
 <div class="container">
@@ -9,7 +8,12 @@
 	Warning : Si vous participer déjà à ce concours, et que vous ajouter une nouvelle image, l'ancienne sera supprimer et votre compteur remis à 0.
 	<ul class="grid effect-1" id="grid"></ul>
 </div>
-<div>{{controller.getAlbums()}}</div>
+<div id="album">{{controller.getAlbums()}}</div>
+<div id="album">{{controller.getPictures('688238887890982')}}</div>
+{% endblock %}
+{% block javascript %}
+	<script src="../assets/script/helper/helper.js"></script>
+	<script src="../assets/script/controller/userController.js"></script>
 {% endblock %}
 
 	

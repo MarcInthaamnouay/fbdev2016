@@ -8,12 +8,19 @@ require 'vendor/autoload.php';
 require_once 'controllers/ContestController.php';
 require_once 'controllers/UserController.php';
 
+// Import our helper
+require_once 'service/helper.php';
+
+
+
 $app = new Slim\App([
     'settings' => [
         'displayErrorDetails' => true
     ]
 ]);
 
+
+$app->add(new \RKA\SessionMiddleware(['name' => 'berseck-fbdev']));
 
 // Define the container for the views
 
@@ -40,19 +47,32 @@ $app->get('/', function($request, $response, $args){
     // Make a call to the contestController
     $this->logger->addInfo("Something interesting happened");
     $homeController = new ContestController();
+    
     return $this->view->render($response, 'test.twig', [
         'controller' => $homeController
     ]);
 });
 
-$app->get('/upload', function($request, $response, $args){
+$app->get('/upload/{userID}', function($request, $response, $args){
+    $helper = new Helper();
+    $token = $helper->getToken($request);
+
     $userController = new UserController();
-    return $this->view->render($response, 'upload.twig', [
-        'controller' => $userController
+        
+    return $this->view->render($response, 'user.twig', [
+            'controller' => $userController
     ]);
 });
 
-$app->get('/admin', function($request, $response, $args){
+$app->post('/token', function($request, $response, $args){
+    
+});
+
+$app->get('/login', function($request, $response, $args){
+    return $this->view->render($response, 'login.twig');
+});
+
+$app->get('/admin/login', function($request, $response, $args){
 
 });
 
