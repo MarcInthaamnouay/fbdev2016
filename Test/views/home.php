@@ -1,8 +1,12 @@
 <?php require 'header.php'; ?>
+<?php require '../controllers/ContestController.php'; 
+$contest = new ContestController() ;
+
+$concour = $contest->getDataContest($contest->getCurrentContest()['id']); ?>
 
 
 	<header class="title-container">
-		<h1 class="title">Berseck competition</h1>
+		<h1 class="title"><?php var_dump($concour); ?></h1>
 		<button class="open-modal-desc">Description</button>
 	</header>
 
