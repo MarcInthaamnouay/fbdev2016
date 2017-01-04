@@ -47,7 +47,7 @@ $app->get('/', function($request, $response, $args){
 });
 
 $app->get('/upload', function($request, $response, $args){
-    $userController = new UserController();
+    $userController = new UserController('EAAUJwqOyHEUBAKoYksV5bS3g6CEDHOmSIY3BxxTq7F2M57wAIKYtC3X0SQy3f7bHgnZA1WoBvAZB4r0GvAqbpJrTqw914Q2Hq3CAuuJJvrFfi2ZAAD49iFheXCEKi4muL91pXpFqPnZAusOZBwnGmTc8mBvWkPvcQ50UNoDMUKAZDZD');
     return $this->view->render($response, 'upload.twig', [
         'controller' => $userController
     ]);
