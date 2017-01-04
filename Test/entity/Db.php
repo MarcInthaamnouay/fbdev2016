@@ -85,6 +85,13 @@ class Db {
         return "'" . $connection -> real_escape_string($value) . "'";
     }
 
+   
+
+    function isUserInContest($idContest,$idUsers) {
+        $connection = $this -> connect();
+    }
+
+    
     public function getAllContest() {
         // Connect to the database
         $connection = $this -> connect();
@@ -140,18 +147,15 @@ class Db {
         $connection = $this -> connect();
     }
 
-    function isUserInContest($idContest,$idUsers) {
-        $connection = $this -> connect();
-    }
-
     function addPhotoToContest($idContest,$idUsers,$idPhoto) {
         $connection = $this -> connect();
     }
 
     function getParticipationsOfContest($idContest){
         $connection = $this -> connect();
-        $results = $connection -> query("SELECT * FROM participants where id_contest =".$idContest);
+        $results = $connection -> query("SELECT * FROM participants where id_contest = 1");
         return $results;
     }
+
 
 }

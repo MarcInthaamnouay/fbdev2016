@@ -2,16 +2,29 @@
 
 require '../entity/Db.php';
 
-private $db;
+
 
 class ContestController {
+
+	private $contest;
+
 	function __construct()
 	{
-		$db = new Db();
+		$this->contest = new Db();
 	}
 
-	public function getDataContest()
+	public function getDataContest($idContest)
 	{
-
+		$result = $this->contest->getParticipationsOfContest($idContest);
+		return $result;
 	}
+
+	public function getCurrentContest()
+	{
+		$result = $this->contest->getCurrentContest();
+		return $result;
+	}
+
+
+
 }
