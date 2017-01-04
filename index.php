@@ -39,9 +39,10 @@ $container['logger'] = function($c) {
 $app->get('/', function($request, $response, $args){
     // Make a call to the contestController
     $this->logger->addInfo("Something interesting happened");
-    $homeController = new ContestController();
+    $contestController = new ContestController();
     return $this->view->render($response, 'example.twig', [
-        'controller' => $homeController
+        'controller' => $contestController
+
     ]);
 });
 
@@ -50,7 +51,7 @@ $app->get('/upload', function($request, $response, $args){
     return $this->view->render($response, 'upload.twig', [
         'controller' => $userController
     ]);
-});
+})->setName('upload');
 
 $app->get('/admin', function($request, $response, $args){
 

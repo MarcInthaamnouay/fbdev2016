@@ -12,7 +12,7 @@ class Db {
         // Try and connect to the database
         if(!isset(self::$connection)) {
             // Load configuration as an array. Use the actual location of your configuration file
-            $config = parse_ini_file('../conf.inc.php'); 
+            $config = parse_ini_file('./conf.inc.php'); 
 
             try {
                  self::$connection = new PDO('mysql:dbname='.$config['dbname'].';host='.$config['host'], $config['username'],$config['password']);
