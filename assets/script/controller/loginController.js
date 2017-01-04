@@ -16,10 +16,15 @@ const loginController = (function(){
         console.log('pickaboo');
         FB.login(function(response) {
             if (response.authResponse) {
+                const authObj = {
+                    token : response.authResponse.accessToken, 
+                    userID : parseInt(response.authResponse.userID)
+                }
                 //set the token as a session by using our request service
-                let newRequest = new RequestBackend("/token", "POST", {"token" : response.authResponse.accessToken, "userID" : response.authResponse.userID});
+                let newRequest = new RequestBackend("/token", "POST", authObj);
                 newRequest.prepare().execute().then(success => {
                     console.log(success);
+                    localStorage.setItem("facebook_oauth_token", JSON.stringify(authObj));
                 })  
                 .catch(err => { 
                     console.log(err);

@@ -38,7 +38,7 @@ class RequestBackend{
         }
 
         // Prepare the request
-        this.makeRequest = new Request('http://berseck.fbdev.fr/' + this.req, config);
+        this.makeRequest = new Request('http://berseck.fbdev.fr' + this.req, config);
 
         return this;
     }

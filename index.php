@@ -49,20 +49,19 @@ $app->get('/', function($request, $response, $args){
     $this->logger->addInfo("Something interesting happened");
     $homeController = new ContestController();
 
+    $contestController = new ContestController();
     return $this->view->render($response, 'example.twig', [
-        'controller' => $homeController
+        'controller' => $contestController
+
     ]);
 });
 
 $app->get('/upload/{userID}', function($request, $response, $args){
-    
-
-    $userController = new UserController();
-        
-    return $this->view->render($response, 'user.twig', [
-            'controller' => $userController
-    ]);
-});
+     $userController = new UserController('EAAUJwqOyHEUBAKoYksV5bS3g6CEDHOmSIY3BxxTq7F2M57wAIKYtC3X0SQy3f7bHgnZA1WoBvAZB4r0GvAqbpJrTqw914Q2Hq3CAuuJJvrFfi2ZAAD49iFheXCEKi4muL91pXpFqPnZAusOZBwnGmTc8mBvWkPvcQ50UNoDMUKAZDZD');
+        return $this->view->render($response, 'upload.twig', [
+            'controller' => $userController,
+        ]);
+})->setName('upload');
 
 $app->post('/token', function($request, $response, $args){
     $helper = new Helper();
@@ -70,10 +69,17 @@ $app->post('/token', function($request, $response, $args){
     $userID = $helper->getUserID($request);
 
     $saveToken = new connexion();
-    $saveToken->adduser($userID, $token);
+    $res = $saveToken->adduser($userID, $token);
 
-    $response->withJson(array('status' => 'success'), 401);
+    print_r($res);
+    // @TODO Use is_bool to compare 2 boolean...
+    if($res == true){
+        $response->withJson(array('status' => 'success'), 401);
+    } else {
+        $response->withJson(array('status' => 'error'), 401);
+    }
 
+    
 });
 
 $app->get('/login', function($request, $response, $args){

@@ -183,6 +183,19 @@ body{
 	height: 100vh;
 }
 
+.visuel-container .slide .vote{
+	position: absolute;
+	font-size: 25px;
+	top: 15px;
+	right: 15px;
+	transition: color 0.3s ease-in-out;
+	cursor: pointer;
+}
+
+.visuel-container .slide .vote:hover{
+	color: black;
+}
+
 .visuel-container .slide .visuel{
 	width : 100%;
 	height: 100%;
@@ -197,6 +210,7 @@ body{
 	border : none;
 	transition : all 0.3s ease-in-out;
 	cursor: pointer;
+	outline: none;
 }
 
 .visuel-container .slick-arrow:hover{

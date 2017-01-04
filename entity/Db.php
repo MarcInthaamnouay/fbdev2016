@@ -12,7 +12,7 @@ class Db {
         // Try and connect to the database
         if(!isset(self::$connection)) {
             // Load configuration as an array. Use the actual location of your configuration file
-            $config = parse_ini_file('../conf.inc.php'); 
+            $config = parse_ini_file('./conf.inc.php'); 
 
             try {
                  self::$connection = new PDO('mysql:dbname='.$config['dbname'].';host='.$config['host'], $config['username'],$config['password']);
@@ -88,7 +88,8 @@ class Db {
     public function selectUser($id) {
         try{
             $connection = $this -> connect();
-            $result = $connection -> query("SELECT * FROM user_trace WHERE id_users = ".$id);
+            $result = $connection -> query("SELECT * FROM user_trace WHERE id_users = ".$id, PDO::FETCH_ASSOC);
+    
             return $result;
         } catch(PDOException $e){
             return $e;
@@ -101,22 +102,22 @@ class Db {
         $sql = "UPDATE user_trace SET token=".$token." WHERE id_user=".$idUser;
         $req = $connection->prepare($sql);
         $req->execute();
+
+        return true;
     }
 
     public function addUser($token,$idUser) {
         try{
             $connection = $this -> connect();
-            $req = $connection->prepare("INSERT INTO user_trace (id_users, token) VALUES (?, ?)");
-            $req->bindParam(1, $idUser);
-            $req->bindParam(1, $token);
+            $req = $connection->prepare("INSERT INTO user_trace (id_users, token) VALUES (:id_users, :token)");
+            $req->bindParam(':id_users', $idUser);
+            $req->bindParam(':token', $token);
             $req->execute();
 
             return true;
         } catch(PDOException $e){
             return $e;
         }
-        
-
     }
 
 

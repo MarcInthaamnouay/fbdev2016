@@ -2,7 +2,7 @@
 
 require_once __DIR__.'/../entity/Db.php';
 
-class connexion {
+Class connexion {
 
 	private $db;
 
@@ -12,17 +12,26 @@ class connexion {
 	}
 
 	function checkUserExist($idUser){
-		 $result = $this->db->selectUser();
-		 if(count($result) == 0) return false;
-		 else return true; 
+		 $result = $this->db->selectUser($idUser);
+		 //print_r(count($result));
+		 if($result->rowCount() == 0) 
+		 	return false;
+		 else 
+		 	return true; 
 	}
 
 	function adduser($idUser,$token) {
-		if(!$this->checkUserExist($idUser))
-			$result = $this->db->addUser();
-		else
-			$result = $this->db->updateUser();
+		if($this->checkUserExist($idUser) === false){
+			$result = $this->db->addUser($token, $idUser);
 
-		return $result;
+			return true;
+		}
+		else{
+			$result = $this->db->updateUser($idUser, $token);
+
+			return true;
+		}
+			
+		return false;
 	}
 }

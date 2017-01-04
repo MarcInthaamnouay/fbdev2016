@@ -1,11 +1,15 @@
 {% extends "layout.twig" %}
 {% block content %}
+
+
+
 	<div class="sidebar">
 		<h1 class="sidebar-title">Logo Berseck</h1>
 		<ul class="main-menu">
 			<li><a class="open-modal-desc" href="">Description</a></li>
-			<li><a href="">Participer</a></li>
+			<li><a href="{{path_for('upload'/23)}}">Participer</a></li>
 		</ul>
+		<p class="cotest-name">{{ controller.getCurrentContest['title'] }}</p>
 		<div class="footer-sidebar">
 			<a href="" class="button-part"><i class="icon-facebook"></i>Partager l'application</a>
 			<p class="copyright">&copy; Berseck Team</p>
@@ -15,6 +19,7 @@
 	<div class="visuel-container">
 		<div class="main-slider">
 			<div class="slide">
+				<i class="icon-heart vote"></i>
 				<img class="visuel" src="http://i-cms.linternaute.com/image_cms/original/2377659-les-100-plus-beaux-paysages-de-france.jpg" />
 				<div class="slide-desc">
 					<h2 class="slide-title">Titre de l'image</h2>
