@@ -8,16 +8,7 @@
 	Warning : Si vous participer déjà à ce concours, et que vous ajouter une nouvelle image, l'ancienne sera supprimer et votre compteur remis à 0.
 	<ul class="grid effect-1" id="grid"></ul>
 </div>
-<?php 
-	require '../entity/Db.php';
-	$db = new Db();
-	$result = $db->getCurrentContest();
-	foreach($result as $key => $res){
-		echo "Concours : ";
-		echo $res['id_concours']." "; echo $res['titre']. "<br />";
-	}
 
-?>
 
 <?php require 'footer.php'; ?>
 
