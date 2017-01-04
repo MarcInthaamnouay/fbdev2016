@@ -85,73 +85,9 @@ class Db {
         return "'" . $connection -> real_escape_string($value) . "'";
     }
 
-    public function getAllContest() {
-        // Connect to the database
-        $connection = $this -> connect();
+   
 
-        // Query the database
-        $result = $connection -> query("SELECT * FROM contest");
-        return $result;
-    }
 
-    public function getCurrentContest() {
-        // Connect to the database
-        $connection = $this -> connect();
 
-        // Query the database
-        $results = $connection -> query("SELECT * FROM contest");
-        $now = new DateTime();
-        $result = false;
-        foreach($results as $row){
-            if(new DateTime($row['start'])<$now && new DateTime($row['end']) >$now)
-                $result = $row;
-        }
-        return $result;
-    }
-
-     public function haveCurrentContest() {
-        // Connect to the database
-        $connection = $this -> connect();
-
-        // Query the database
-        $results = $connection -> query("SELECT * FROM contest");
-        $now = new DateTime();
-        foreach($results as $row){
-            if(new DateTime($row['start'])<$now && new DateTime($row['end']) >$now)
-                return true;
-        }
-        return false;
-    }
-
-    function addContest($title,$text,$lot,$infos,$start,$end){
-        $connection = $this -> connect();
-        $req = $connection->prepare("INSERT INTO contest (title, text, lot, infos, start, end) VALUES (?, ?, ?, ?, ?, ?)");
-        $req->bindParam(1, $title);
-        $req->bindParam(2, $text);
-        $req->bindParam(3, $lot);
-        $req->bindParam(4, $infos); 
-        $req->bindParam(5, $start);
-        $req->bindParam(6, $end);
-        $req->execute();
-
-    }
-
-    function updateContest($title,$text,$lot,$infos,$start,$end){
-        $connection = $this -> connect();
-    }
-
-    function isUserInContest($idContest,$idUsers) {
-        $connection = $this -> connect();
-    }
-
-    function addPhotoToContest($idContest,$idUsers,$idPhoto) {
-        $connection = $this -> connect();
-    }
-
-    function getParticipationsOfContest($idContest){
-        $connection = $this -> connect();
-        $results = $connection -> query("SELECT * FROM participants where id_contest =".$idContest);
-        return $results;
-    }
 
 }
