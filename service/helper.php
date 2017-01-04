@@ -18,13 +18,10 @@ Class Helper{
     * @Return {token} string
     */
     function getToken($request){
-
-        $data = $request->getAttributes('user-param');
+        $data = $request->getParsedBody();
         $token = filter_var($data['token']);
         
         if(isset($token)){
-            $_SESSION['token'] = $token;
-
             return $token;
         } else {
             return false;

@@ -10,6 +10,7 @@ require_once 'controllers/UserController.php';
 
 // Import our helper
 require_once 'service/helper.php';
+require_once 'service/connection.php';
 
 
 
@@ -47,15 +48,14 @@ $app->get('/', function($request, $response, $args){
     // Make a call to the contestController
     $this->logger->addInfo("Something interesting happened");
     $homeController = new ContestController();
-    
-    return $this->view->render($response, 'test.twig', [
+
+    return $this->view->render($response, 'example.twig', [
         'controller' => $homeController
     ]);
 });
 
 $app->get('/upload/{userID}', function($request, $response, $args){
-    $helper = new Helper();
-    $token = $helper->getToken($request);
+    
 
     $userController = new UserController();
         
@@ -65,7 +65,15 @@ $app->get('/upload/{userID}', function($request, $response, $args){
 });
 
 $app->post('/token', function($request, $response, $args){
-    
+    $helper = new Helper();
+    $token = $helper->getToken($request);
+    $userID = $helper->getUserID($request);
+
+    $saveToken = new connexion();
+    $saveToken->adduser($userID, $token);
+
+    $response->withJson(array('status' => 'success'), 401);
+
 });
 
 $app->get('/login', function($request, $response, $args){

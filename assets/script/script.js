@@ -170,7 +170,7 @@ function getAllPhotos(id = null){
     .then(res => {
       console.log(res);
       for(let u = 0; u < res.data.length; u++){
-          let tmpl = `<li><img src="${res.data[u].source}"><img src="${res.data[u].source}"></li>`;
+          let tmpl = `<li><img src="${res.data[u].source}"></li>`;
           parentElement.insertAdjacentHTML('beforeend', tmpl);
       }
 

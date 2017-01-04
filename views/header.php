@@ -1,3 +1,4 @@
+<?php ini_set('display_errors',1); ?>
 <!DOCTYPE html>
 <html lang="fr" class="no-js">
 	<head>
@@ -9,20 +10,13 @@
 		<meta name="keywords" content="" />
 		<meta name="author" content="" />
 		<link rel="stylesheet" type="text/css" href="../assets/css/default.css" />
-		<link rel="stylesheet" type="text/css" href="../assets/css/example.css" />
-		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
-		<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css"/>
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
 		<script src="../assets/script/main.js"></script>
-		<!--<script src="../assets/script/modernize.js"></script>
-		<script src="../assets/script/script.js"></script>-->
+		<link rel="stylesheet" type="text/css" href="../assets/css/main.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+		<script src="../assets/script/modernize.js"></script>
+		<script src="../assets/script/script.js"></script>
 		<script src="../assets/script/facebookLogin.js"></script>
 	</head>
 	<body>
-		{% block content %}{% endblock %}
-		<footer>
-			{% block footer %}{% endblock %}
-		</footer>
-		<script type="text/javascript" src="//cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
-	</body>
-	{% block javascript %} {% endblock %}
+	
+	<?php 
