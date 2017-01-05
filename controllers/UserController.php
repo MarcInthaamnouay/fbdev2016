@@ -20,13 +20,10 @@ Class UserController{
     public function getAlbums(){
         $album = $this->photo->getAlbums();
 
-        var_dump($album);
     }
 
     function getPictures($albumID){
         $pictures = $this->photo->getListOfPhotosFromAlbum("688238887890982");
-
-        var_dump($pictures);
     }
 
     function setToken($token){
@@ -40,6 +37,7 @@ Class UserController{
     /* @return un boolean, vrai si l'utilisateur est dans le contest et faux sinon
     */
     public function inContest($idUser, $idContest){
+        if(empty($idUser) || empty($idContest) || !is_int($idUser) || !is_int($idContest)) return false;
         $results = $this->contest->getContestOfUser();
         foreach ($$results as $key => $value) {
             if($value['id_user'] == $idContest) return true;
@@ -55,6 +53,7 @@ Class UserController{
     /* @return un boolean, vrai dans les cas
     */
     public function addToContest($idUser, $idContest, $idPhoto){
+        if(empty($idUser) || empty($idContest) || !is_int($idUser) || empty($idPhoto) || !is_int($idPhoto) || !is_int($idContest)) return false;
         if($this->inContest($idUser,$idContest))
             $this->contest->addPhotoToContest($idContest,$idUser,$idPhoto);
         else

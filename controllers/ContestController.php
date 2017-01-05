@@ -18,6 +18,7 @@ class ContestController {
     */
 	public function getDataContest($idContest)
 	{
+		if(empty($idContest) || !is_int($idContest)) return false;
 		$result = $this->contest->getParticipationsOfContest($idContest);
 		return $result;
 	}
