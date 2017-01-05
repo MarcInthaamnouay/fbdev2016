@@ -99,11 +99,11 @@ class Db {
    
     public function UpdateUser($idUser,$token) {
         $connection = $this -> connect();
-        $sql = "UPDATE user_trace SET token=".$token." WHERE id_user=".$idUser;
+        $sql = "UPDATE user_trace SET token='".$token."' WHERE id_users=".$idUser;
         $req = $connection->prepare($sql);
         $req->execute();
-
-        return true;
+        
+        return $req->rowCount();
     }
 
     public function addUser($token,$idUser) {

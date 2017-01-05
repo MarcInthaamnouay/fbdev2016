@@ -25,10 +25,6 @@ Class Photos{
 
         $album_array = array();
         try{
-            $res = $fb->get('/me?fields=id,picture');
-            
-            $usr = $res->getGraphUser();
-
             if(isset($this->userID)){
                 $fbApp = $this->helper->instanceFBApp();
                 $request = new Facebook\FacebookRequest($fbApp, $this->token, 'GET', '/'.$this->userID.'/albums');

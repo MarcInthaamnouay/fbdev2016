@@ -13,7 +13,6 @@ Class connexion {
 
 	function checkUserExist($idUser){
 		 $result = $this->db->selectUser($idUser);
-		 //print_r(count($result));
 		 if($result->rowCount() == 0) 
 		 	return false;
 		 else 
@@ -28,7 +27,6 @@ Class connexion {
 		}
 		else{
 			$result = $this->db->updateUser($idUser, $token);
-
 			return true;
 		}
 			
