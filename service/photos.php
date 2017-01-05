@@ -10,25 +10,28 @@ Class Photos{
 
     private $token;
     private $helper;
+    private $userID;
 
-    function __construct($token){
-        $this->token = "EAAUJwqOyHEUBAPSCJKJAt5QZBzVpJye10LQ1gkS5QAGiZBVPvpSmZBZAriwtsnS6K0Ptr0koAzSIYlgqg1XZAEBvVF0mSsz9aMuf93muoZCfMoISjOt8suC59fsIduvhIqCi2NF3UJS6p2W2Jsv4GquqdHnDUWEdmlRuZC6dSMdXAZDZD";
+    function __construct($userID){
+        $this->userID = $userID;
         $this->helper = new Helper();
     }
 
-    function getAblums(){
+    function getAlbums(){
         $fb = $this->helper->getFBService();
+        $this->token = $this->helper->getDBToken($this->userID);
+        var_dump($this->token);
         $fb->setDefaultAccessToken($this->token);
 
         $album_array = array();
         try{
             $res = $fb->get('/me?fields=id,picture');
+            
             $usr = $res->getGraphUser();
-            $userID = "1176824679032398";
 
-            if(isset($userID)){
+            if(isset($this->userID)){
                 $fbApp = $this->helper->instanceFBApp();
-                $request = new Facebook\FacebookRequest($fbApp, $this->token, 'GET', '/'.$userID.'/albums');
+                $request = new Facebook\FacebookRequest($fbApp, $this->token, 'GET', '/'.$this->userID.'/albums');
             try{
                 $response = $fb->getClient()->sendRequest($request);
                 $resBody = $response->getDecodedBody();
@@ -42,14 +45,14 @@ Class Photos{
                 return $album_array;
             } catch(Facebook\Exceptions\FacebookResponseException $e){
                 var_dump($e->getMessage());
-              }
+            }
             }
         } catch(Facebook\Exceptions\FacebookResponseException $e){
             print_r($e->getMessage());
         }
     }
 
-    function getListOfPhotosFromAlbum($albumID){
+    public function getListOfPhotosFromAlbum($albumID){
         $fbApp = $this->helper->instanceFBApp();
         $request = new Facebook\FacebookRequest($fbApp, $this->token , 'GET', '/'.$albumID.'/photos/uploaded?fields=source,images,name');
 
