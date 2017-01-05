@@ -23,8 +23,20 @@ Same process as Mac. Note that the hosts is in **System32/driver/etc/hosts**
 
 ## JavaScript
 
-TBD
+* Will try to implement the AirBnb ES6 Coding Style
 
 ## PHP 
 
 TBD
+
+## Thanks to 
+
+* Slim
+* Facebook
+
+## Contributors
+
+* Fadyl Bello @lewisroy
+* Yann Miloux @Bitoux
+* Marc Intha-amnouay @MarcInthaamnouay
+* Timothé Molavy @timoRR9
