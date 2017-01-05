@@ -7,12 +7,14 @@
 		<nav class="codrops-demos" id ="albums-list"></nav>
 	</header>
 	Warning : Si vous participer déjà à ce concours, et que vous ajouter une nouvelle image, l'ancienne sera supprimer et votre compteur remis à 0.
-	<ul class="grid effect-1" id="grid"></ul>
 </div>
-<div>{{controller.getAlbums()}}</div>
+<ul class="grid effect-1" id="grid"></ul>
 {% endblock %}
 {% block javascript %}
 	<script src="../assets/script/config/app.js"></script>
+	<script src="../assets/script/helper/helper.js"></script>
+	<script src="../assets/script/service/request.js"></script>
+	<script src="../assets/script/controller/userController.js"></script>
 {% endblock %}
 
 	

@@ -102,7 +102,7 @@ class Db {
         $sql = "UPDATE user_trace SET token='".$token."' WHERE id_users=".$idUser;
         $req = $connection->prepare($sql);
         $req->execute();
-        
+
         return $req->rowCount();
     }
 
@@ -119,8 +119,4 @@ class Db {
             return $e;
         }
     }
-
-
-
-
 }

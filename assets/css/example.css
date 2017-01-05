@@ -98,7 +98,6 @@ body{
 	margin-left: 0 !important;
 	margin-right: 0 !important;
 	height: 100vh;
-	overflow: hidden;
     width: calc(100vw + 20px);
 }
 

@@ -15,14 +15,12 @@ Class Photos{
     function __construct($userID){
         $this->userID = $userID;
         $this->helper = new Helper();
+        $this->token = $this->helper->getDBToken($this->userID);
     }
 
     function getAlbums(){
         $fb = $this->helper->getFBService();
-        $this->token = $this->helper->getDBToken($this->userID);
-        var_dump($this->token);
         $fb->setDefaultAccessToken($this->token);
-
         $album_array = array();
         try{
             if(isset($this->userID)){
@@ -38,7 +36,6 @@ Class Photos{
                         array_push($album_array, $v);
                     }
                 }
-                return $album_array;
             } catch(Facebook\Exceptions\FacebookResponseException $e){
                 var_dump($e->getMessage());
             }
@@ -46,6 +43,8 @@ Class Photos{
         } catch(Facebook\Exceptions\FacebookResponseException $e){
             print_r($e->getMessage());
         }
+
+        return $album_array;
     }
 
     public function getListOfPhotosFromAlbum($albumID){
@@ -61,7 +60,6 @@ Class Photos{
         } catch(Facebook\Exceptions\FacebookResponseException $e){
             echo $e->getMessage();
         }
-        echo $albumID;
     }
 }
 

@@ -7,6 +7,7 @@ require 'vendor/autoload.php';
 // Import our controller
 require_once 'controllers/ContestController.php';
 require_once 'controllers/UserController.php';
+require_once 'controllers/PhotoController.php';
 
 // Import our helper
 require_once 'service/helper.php';
@@ -57,16 +58,43 @@ $app->get('/', function($request, $response, $args){
 });
 
 $app->get('/upload/{userID}', function($request, $response, $args){
-     $userController = new UserController($args['userID']);
+     $userController = new UserController();
         return $this->view->render($response, 'upload.twig', [
             'controller' => $userController,
         ]);
 })->setName('upload');
 
+$app->post('/albums', function($request, $response, $args){
+    $helper = new Helper();
+    $userID = $helper->getID($request, 'userID');
+
+    $photoController = new PhotoController($userID);
+    $albums = $photoController->getAlbums();
+
+ 
+    if(count($albums) > 0){
+        return json_encode($albums);
+    }
+});
+
+$app->post('/photos', function($request, $response, $args){
+    $helper = new Helper();
+    $userID = $helper->getID($request, 'userID');
+    $albumID = $helper->getID($request, 'albumID');
+    $photoController = new PhotoController($userID);
+    
+    // get the photo
+    $photos = $photoController->getPictures($albumID);
+
+    if(count($photos) > 0){
+        return json_encode($photos);
+    }
+});
+
 $app->post('/token', function($request, $response, $args){
     $helper = new Helper();
     $token = $helper->getToken($request);
-    $userID = $helper->getUserID($request);
+    $userID = $helper->getID($request, 'userID');
 
     $saveToken = new connexion();
     $res = $saveToken->adduser($userID, $token);

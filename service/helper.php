@@ -31,13 +31,14 @@ Class Helper{
     }
 
     /*
-    * GetUserID
+    * GetID
     *    Return the user id
     * @Return {userID} string
     */
-    function getUserID($request){
+    function getID($request, $paramName){
         $data = $request->getParsedBody();
-        $id = filter_var($data['userID']);
+        //print_r($data);
+        $id = filter_var($data[$paramName]);
 
         return $id;
     }

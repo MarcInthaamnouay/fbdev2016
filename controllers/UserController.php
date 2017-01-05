@@ -1,34 +1,14 @@
 <?php
 
-require_once __DIR__.'/../service/photos.php';
+
 require_once __DIR__.'/../entity/Contest.php';
 
 Class UserController{
-    private $token;
     private $contest;
     private $photo;
 
-    function __construct($userID){
-        $this->photo = new Photos($userID);
+    function __construct(){
         $this->contest = new Contest();
-    }
-
-    /**
-    * Rcupration des albums de l'utilisateur
-    * @return {Object} les Albums de notre utilisateur
-    */
-    public function getAlbums(){
-        $album = $this->photo->getAlbums();
-        
-        return $album;
-    }
-
-    function getPictures($albumID){
-        $pictures = $this->photo->getListOfPhotosFromAlbum();
-    }
-
-    function setToken($token){
-        $this->token = $token;
     }
 
     /**
