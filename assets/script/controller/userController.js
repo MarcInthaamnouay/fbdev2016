@@ -15,6 +15,17 @@ const userController = (function(){
     } 
 
     /**
+     *  Save Photos
+     *              Save a photo of the user
+     *  
+     */
+    const savePhoto = function(){
+        this.classList.add('select');
+        // @TODO add a button save on the UI
+        
+    };
+
+    /**
      *  Display Photos
      *              Display photos of an album
      */
@@ -27,9 +38,11 @@ const userController = (function(){
         .then(success => {
             grid.innerHTML = '';
             for(let value of success.data){
-                let tmpl = `<li><img src=${value.source}></li>`;
+                let tmpl = `<li><img src=${value.source} class="userImg"></li>`;
                 grid.insertAdjacentHTML('beforeend', tmpl);
             }
+            helper.addListener(userImg, savePhoto)
+            
         })
         .catch(err => {
             console.log(err);
@@ -48,7 +61,7 @@ const userController = (function(){
                 let tmpl = `<a href="#" data-id="${value.id}" class="albums-link">${value.name}</a>`;
                 el.insertAdjacentHTML('beforeend', tmpl);
             }
-            console.log(helper);
+
             helper.addListener('albums-link', displayPhotos);
         })
         .catch(err => {

@@ -53,7 +53,6 @@ $app->get('/', function($request, $response, $args){
     $contestController = new ContestController();
     return $this->view->render($response, 'example.twig', [
         'controller' => $contestController
-
     ]);
 });
 
