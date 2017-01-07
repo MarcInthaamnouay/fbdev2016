@@ -22,6 +22,7 @@ const loginController = (function(){
                 //set the token as a session by using our request service
                 let newRequest = new RequestBackend("/token", "POST", authObj);
                 newRequest.prepare().execute().then(success => {
+                    console.log(authObj.userID);
                     localStorage.setItem("facebook_oauth_token", JSON.stringify(authObj));
                     window.location.href = `/upload/${authObj.userID}`;
                 })  

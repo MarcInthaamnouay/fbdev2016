@@ -15,19 +15,39 @@ const userController = (function(){
     } 
 
     /**
+     *  Send Photos to the backend
+     *              Send photo to the backend and save it's url
+     */
+    const sendPhotos = function(){  
+        console.log('click');
+        let url = this.src;
+        const req = new RequestBackend('/upload/photo', 'POST', {userID : haveToken.userID, photoURL : url});
+        req.prepare().execute()
+        .then(success => {
+            console.log(success);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    }
+
+    /**
      *  Save Photos
      *              Save a photo of the user
-     *  
+     *  @private
      */
     const savePhoto = function(){
+        // remove the element from other element..
         this.classList.add('select');
-        // @TODO add a button save on the UI
-        
+        const tmpl = `<button id='add'>add</button>`;
+        this.parentElement.insertAdjacentHTML('beforeend', tmpl);
+        helper.addListener('add', sendPhotos, 'id');
     };
 
     /**
      *  Display Photos
      *              Display photos of an album
+     *  @private
      */
     const displayPhotos = function(){
         let album_id = this.getAttribute('data-id');
@@ -41,8 +61,7 @@ const userController = (function(){
                 let tmpl = `<li><img src=${value.source} class="userImg"></li>`;
                 grid.insertAdjacentHTML('beforeend', tmpl);
             }
-            helper.addListener(userImg, savePhoto)
-            
+            helper.addListener('userImg', savePhoto)
         })
         .catch(err => {
             console.log(err);
@@ -52,6 +71,7 @@ const userController = (function(){
     /**
      *  Display Album
      *          Display the photo of the album and add a listener to the link
+     *  @private
      */
     const displayAlbum = function(){
         const req = new RequestBackend("/albums", "POST", {userID : haveToken.userID});
@@ -66,11 +86,16 @@ const userController = (function(){
         })
         .catch(err => {
             console.log(err);
+            if(err.indexOf('expired') != -1){
+                // This mean that the tokin has expired so he have to relog to the app
+                window.location.href = '/login';
+            } else{
+                console.log(err);
+            }
+            
         })
     };
 
-    document.addEventListener('DOMContentLoaded', displayAlbum);
-
-    
-    
+    // Add a listener to the DOM
+    document.addEventListener('DOMContentLoaded', displayAlbum);  
 })(document, window);

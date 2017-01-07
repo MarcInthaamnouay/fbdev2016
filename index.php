@@ -14,7 +14,6 @@ require_once 'service/helper.php';
 require_once 'service/connection.php';
 
 
-
 $app = new Slim\App([
     'settings' => [
         'displayErrorDetails' => true
@@ -38,16 +37,9 @@ $container['view'] = function($container){
     return $view;
 };
 
-$container['logger'] = function($c) {
-    $logger = new \Monolog\Logger('my_logger');
-    $file_handler = new \Monolog\Handler\StreamHandler("../logs/app.log");
-    $logger->pushHandler($file_handler);
-    return $logger;
-};
-
 $app->get('/', function($request, $response, $args){
     // Make a call to the contestController
-    $this->logger->addInfo("Something interesting happened");
+  //  $this->logger->addInfo("Something interesting happened");
     $homeController = new ContestController();
 
     $contestController = new ContestController();
@@ -58,9 +50,9 @@ $app->get('/', function($request, $response, $args){
 
 $app->get('/upload/{userID}', function($request, $response, $args){
      $userController = new UserController();
-        return $this->view->render($response, 'upload.twig', [
-            'controller' => $userController,
-        ]);
+    return $this->view->render($response, 'upload.twig', [
+        'controller' => $userController,
+    ]);
 })->setName('upload');
 
 $app->post('/albums', function($request, $response, $args){
@@ -70,7 +62,6 @@ $app->post('/albums', function($request, $response, $args){
     $photoController = new PhotoController($userID);
     $albums = $photoController->getAlbums();
 
- 
     if(count($albums) > 0){
         return json_encode($albums);
     }
@@ -90,6 +81,15 @@ $app->post('/photos', function($request, $response, $args){
     }
 });
 
+$app->post('/upload/photo', function($request, $response, $args){
+    $helper = new Helper();
+    $userID = $helper->getID($request, 'userID');
+    $photoURL = $helper->getPhotoID($request, 'photoURL');
+    // Instance our controller with this parameters
+    $photoController = new PhotoController($userID);
+    $res = $photoController->savePhotoInDB($photoURL);
+});
+
 $app->post('/token', function($request, $response, $args){
     $helper = new Helper();
     $token = $helper->getToken($request);
@@ -98,15 +98,12 @@ $app->post('/token', function($request, $response, $args){
     $saveToken = new connexion();
     $res = $saveToken->adduser($userID, $token);
 
-    print_r($res);
     // @TODO Use is_bool to compare 2 boolean...
-    if($res == true){
-        $response->withJson(array('status' => 'success'), 401);
+    if($res === true){
+        return $response->withJson(array('status' => 'success'), 200);
     } else {
-        $response->withJson(array('status' => 'error'), 401);
+        return $response->withJson(array('status' => 'error'), 200);
     }
-
-    
 });
 
 $app->get('/login', function($request, $response, $args){

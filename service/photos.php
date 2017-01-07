@@ -1,8 +1,8 @@
 <?php
 
-
 require_once __DIR__ . '/../vendor/fb_sdk/src/Facebook/autoload.php';
 require_once __DIR__ . '/helper.php';
+require_once __DIR__ . '/../entity/Db.php';
 
 use Facebook\FacebookRequest;
 
@@ -18,6 +18,12 @@ Class Photos{
         $this->token = $this->helper->getDBToken($this->userID);
     }
 
+    /**
+     *  GetAlbums services
+     *  Get a List of Albums
+     *  @return an array of album
+     *  @return a String if an error happened
+     */
     function getAlbums(){
         $fb = $this->helper->getFBService();
         $fb->setDefaultAccessToken($this->token);
@@ -37,16 +43,23 @@ Class Photos{
                     }
                 }
             } catch(Facebook\Exceptions\FacebookResponseException $e){
-                var_dump($e->getMessage());
+                return $e->getMessage();
             }
             }
         } catch(Facebook\Exceptions\FacebookResponseException $e){
-            print_r($e->getMessage());
+            return $e->getMessage();
         }
 
         return $album_array;
     }
 
+    /**
+     *  GetListOfPhotosFromAlbum
+     *  Get a list of photo from an Album ID
+     *  @return a list of photos
+     *  @return a string of an error message
+     *  @param a int representing the ID of an album
+     */
     public function getListOfPhotosFromAlbum($albumID){
         $fbApp = $this->helper->instanceFBApp();
         $request = new Facebook\FacebookRequest($fbApp, $this->token , 'GET', '/'.$albumID.'/photos/uploaded?fields=source,images,name');
@@ -58,8 +71,25 @@ Class Photos{
 
             return $resBody;
         } catch(Facebook\Exceptions\FacebookResponseException $e){
-            echo $e->getMessage();
+            return $e->getMessage;
         }
+    }
+
+    /**
+     *  SaveIntoDB
+     *  Insert a photo in the participants database
+     *  @param a string of the photo url selected by the user
+     *  @return a response from the database
+     */
+    public function saveIntoDB($photoURL){
+        $query = 'INSERT INTO participants (id_picture, id_user) VALUES (:id_picture, :id_user)';
+        $query->bindParam(':id_picture', $photoURL);
+        $query->bindParam(':id_user', $this->userID);
+
+        $con = new Db();
+        $res = $con -> query($query);
+
+        return $res;
     }
 }
 

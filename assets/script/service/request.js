@@ -55,6 +55,10 @@ class RequestBackend{
                 .then((response) => {
                     response.json()
                         .then(json => {
+                            if(json.status != undefined)
+                                if(json.status != 'success')
+                                    reject(json.status);
+                            // Otherwise resolve
                             resolve(json);
                         })
                         .catch(error => {

@@ -12,7 +12,7 @@ Class UserController{
     }
 
     /**
-     * V�rifie si l'utilisateur est dans le concours
+     * Verifie si l'utilisateur est dans le concours
      * @var idUser L'identifiant de l'utilisateur
      * @var idContest L'identifiant de notre concours
      * @return {Boolean}, vrai si l'utilisateur est dans le contest et faux sinon

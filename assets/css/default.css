@@ -152,6 +152,19 @@ a:active {
 	float: left;
 	padding: 7px;
 	width: 33%;
+	position: relative;
+}
+
+#add{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	width: 95%;
+	background-color: rgba(107, 115, 129, 0.8);
+	color: white;
+	margin-top: 7px;
+	margin-bottom: 7px;
+	border: none;
 }
 
 .grid li.shown,
