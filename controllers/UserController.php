@@ -22,10 +22,9 @@ Class UserController{
         $results = $this->contest->getContestOfUser($idUser);
     
         foreach ($results as $key => $value) {
-            var_dump($value);
-            // @TODO first check if the contest is here
-            // @TODO if yes then check if the id_user is the same
-            if($value['id_user'] == $idContest) return true;
+            if($value['id_contest'] == $idContest)
+                if($value['id_user'] == $idUser) 
+                    return true;
         }
 
         return false;
@@ -39,10 +38,8 @@ Class UserController{
      * @return {Boolean}, vrai dans les cas
     */
     public function addToContest($idUser, $idContest, $idPhoto){
-        var_dump($this->inContest($idUser,$idContest));
         if(empty($idUser) || empty($idContest) || !is_int($idUser) || empty($idPhoto) || !is_int($idContest)) return false;
         if(!$this->inContest($idUser,$idContest)){
-            var_dump('yy');
             $this->contest->addPhotoToContest($idContest,$idUser,$idPhoto);
         }
         else

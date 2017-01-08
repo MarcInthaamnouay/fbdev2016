@@ -52,7 +52,7 @@ Class Helper{
     function getDBToken($userID){
         $db = new Db();
         $con = $db->connect();
-        $results = $con->query("SELECT * FROM user_trace WHERE id_users = ".$userID);
+        $results = $con->query("SELECT * FROM user_trace WHERE id_user = ".$userID);
         $result = $results->fetch();
         $token = '';
 

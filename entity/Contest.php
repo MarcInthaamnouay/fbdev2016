@@ -65,29 +65,30 @@ class Contest extends Db {
 
     public function getContestOfUser($idUser){
         $connection = $this -> connect();
-        $results = $connection -> query("SELECT * FROM participants WHERE id_users = ".$idUser);
+        $results = $connection -> query("SELECT * FROM participants WHERE id_user = ".$idUser);
         return $results;
 
     }
 
     public function addPhotoToContest($idContest,$idUser,$idPhoto) {
         $connection = $this -> connect();
-        $req = $connection->prepare("INSERT INTO participants (id_picture, id_users, id_contest) VALUES (?, ?, ?)");
+        $req = $connection->prepare("INSERT INTO participants (id_picture, id_user, id_contest) VALUES (?, ?, ?)");
         $req->bindParam(1, $idPhoto);
         $req->bindParam(2, $idUser);
         $req->bindParam(3, $idContest);
         $res = $req->execute();
-
-        print_r($res);
-        var_dump('yolo');
     }
 
     public function UpdatePhotoToContest($idContest,$idUser,$idPhoto) {
-        var_dump("laaa");
-        $connection = $this -> connect();
-        $sql = "UPDATE participants SET id_picture=".$idPhoto.", id_contest=".$idContest." WHERE id_user=".$idUser;
-        $req = $connection->prepare($sql);
-        $req->execute();
+        try{
+            $connection = $this -> connect();
+            $sql = "UPDATE participants SET id_picture='".$idPhoto."', id_contest=".$idContest." WHERE id_user=".$idUser;
+            $req = $connection->prepare($sql);
+            $req->execute();
+        } catch(PDOException $e){
+            return $e;
+        }
+        
     }
 
     public function getParticipationsOfContest($idContest){

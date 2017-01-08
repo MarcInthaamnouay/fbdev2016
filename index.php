@@ -92,7 +92,11 @@ $app->post('/upload/photo', function($request, $response, $args){
     $userController = new UserController();
     $res = $userController->addToContest(intval($userID), intval($contestID) ,$photoURL);
 
-    print_r($res);
+    if($res){
+        return $response->withJson(array('status' => 'success'), 200);
+    } else{
+        return $response->withJson(array('status' => 'error '.$res), 200);
+    }
 });
 
 $app->post('/token', function($request, $response, $args){

@@ -88,7 +88,7 @@ class Db {
     public function selectUser($id) {
         try{
             $connection = $this -> connect();
-            $result = $connection -> query("SELECT * FROM user_trace WHERE id_users = ".$id, PDO::FETCH_ASSOC);
+            $result = $connection -> query("SELECT * FROM user_trace WHERE id_user = ".$id, PDO::FETCH_ASSOC);
     
             return $result;
         } catch(PDOException $e){
@@ -99,7 +99,7 @@ class Db {
    
     public function UpdateUser($idUser,$token) {
         $connection = $this -> connect();
-        $sql = "UPDATE user_trace SET token='".$token."' WHERE id_users=".$idUser;
+        $sql = "UPDATE user_trace SET token='".$token."' WHERE id_user=".$idUser;
         $req = $connection->prepare($sql);
         $req->execute();
 
@@ -109,8 +109,8 @@ class Db {
     public function addUser($token,$idUser) {
         try{
             $connection = $this -> connect();
-            $req = $connection->prepare("INSERT INTO user_trace (id_users, token) VALUES (:id_users, :token)");
-            $req->bindParam(':id_users', $idUser);
+            $req = $connection->prepare("INSERT INTO user_trace (id_user, token) VALUES (:id_user, :token)");
+            $req->bindParam(':id_user', $idUser);
             $req->bindParam(':token', $token);
             $req->execute();
 
