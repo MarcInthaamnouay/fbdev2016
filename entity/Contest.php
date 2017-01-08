@@ -72,21 +72,23 @@ class Contest extends Db {
 
     public function addPhotoToContest($idContest,$idUser,$idPhoto) {
         $connection = $this -> connect();
-        $req = $connection->prepare("INSERT INTO contest (id_picture, id_user, id_contest) VALUES (?, ?, ?)");
-        $req->bindParam(1, $idContest);
+        $req = $connection->prepare("INSERT INTO participants (id_picture, id_users, id_contest) VALUES (?, ?, ?)");
+        $req->bindParam(1, $idPhoto);
         $req->bindParam(2, $idUser);
-        $req->bindParam(3, $idPhoto);
-        $req->execute();
+        $req->bindParam(3, $idContest);
+        $res = $req->execute();
+
+        print_r($res);
+        var_dump('yolo');
     }
 
     public function UpdatePhotoToContest($idContest,$idUser,$idPhoto) {
+        var_dump("laaa");
         $connection = $this -> connect();
-        $sql = "UPDATE contest SET id_picture=".$idPhoto.", id_contest=".$idContest." WHERE id_user=".$idUser;
+        $sql = "UPDATE participants SET id_picture=".$idPhoto.", id_contest=".$idContest." WHERE id_user=".$idUser;
         $req = $connection->prepare($sql);
         $req->execute();
     }
-
-
 
     public function getParticipationsOfContest($idContest){
         $connection = $this -> connect();

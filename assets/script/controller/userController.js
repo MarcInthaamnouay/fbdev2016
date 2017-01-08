@@ -20,7 +20,7 @@ const userController = (function(){
      */
     const sendPhotos = function(){  
         console.log('click');
-        let url = this.src;
+        let url = this.previousSibling.src;
         const req = new RequestBackend('/upload/photo', 'POST', {userID : haveToken.userID, photoURL : url});
         req.prepare().execute()
         .then(success => {

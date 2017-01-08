@@ -30,17 +30,15 @@ const helperModule = (function(){
 
         if (type == 'class'){
             element = document.getElementsByClassName(target);
-        } else {
-            element = document.getElementById(target);
-        }
-        
-        console.log(typeof element);
-        if(element.length == 1)
-            element.addEventListener('click', callback);
-        else
             for(let i = 0; i < element.length; i++){
                 element[i].addEventListener('click', callback);
             }
+        } else {
+            console.log('should have add');
+            console.log(target);
+            element = document.getElementById(target);
+            element.addEventListener('click', callback);
+        }   
     };
 
     return {

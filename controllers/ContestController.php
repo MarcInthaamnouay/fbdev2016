@@ -12,9 +12,9 @@ class ContestController {
 	}
 
 	/**
-    /* Récupération des données d'un concours
-    /* @var idContest L'identifiant de notre concours
-    /* @return tous les participants à un concours
+    * Rï¿½cupï¿½ration des donnï¿½es d'un concours
+    * @var idContest L'identifiant de notre concours
+    * @return tous les participants ï¿½ un concours
     */
 	public function getDataContest($idContest)
 	{
@@ -24,8 +24,8 @@ class ContestController {
 	}
 
 	/**
-    /* Récupération des données du concours en cours
-    /* @return Le concours en cours, false sinon
+    * Rï¿½cupï¿½ration des donnï¿½es du concours en cours
+    * @return Le concours en cours, false sinon
     */
 	public function getCurrentContest()
 	{

@@ -84,10 +84,15 @@ $app->post('/photos', function($request, $response, $args){
 $app->post('/upload/photo', function($request, $response, $args){
     $helper = new Helper();
     $userID = $helper->getID($request, 'userID');
-    $photoURL = $helper->getPhotoID($request, 'photoURL');
+    $photoURL = $helper->getID($request, 'photoURL');
+
+    $contest = new Contest();
+    $contestID = $contest->getCurrentContest()['id'];
     // Instance our controller with this parameters
-    $photoController = new PhotoController($userID);
-    $res = $photoController->savePhotoInDB($photoURL);
+    $userController = new UserController();
+    $res = $userController->addToContest(intval($userID), intval($contestID) ,$photoURL);
+
+    print_r($res);
 });
 
 $app->post('/token', function($request, $response, $args){

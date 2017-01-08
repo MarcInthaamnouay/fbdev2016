@@ -74,22 +74,5 @@ Class Photos{
             return $e->getMessage;
         }
     }
-
-    /**
-     *  SaveIntoDB
-     *  Insert a photo in the participants database
-     *  @param a string of the photo url selected by the user
-     *  @return a response from the database
-     */
-    public function saveIntoDB($photoURL){
-        $query = 'INSERT INTO participants (id_picture, id_user) VALUES (:id_picture, :id_user)';
-        $query->bindParam(':id_picture', $photoURL);
-        $query->bindParam(':id_user', $this->userID);
-
-        $con = new Db();
-        $res = $con -> query($query);
-
-        return $res;
-    }
 }
 
