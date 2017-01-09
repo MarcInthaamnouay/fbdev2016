@@ -42,9 +42,7 @@ class ContestController {
 		 $contestID = $this->getCurrentContest()['id'];
 		 $contestData = $this->getDataContest(intval($contestID));
 
-		 $dataArray = array($contestData);
-
-		 return $dataArray;
+		 return $contestData;
 	 }
 	
 }

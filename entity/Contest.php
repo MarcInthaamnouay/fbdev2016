@@ -101,15 +101,25 @@ class Contest extends Db {
         
     }
 
+    /**
+     *  Get Participations Of Contest
+     *          Get a list of contestants of a contest based on the idContest
+     *  @param an int idContest which represent the id of the addContest
+     *  @return an assoc array representing the images
+     *  @return an error message of type String if there's an error
+     */
     public function getParticipationsOfContest($idContest){
         $connection = $this -> connect();
         try{
-            $results = $connection -> query("SELECT * FROM participants where id_contest = ".$idContest);
-            $result = $results->fetch(PDO::FETCH_ASSOC);
+            $stmt = $connection -> prepare('SELECT * FROM participants WHERE id_contest = :id_contest');
+            $stmt->bindParam(':id_contest', $idContest, PDO::PARAM_INT);
+            $stmt->execute();
+            $stmt->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $stmt->fetchAll();
+            
             return $result;
         } catch(PDOException $e){
             return $e;
         }
-        
     }
 }
