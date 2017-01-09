@@ -1,8 +1,5 @@
 {% extends "layout.twig" %}
 {% block content %}
-
-
-
 	<div class="sidebar">
 		<h1 class="sidebar-title">Logo Berseck</h1>
 		<ul class="main-menu">
@@ -15,7 +12,6 @@
 			<p class="copyright">&copy; Berseck Team</p>
 		</div>
 	</div>
-
 	<div class="visuel-container">
 		<div class="main-slider">
 			<div class="slide">
@@ -50,10 +46,9 @@
 		</div>
 		<div class="slider-menu-container">
 			<div class="slider-menu">
-				<img class="visuel" src="http://i-cms.linternaute.com/image_cms/original/2377659-les-100-plus-beaux-paysages-de-france.jpg">
-				<img class="visuel" src="http://i-cms.linternaute.com/image_cms/original/2377659-les-100-plus-beaux-paysages-de-france.jpg">
-				<img class="visuel" src="http://i-cms.linternaute.com/image_cms/original/2377659-les-100-plus-beaux-paysages-de-france.jpg">
-				<img class="visuel" src="http://i-cms.linternaute.com/image_cms/original/2377659-les-100-plus-beaux-paysages-de-france.jpg">
+				{% for contestants in controller.getCurrentPhotos()%}
+					<img class="visuel" src="{{contestants.id_picture}}">
+				{% endfor %}
 			</div>
 		</div>
 	</div>

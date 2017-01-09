@@ -4,9 +4,9 @@
  */
 function statusChangeCallback(response) {
     if (response.status === 'connected') {
-    
+      return;
     } else if (response.status === 'not_authorized') {
-        checkIfLogin();
+        window.location.href = '/login';
     } else {
         checkIfLogin();
     }
@@ -27,10 +27,10 @@ function checkLoginState() {
  *          Check if the user is in the login page
  */
 function checkIfLogin(){
-    if(window.location.href.indexOf('login') != -1){
-        window.location.href = '/login';
-    } else {
+    if(/login/.test(window.location.href)){
         return;
+    } else {
+        window.location.href = '/login';
     }
 }
 

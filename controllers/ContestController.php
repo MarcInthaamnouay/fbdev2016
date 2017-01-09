@@ -12,7 +12,7 @@ class ContestController {
 	}
 
 	/**
-    * R�cup�ration des donn�es d'un concours
+    * Recuperation des donnees d'un concours
     * @var idContest L'identifiant de notre concours
     * @return tous les participants � un concours
     */
@@ -24,7 +24,7 @@ class ContestController {
 	}
 
 	/**
-    * R�cup�ration des donn�es du concours en cours
+    * Recuperation des donnees du concours en cours
     * @return Le concours en cours, false sinon
     */
 	public function getCurrentContest()
@@ -34,5 +34,18 @@ class ContestController {
 		return $result;
 	}
 
+	/**
+	 *	Get Current Photos
+	 *			Get the current photos of the contest
+	 *	@param idContest int
+	 */
+	 public function getCurrentPhotos(){
+		 $contestID = $this->getCurrentContest()['id'];
+		 $contestData = $this->getDataContest(intval($contestID));
+
+		 $dataArray = array($contestData);
+
+		 return $dataArray;
+	 }
 	
 }

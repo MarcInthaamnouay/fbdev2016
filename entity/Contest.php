@@ -72,11 +72,21 @@ class Contest extends Db {
 
     public function addPhotoToContest($idContest,$idUser,$idPhoto) {
         $connection = $this -> connect();
-        $req = $connection->prepare("INSERT INTO participants (id_picture, id_user, id_contest) VALUES (?, ?, ?)");
-        $req->bindParam(1, $idPhoto);
-        $req->bindParam(2, $idUser);
-        $req->bindParam(3, $idContest);
-        $res = $req->execute();
+        try{
+            var_dump($idPhoto);
+            var_dump($idUser);
+            var_dump($idContest);
+            $req = $connection->prepare("INSERT INTO participants (id_picture, id_user, id_contest) VALUES (?, ?, ?)");
+            $req->bindParam(1, $idPhoto);
+            $req->bindParam(2, $idUser);
+            $req->bindParam(3, $idContest);
+            $res = $req->execute();
+
+            return true;
+        } catch(PDOException $e){
+            return $e;
+        }
+
     }
 
     public function UpdatePhotoToContest($idContest,$idUser,$idPhoto) {
@@ -93,8 +103,13 @@ class Contest extends Db {
 
     public function getParticipationsOfContest($idContest){
         $connection = $this -> connect();
-        $results = $connection -> query("SELECT * FROM participants where id_contest = ".$idContest);
-        $result = $results->fetch();
-        return $result;
+        try{
+            $results = $connection -> query("SELECT * FROM participants where id_contest = ".$idContest);
+            $result = $results->fetch(PDO::FETCH_ASSOC);
+            return $result;
+        } catch(PDOException $e){
+            return $e;
+        }
+        
     }
 }

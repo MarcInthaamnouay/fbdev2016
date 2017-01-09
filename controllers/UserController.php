@@ -40,6 +40,7 @@ Class UserController{
     public function addToContest($idUser, $idContest, $idPhoto){
         if(empty($idUser) || empty($idContest) || !is_int($idUser) || empty($idPhoto) || !is_int($idContest)) return false;
         if(!$this->inContest($idUser,$idContest)){
+            var_dump("addd bebbe");
             $this->contest->addPhotoToContest($idContest,$idUser,$idPhoto);
         }
         else
