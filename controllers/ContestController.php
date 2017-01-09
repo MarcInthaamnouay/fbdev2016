@@ -12,20 +12,19 @@ class ContestController {
 	}
 
 	/**
-    * Rï¿½cupï¿½ration des donnï¿½es d'un concours
-    * @var idContest L'identifiant de notre concours
-    * @return tous les participants ï¿½ un concours
+    /* Récupération des données d'un concours
+    /* @var idContest L'identifiant de notre concours
+    /* @return tous les participants à un concours
     */
 	public function getDataContest($idContest)
 	{
-		if(empty($idContest) || !is_int($idContest)) return false;
 		$result = $this->contest->getParticipationsOfContest($idContest);
 		return $result;
 	}
 
 	/**
-    * Rï¿½cupï¿½ration des donnï¿½es du concours en cours
-    * @return Le concours en cours, false sinon
+    /* Récupération des données du concours en cours
+    /* @return Le concours en cours, false sinon
     */
 	public function getCurrentContest()
 	{
