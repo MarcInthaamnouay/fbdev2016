@@ -5,5 +5,6 @@
 				viewportFactor : 0.2
 			} );
 		</script>
+		<h1>toto</h1>
 	</body>
 </html>
