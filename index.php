@@ -115,6 +115,21 @@ $app->post('/token', function($request, $response, $args){
     }
 });
 
+$app->post('/user/like', function($request, $response, $args){
+    // Create an instance of the ContestController
+    $contestController = new ContestController();
+    $res = $contestController->setLikes($request);
+
+    if($res && is_bool($res)){
+        return $response->withJson(array('status' => 'success'), 200);
+    } else {
+        if(is_bool($res))
+            return $response->withJson(array('status' => 'error'), 500);
+        else
+            return $response->withJson(array('status' => 'error '.$res), 200);
+    }
+});
+
 $app->get('/login', function($request, $response, $args){
     return $this->view->render($response, 'login.twig');
 });

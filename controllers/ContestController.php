@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__.'/../entity/Contest.php';
+require_once __DIR__.'/../service/helper.php';
 
 class ContestController {
 
@@ -9,6 +10,7 @@ class ContestController {
 	function __construct()
 	{
 		$this->contest = new Contest();
+		$this->helper = new Helper();
 	}
 
 	/**
@@ -43,6 +45,17 @@ class ContestController {
 		 $contestData = $this->getDataContest(intval($contestID));
 
 		 return $contestData;
+	 }
+
+	 public function setLikes($request){
+		 $id_participant = intval($this->helper->getID($request, 'id_contestant'));
+		 $id_user = intval($this->helper->getID($request, 'id_user'));
+		 $date = $this->helper->getID($request, 'date_vote');
+
+		 // Call our contest entity to add a vote
+		 $res = $this->contest->setVote($id_participant, $id_user, $date);
+
+		 return $res;
 	 }
 	
 }

@@ -1,6 +1,7 @@
 /**
  * User Controler
  *      Controller of the user
+ * @public
  */
 const userController = (function(){
     let helper = helperModule;
@@ -17,6 +18,7 @@ const userController = (function(){
     /**
      *  Send Photos to the backend
      *              Send photo to the backend and save it's url
+     *  @private
      */
     const sendPhotos = function(){  
         console.log('click');
@@ -95,7 +97,6 @@ const userController = (function(){
             
         })
     };
-
     // Add a listener to the DOM
-    document.addEventListener('DOMContentLoaded', displayAlbum);  
+    document.addEventListener('DOMContentLoaded', displayAlbum);
 })(document, window);

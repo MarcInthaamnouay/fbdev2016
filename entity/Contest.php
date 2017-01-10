@@ -118,7 +118,78 @@ class Contest extends Db {
             $result = $stmt->fetchAll();
             
             return $result;
+        } catch (PDOException $e){
+            return $e;
+        }
+    }
+
+    /**
+     *  Check Vote
+     *          Check vote check if there's the same vote in the Database 
+     *          based on the given parameters
+     *  @param id_participant an int representing the participant
+     *  @param id_user an int representing the id of the user_error
+     *  @param date a String date representing the date of the vote (today)
+     *  @param contest id is an int representing the id of the contest at this time
+     *  @return boolean
+     */
+    private function checkVote($id_participant, $id_user, $date, $contestID){
+        $connection = $this -> connect();
+
+        try{
+            $stmt = $connection -> prepare('SELECT * FROM vote WHERE id_participant = :id_participant AND id_user = :id_user AND date_vote = :date_vote AND id_contest = :id_contest');
+            
+            $stmt->bindParam(':id_user', $id_user, PDO::PARAM_INT);
+            $stmt->bindParam(':id_participant', $id_participant, PDO::PARAM_INT);
+            $stmt->bindParam(':date_vote', $date, PDO::PARAM_STR);
+            $stmt->bindParam(':id_contest', $contestID ,PDO::PARAM_INT);
+
+            $stmt->execute();
+            $res = $stmt->fetchAll();
+
+            if(count($res) > 0){
+                return false;
+            } else {
+                return true;
+            }
         } catch(PDOException $e){
+            return $e;
+        }
+    }
+
+    /**
+     *  Set Vote 
+     *          Set vote set a vote based on the params
+     *  @param id_participant an int representing the participant
+     *  @param id_user an int representing the id of the user_error
+     *  @param date a String date representing the date of the vote (today)
+     *  @return boolean
+     */
+    public function setVote($id_participant, $id_user, $date){
+        $connection = $this -> connect();
+        // Get our contest ID
+        $contest = $this -> getCurrentContest();
+        $contestID = $contest['id'];
+
+        $isPresent = $this->checkVote($id_participant, $id_user, $date, $contestID);
+
+        if(!$isPresent){
+            return 'vote is already present';
+        }
+
+        try{
+            $stmt = $connection -> prepare('INSERT INTO vote (id_user, id_participant, date_vote, id_contest) VALUES (:id_user, :id_participant, :date_vote, :id_contest)');
+
+            $stmt->bindParam(':id_user', $id_user, PDO::PARAM_INT);
+            $stmt->bindParam(':id_participant', $id_participant, PDO::PARAM_INT);
+            $stmt->bindParam(':date_vote', $date, PDO::PARAM_STR);
+            $stmt->bindParam(':id_contest', $contestID ,PDO::PARAM_INT);
+
+            $res = $stmt->execute();
+
+            return $res;
+        } catch (PDOException $e){
+            //var_dump('ma');
             return $e;
         }
     }

@@ -47,7 +47,7 @@
 		<div class="slider-menu-container">
 			<div class="slider-menu">
 				{% for contestants in controller.getCurrentPhotos()%}
-					<img class="visuel" src="{{contestants.id_picture}}">
+					<img class="visuel visuel-generate" src="{{contestants.id_picture}}" data-id-contestant="{{contestants.id_user}}"/>
 				{% endfor %}
 			</div>
 		</div>
@@ -247,4 +247,9 @@ Et olim licet otiosae sint tribus pacataeque centuriae et nulla suffragiorum cer
         </div>
       </div>
     </div>
+{% endblock %}
+{% block javascript %}
+    <script src="../assets/script/helper/helper.js"></script>
+    <script src="../assets/script/service/request.js"></script>
+    <script src="../assets/script/controller/homeController.js"></script>
 {% endblock %}

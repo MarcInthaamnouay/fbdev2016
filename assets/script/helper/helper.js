@@ -41,8 +41,22 @@ const helperModule = (function(){
         }   
     };
 
+    /**
+     *  Correct DB Date
+     *          Correct Database Month
+     *  Add a 0 in the day or month if it's under 10
+     */
+    const correctDBDate = function(date = 1){
+        if (date < 10){
+            return '0'+date;
+        } else {
+            return date;
+        }
+    }
+
     return {
         token : getToken,
-        addListener : addEvent
+        addListener : addEvent,
+        fixDate : correctDBDate
     }
 }.bind({}))();
