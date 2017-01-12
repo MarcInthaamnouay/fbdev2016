@@ -133,15 +133,14 @@ class Contest extends Db {
      *  @param contest id is an int representing the id of the contest at this time
      *  @return boolean
      */
-    private function checkVote($id_participant, $id_user, $date, $contestID){
+    private function checkVote($id_participant, $id_user, $contestID){
         $connection = $this -> connect();
 
         try{
-            $stmt = $connection -> prepare('SELECT * FROM vote WHERE id_participant = :id_participant AND id_user = :id_user AND date_vote = :date_vote AND id_contest = :id_contest');
+            $stmt = $connection -> prepare('SELECT * FROM vote WHERE id_participant = :id_participant AND id_user = :id_user AND id_contest = :id_contest');
             
             $stmt->bindParam(':id_user', $id_user, PDO::PARAM_INT);
             $stmt->bindParam(':id_participant', $id_participant, PDO::PARAM_INT);
-            $stmt->bindParam(':date_vote', $date, PDO::PARAM_STR);
             $stmt->bindParam(':id_contest', $contestID ,PDO::PARAM_INT);
 
             $stmt->execute();
@@ -171,7 +170,7 @@ class Contest extends Db {
         $contest = $this -> getCurrentContest();
         $contestID = $contest['id'];
 
-        $isPresent = $this->checkVote($id_participant, $id_user, $date, $contestID);
+        $isPresent = $this->checkVote($id_participant, $id_user, $contestID);
 
         if(!$isPresent){
             return 'vote is already present';
@@ -187,9 +186,54 @@ class Contest extends Db {
 
             $res = $stmt->execute();
 
+            // Update the participants counter
+            $this->updateCounterVote($id_participant, $contestID);
+
             return $res;
         } catch (PDOException $e){
             //var_dump('ma');
+            return $e;
+        }
+    }
+
+    /**
+     *  Update Counter Vote
+     *          Update the vote counter of a participant
+     *  @param participant_id 
+     *  @param contestID
+     */
+    private function updateCounterVote($id_participant, $contestID){
+        $connection = $this -> connect();
+        $counter = 0;
+        try{
+            // Prepare the request 
+            $stmt = $connection -> prepare('SELECT COUNT(*) AS NumberOfVote FROM vote WHERE id_participant = :id_participant AND id_contest = :id_contest');
+            // Bind the param
+            $stmt->bindParam(':id_participant', $id_participant, PDO::PARAM_INT);
+            $stmt->bindParam(':id_contest', $contestID, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $res = $stmt->fetchAll();
+
+            foreach($res as $value){
+                $counter = $value['NumberOfVote'];
+            }
+            
+            // Now update the participant database
+
+            try{
+                $updateStmt = $connection -> prepare("UPDATE participants SET vote = :vote_number WHERE id_user = :id_participant");
+                // bind the param
+                $updateStmt->bindParam(':id_participant', $id_participant, PDO::PARAM_INT);
+                $updateStmt->bindParam(':vote_number', $counter, PDO::PARAM_INT);
+                $updateRes = $updateStmt->execute();
+
+                if(!$res)
+                    return 'error';
+            } catch(PDOException $e){
+                return $e;
+            }
+        } catch (PDOException $e){
             return $e;
         }
     }

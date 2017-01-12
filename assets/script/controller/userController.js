@@ -80,11 +80,19 @@ const userController = (function(){
         req.prepare().execute()
         .then(success => {
             for(let value of success){
-                let tmpl = `<a href="#" data-id="${value.id}" class="albums-link">${value.name}</a>`;
+                let tmpl = `<div class="col-xs-4" style="text-align:center;">
+                                <h1 class="title-big-tim" style="margin-top:50px">${value.name}</h1>
+                                <br>
+                                <a>
+                                    <button type="button" class="btn btn-default btn-lg  title-tim album-tim" style="color:#337ab7;border-color: #337ab7;width: 100%;margin-top:55px;margin-bottom:20px;" data-id=${value.id}>
+                                    <i class="icon-paper-plane"></i> Choisir
+                                    </button>
+                                </a>
+                            </div>`;
                 el.insertAdjacentHTML('beforeend', tmpl);
             }
 
-            helper.addListener('albums-link', displayPhotos);
+            helper.addListener('album-tim', displayPhotos);
         })
         .catch(err => {
             console.log(err);
