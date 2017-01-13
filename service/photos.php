@@ -15,7 +15,7 @@ Class Photos{
     function __construct($userID){
         $this->userID = $userID;
         $this->helper = new Helper();
-        $this->token = $this->helper->getDBToken($this->userID);
+        $this->token = Helper::retrieveToken($this->userID);
     }
 
     /**
@@ -65,7 +65,7 @@ Class Photos{
         $request = new Facebook\FacebookRequest($fbApp, $this->token , 'GET', '/'.$albumID.'/photos/uploaded?fields=source,images,name');
 
         try{
-            $fb = $this->helper->getFBService();
+            $fb = Helper::getFBService();
             $response = $fb->getClient()->sendRequest($request);
             $resBody = $response->getDecodedBody();
 

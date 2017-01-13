@@ -1,13 +1,16 @@
 <?php
 
 require_once __DIR__.'/../service/photos.php';
+require_once __DIR__.'/../service/helper.php';
 
-Class PhotoController{
+class PhotoController{
     private $token;
     private $photo;
+    private $userID;
 
-    function __construct($userID){
-        $this->photo = new Photos($userID);
+    function __construct($request){
+        $this->userID = Helper::getID($request, 'userID');
+        $this->photo = new Photos($this->userID);
     }
 
     /**
@@ -33,7 +36,8 @@ Class PhotoController{
      *  @return a list of pictures
      *  @Route("/photos")
      */
-    public function getPictures($albumID){
+    public function getPictures($request){
+        $albumID = Helper::getID($request,'albumID');
         $pictures = $this->photo->getListOfPhotosFromAlbum($albumID);
         
         return $pictures;
