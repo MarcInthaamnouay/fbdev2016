@@ -25,14 +25,14 @@ Class Photos{
      *  @return a String if an error happened
      */
     function getAlbums(){
-        $fb = $this->helper->getFBService();
+        $fb = Helper::getFBService();
         $fb->setDefaultAccessToken($this->token);
         $album_array = array();
         try{
             if(isset($this->userID)){
                 $fbApp = $this->helper->instanceFBApp();
                 $request = new Facebook\FacebookRequest($fbApp, $this->token, 'GET', '/'.$this->userID.'/albums');
-            try{
+                
                 $response = $fb->getClient()->sendRequest($request);
                 $resBody = $response->getDecodedBody();
 
@@ -42,9 +42,6 @@ Class Photos{
                         array_push($album_array, $v);
                     }
                 }
-            } catch(Facebook\Exceptions\FacebookResponseException $e){
-                return $e->getMessage();
-            }
             }
         } catch(Facebook\Exceptions\FacebookResponseException $e){
             return $e->getMessage();
@@ -73,6 +70,29 @@ Class Photos{
         } catch(Facebook\Exceptions\FacebookResponseException $e){
             return $e->getMessage;
         }
+    }
+
+    public function bulkRequest($params){
+        $fbApp = $this->helper->instanceFBApp();
+        $request = new Facebook\FacebookRequest($fbApp, $this->token , 'POST', '?batch='.urlencode(json_encode($params)));
+        $batchData = array();
+
+        try{
+            $fb = Helper::getFBService();
+            $response = $fb->getClient()->sendRequest($request);
+            $resBody = $response->getDecodedBody();
+
+            foreach($resBody as $key => $value){
+                //array_push($batchData, array())
+                $res = json_decode($value['body']);
+                array_push($batchData,$res->data[0]);
+            }
+
+            return $batchData;
+        } catch (Facebook\Exceptions\FacebookResponseException $e){
+            return $e->getMessage();
+        }
+            
     }
 }
 

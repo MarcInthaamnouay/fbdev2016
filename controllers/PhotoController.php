@@ -53,4 +53,30 @@ class PhotoController{
 
         var_dump($insertResult);
     }
+
+    /**
+     *  Get Cover Albums 
+     *  @param request 
+     *  /!\ As the following request /{album-id}/picture return an empty array
+     *  for a mysterious reason we're using the getListPhotoFromAlbum api 
+     *  @return 
+     */
+    public function getAlbumCoverPhoto($request){
+        $albumsID = $request->getParsedBody()['albums'];
+        $listOfCoverPhoto = array();
+        $batch = array();
+
+        // Make bulk request
+
+        foreach($albumsID as $id){
+            if($id != NULL){
+                $patternBulk = $id."/photos/uploaded?fields=source";
+                array_push($batch, array("method" => "GET", "relative_url" => $patternBulk));
+            }
+        }
+
+        $res = $this->photo->bulkRequest($batch);
+
+        return $res;
+    }
 }

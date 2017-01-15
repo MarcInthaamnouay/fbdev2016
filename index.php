@@ -44,12 +44,12 @@ $app->get('/', function($request, $response, $args){
     $homeController = new ContestController();
 
     $contestController = new ContestController();
-    return $this->view->render($response, 'example.twig', [
+    return $this->view->render($response, 'index.twig', [
         'controller' => $contestController
     ]);
 });
 
-$app->get('/upload/{userID}', function($request, $response, $args){
+$app->get('/upload', function($request, $response, $args){
      $userController = new UserController();
     return $this->view->render($response, 'upload.twig', [
         'controller' => $userController,
@@ -63,6 +63,16 @@ $app->post('/albums', function($request, $response, $args){
     if(count($albums) > 0){
         return json_encode($albums);
     }
+});
+
+$app->post('/albums/photocover', function($request, $response, $args){
+    $photoController = new PhotoController($request);
+    $res = $photoController->getAlbumCoverPhoto($request);
+
+    if(!is_array($res))
+        return $response->withJson(array('status' => 'error '.$res));
+    
+    return $response->withJson($res);
 });
 
 $app->post('/photos', function($request, $response, $args){
