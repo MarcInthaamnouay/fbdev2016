@@ -21,7 +21,7 @@ const userController = (function(){
      */
     const sendPhotos = function(){  
         console.log('click');
-        let url = this.previousSibling.src;
+        let url = this.src;
         const req = new RequestBackend('/upload/photo', 'POST', {userID : haveToken.userID, photoURL : url});
         req.prepare().execute()
         .then(success => {
@@ -31,19 +31,6 @@ const userController = (function(){
             console.log(err);
         });
     }
-
-    /**
-     *  Save Photos
-     *              Save a photo of the user
-     *  @private
-     */
-    const savePhoto = function(){
-        // remove the element from other element..
-        this.classList.add('select');
-        const tmpl = `<button id='add'>add</button>`;
-        this.parentElement.insertAdjacentHTML('beforeend', tmpl);
-        helper.addListener('add', sendPhotos, 'id');
-    };
 
     /**
      *  Display Photos
@@ -70,7 +57,7 @@ const userController = (function(){
                  grid.insertAdjacentHTML('beforeend', tmpl);
             }
         })
-        .then(helper.addListener.bind(null, 'userImg', savePhoto))
+        .then(helper.addListener.bind(null, 'userImg', sendPhotos))
         .catch(err => {
             console.log(err);
         });
@@ -126,11 +113,9 @@ const userController = (function(){
         const req = new RequestBackend('/albums/photocover', 'POST', {userID : haveToken.userID, albums : albumsIDs});
         req.prepare().execute()
             .then(success => {
-                console.log(success);
                 let elements = document.getElementsByClassName('thumb-img');
                 for(let i = 0; i < elements.length; i++){
                     elements[i].src = success[i].source;
-                    console.log(elements[i]);
                 }
             })
             .catch(err => {

@@ -39,16 +39,20 @@ Class UserController{
      * @return Boolean, vrai dans les cas
      */
     public function addToContest($request, $idContest){
+        $idUser = intval(Helper::getID($request, 'userID'));
+        $idPhoto = Helper::getID($request, 'photoURL');
 
-        $userID = intval(Helper::getID($request, 'userID'));
-        $idContest = intval(Helper::getID($request, 'photoURL'));
-
-        if(empty($idUser) || empty($idContest) || !is_int($idUser) || empty($idPhoto) || !is_int($idContest)) return false;
-        if(!$this->inContest($idUser,$idContest)){
-            $this->contest->addPhotoToContest($idContest,$idUser,$idPhoto);
+        if(empty($idUser) || empty($idContest) || !is_int($idUser) || empty($idPhoto) || !is_int($idContest)){
+            return "invalid params";
         }
-        else
-            $this->contest->updatePhotoToContest($idContest,$idUser,$idPhoto);
-        return true;
+            
+        if(!$this->inContest($idUser,$idContest)){
+            $res = $this->contest->addPhotoToContest($idContest,$idUser,$idPhoto);
+            return $res;
+        }
+
+        $resUpdate = $this->contest->updatePhotoToContest($idContest,$idUser,$idPhoto);
+
+        return $resUpdate;
     }
 }

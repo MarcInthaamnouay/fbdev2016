@@ -73,9 +73,6 @@ class Contest extends Db {
     public function addPhotoToContest($idContest,$idUser,$idPhoto) {
         $connection = $this -> connect();
         try{
-            var_dump($idPhoto);
-            var_dump($idUser);
-            var_dump($idContest);
             $req = $connection->prepare("INSERT INTO participants (id_picture, id_user, id_contest) VALUES (?, ?, ?)");
             $req->bindParam(1, $idPhoto);
             $req->bindParam(2, $idUser);
