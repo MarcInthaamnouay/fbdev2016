@@ -73,9 +73,6 @@ class Contest extends Db {
     public function addPhotoToContest($idContest,$idUser,$idPhoto) {
         $connection = $this -> connect();
         try{
-            var_dump($idPhoto);
-            var_dump($idUser);
-            var_dump($idContest);
             $req = $connection->prepare("INSERT INTO participants (id_picture, id_user, id_contest) VALUES (?, ?, ?)");
             $req->bindParam(1, $idPhoto);
             $req->bindParam(2, $idUser);
@@ -218,21 +215,21 @@ class Contest extends Db {
             foreach($res as $value){
                 $counter = $value['NumberOfVote'];
             }
+
+            if(!$res)
+                return 'error';
             
             // Now update the participant database
 
-            try{
-                $updateStmt = $connection -> prepare("UPDATE participants SET vote = :vote_number WHERE id_user = :id_participant");
-                // bind the param
-                $updateStmt->bindParam(':id_participant', $id_participant, PDO::PARAM_INT);
-                $updateStmt->bindParam(':vote_number', $counter, PDO::PARAM_INT);
-                $updateRes = $updateStmt->execute();
+            $updateStmt = $connection -> prepare("UPDATE participants SET vote = :vote_number WHERE id_user = :id_participant");
+            // bind the param
+            $updateStmt->bindParam(':id_participant', $id_participant, PDO::PARAM_INT);
+            $updateStmt->bindParam(':vote_number', $counter, PDO::PARAM_INT);
+            $updateRes = $updateStmt->execute();
 
-                if(!$res)
-                    return 'error';
-            } catch(PDOException $e){
-                return $e;
-            }
+            if(!$updateRes)
+                return 'error';
+
         } catch (PDOException $e){
             return $e;
         }

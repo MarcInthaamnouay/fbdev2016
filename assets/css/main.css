@@ -1,0 +1,148 @@
+/* ### FONTS ### */
+@font-face {
+  font-family: Montserrat-Regular;
+  src: url(../fonts/Montserrat-Regular.ttf);
+}
+@font-face {
+  font-family: Montserrat-Bold;
+  src: url(../fonts/Montserrat-Bold.ttf);
+}
+@font-face {
+  font-family: Open-Sans-Regular;
+  src: url(../fonts/OpenSans-Regular.ttf);
+}
+
+body {
+    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
+    font-family: Open-Sans-Regular;
+    height:100%;max-width: 810px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+a{
+  text-decoration: none !important;
+}
+
+.navbar-inverse {
+  background-color: #337ab7;
+  border-color: #337ab7;
+}
+.navbar-inverse .navbar-nav>li>a {
+  color: white;
+  font-family: Montserrat-Regular;
+}
+.navbar-inverse .navbar-brand {
+    color: white;
+    font-family: Montserrat-Bold;
+}
+.nav>li>a {
+  font-family: Montserrat-Regular;
+}
+
+.content-resizer{
+  width:90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.modal-header{
+  font-family: Montserrat-Bold;
+}
+
+
+/* ### index ### */
+.panel-default>.panel-heading {
+    background-color: #337ab7;
+    border-color: #337ab7;
+    font-family: Montserrat-Regular;
+}
+.panel-title>a{
+  color:white;
+}
+
+.icon-calendar, .icon-award{
+  font-size:20px;
+  margin-top: 10px;
+}
+.icon-thumbs-up{
+  color: #337ab7
+}
+
+.caption{
+  position:relative;
+  height: 75px;
+}
+
+.thumbnail img {
+    width: 100%;
+}
+.thumbnail {
+    padding: 0;
+}
+.thumbnail .caption-full {
+    padding: 9px;
+    color: #333;
+}
+
+.buttons-group{
+  position:absolute;
+  top:50%;
+  left:0;
+  right:0;
+  transform: translateY(-50%);
+}
+.arrow-button{
+  height:50px;
+  width:50px;
+  border-radius:25px;
+}
+.like-button{
+  height:50px;
+  width:50px;
+  border-radius:25px;
+  border-color: #337ab7;
+}
+.share-button{
+  background-color: #337ab7;
+  color: white;
+  border-color: #337ab7;
+  font-family: Montserrat-Regular;
+}
+.participer-button{
+  color:#337ab7;
+  border-color: #337ab7;
+
+}
+
+.hidden{
+  display: none;
+}
+
+/* ### Participer ### */
+.album-name{
+  margin-top:10px;
+  color:#337ab7;
+  font-family: Montserrat-Regular;
+}
+
+/* ### Validation ### */
+.validation-title{
+  margin-top:20px;
+  font-family: Montserrat-Bold;
+}
+.validation-img{
+  width:250px;
+}
+.validation-text{
+  width:450px;
+  margin-left:auto;
+  margin-right:auto;
+}
+.validation-button{
+  color:#337ab7;
+  border-color: #337ab7;
+  margin-top:50px;
+  margin-bottom:20px;
+  width:250px;
+}

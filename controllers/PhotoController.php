@@ -1,13 +1,16 @@
 <?php
 
 require_once __DIR__.'/../service/photos.php';
+require_once __DIR__.'/../service/helper.php';
 
-Class PhotoController{
+class PhotoController{
     private $token;
     private $photo;
+    private $userID;
 
-    function __construct($userID){
-        $this->photo = new Photos($userID);
+    function __construct($request){
+        $this->userID = Helper::getID($request, 'userID');
+        $this->photo = new Photos($this->userID);
     }
 
     /**
@@ -33,7 +36,8 @@ Class PhotoController{
      *  @return a list of pictures
      *  @Route("/photos")
      */
-    public function getPictures($albumID){
+    public function getPictures($request){
+        $albumID = Helper::getID($request,'albumID');
         $pictures = $this->photo->getListOfPhotosFromAlbum($albumID);
         
         return $pictures;
@@ -48,5 +52,31 @@ Class PhotoController{
         $insertResult = $this->photo->saveIntoDb($photoURL);
 
         var_dump($insertResult);
+    }
+
+    /**
+     *  Get Cover Albums 
+     *  @param request 
+     *  /!\ As the following request /{album-id}/picture return an empty array
+     *  for a mysterious reason we're using the getListPhotoFromAlbum api 
+     *  @return 
+     */
+    public function getAlbumCoverPhoto($request){
+        $albumsID = $request->getParsedBody()['albums'];
+        $listOfCoverPhoto = array();
+        $batch = array();
+
+        // Make bulk request
+
+        foreach($albumsID as $id){
+            if($id != NULL){
+                $patternBulk = $id."/photos/uploaded?fields=source";
+                array_push($batch, array("method" => "GET", "relative_url" => $patternBulk));
+            }
+        }
+
+        $res = $this->photo->bulkRequest($batch);
+
+        return $res;
     }
 }

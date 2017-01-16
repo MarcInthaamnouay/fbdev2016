@@ -10,7 +10,6 @@ class ContestController {
 	function __construct()
 	{
 		$this->contest = new Contest();
-		$this->helper = new Helper();
 	}
 
 	/**
@@ -48,14 +47,13 @@ class ContestController {
 	 }
 
 	 public function setLikes($request){
-		 $id_participant = intval($this->helper->getID($request, 'id_contestant'));
-		 $id_user = intval($this->helper->getID($request, 'id_user'));
-		 $date = $this->helper->getID($request, 'date_vote');
+		 $id_participant = intval(Helper::getID($request, 'id_contestant'));
+		 $id_user = intval(Helper::getID($request, 'id_user'));
+		 $date = Helper::getID($request, 'date_vote');
 
 		 // Call our contest entity to add a vote
 		 $res = $this->contest->setVote($id_participant, $id_user, $date);
 
 		 return $res;
 	 }
-	
 }

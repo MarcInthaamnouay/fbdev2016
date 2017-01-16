@@ -24,7 +24,7 @@ const loginController = (function(){
                 newRequest.prepare().execute().then(success => {
                     console.log(authObj.userID);
                     localStorage.setItem("facebook_oauth_token", JSON.stringify(authObj));
-                    window.location.href = `/upload/${authObj.userID}`;
+                    window.location.href = `/upload`;
                 })  
                 .catch(err => { 
                     console.log(err);

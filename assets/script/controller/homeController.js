@@ -18,8 +18,10 @@ const homeController = (function(){
      *  @param {String} photoID
      */
     const likePhoto = function(photoID){
+        const attr = domComponent('active', 'class');
+
         const data = {
-            id_contestant : this.getAttribute('data-id-contestant'),
+            id_contestant : attr.getAttr('data-id-contestant', 0),
             id_user : helper.token().userID,
             date_vote : `${date.getFullYear()}-${month}-${day}`
         };
@@ -41,7 +43,7 @@ const homeController = (function(){
      *  @public
      */
     const listenPhoto = function(){
-        helper.addListener('visuel-generate', likePhoto)
+        helper.addListener('like', likePhoto, 'id');
     }
 
     // Listen for the dom ready then add our listener 

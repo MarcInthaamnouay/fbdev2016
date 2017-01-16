@@ -9,7 +9,7 @@ Class Helper{
      *          Return an instance of the Facebook sdk
      *  @return fb instance of facebook sdk
      */
-    function getFBService(){
+    public static function getFBService(){
         $fb = new Facebook\Facebook([
             'app_id' => '1418106458217541',
             'app_secret' => '951fc8f75cad3716a15efd1f4f053647',
@@ -36,13 +36,13 @@ Class Helper{
     }
 
     /**
-     *  GetID
+     *  Get ID
      *          Return the user id
      *  @param request HTTP Request
      *  @param paramName string, name of the parameter 
      *  @return the parameter 
      */
-    function getID($request, $paramName){
+    public static function getID($request, $paramName){
         $data = $request->getParsedBody();
         $id = filter_var($data[$paramName]);
 
@@ -61,14 +61,14 @@ Class Helper{
     }
 
     /**
-     *  Get DB Token 
+     *  Retrieve Token
      *              return the token based on the userID
      *  @param userID string 
      *  @return token string
      *  @return error message if PDOException
      */
-    function getDBToken($userID){
-        $db = new Db();
+    public static function retrieveToken($userID){
+         $db = new Db();
         try{
             $con = $db->connect();
             $results = $con->query("SELECT * FROM user_trace WHERE id_user = ".$userID);
