@@ -137,8 +137,14 @@ $app->get('/login', function($request, $response, $args){
     return $this->view->render($response, 'login.twig');
 });
 
+// @TODO make every admin request to POST
 $app->post('/admin/login', function($request, $response, $args){
     $isAdmin = AdminController::checkIfAdmin($request);
+
+    if ($isAdmin)
+        return $response->withJson(array('status' => 'success'));
+    else
+        return $response->withJson(array('status' => 'error'));
 });
 
 $app->get('/admin/config', function($request, $response, $args){

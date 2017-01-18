@@ -61,11 +61,13 @@ class AdminController {
 	/**
 	 *	Check If Admin
 	 *			Check if the user is an administrator
+	 *	@param HTTP Request request
+	 *	@return res
 	 */
 	public static function checkIfAdmin($request){
 		// Get the admin ID 
 		$adminID = Helper::getID($request, 'userID');
-		$admin = new Admin($adminID);
+		$admin = new Admin();
 		// Check if the user is an admin or not...
 		$fbApp = Helper::getFBService();
 		// Save the token
@@ -74,7 +76,9 @@ class AdminController {
 		$fbApp->setDefaultAccessToken($token);
  
 	   try{
-	      
+	      $res = $admin->isAdmin($adminID);
+		  
+		  return $res;
 	    } catch (Facebook\Exceptions\FacebookResponseException $e){
 	      var_dump($e->getMessage());
 	      return false;
