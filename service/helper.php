@@ -54,7 +54,7 @@ Class Helper{
      *          Return an instance of the FB Appliations
      *  @return instance of Facebook application
      */
-    function instanceFBApp(){
+    public static function instanceFBApp(){
         $fbApp = new Facebook\FacebookApp('1418106458217541', '951fc8f75cad3716a15efd1f4f053647');
 
         return $fbApp;

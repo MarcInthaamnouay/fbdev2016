@@ -30,7 +30,7 @@ Class Photos{
         $album_array = array();
         try{
             if(isset($this->userID)){
-                $fbApp = $this->helper->instanceFBApp();
+                $fbApp = Helper::instanceFBApp();
                 $request = new Facebook\FacebookRequest($fbApp, $this->token, 'GET', '/'.$this->userID.'/albums');
                 
                 $response = $fb->getClient()->sendRequest($request);
@@ -58,7 +58,7 @@ Class Photos{
      *  @param a int representing the ID of an album
      */
     public function getListOfPhotosFromAlbum($albumID){
-        $fbApp = $this->helper->instanceFBApp();
+        $fbApp = Helper::nstanceFBApp();
         $request = new Facebook\FacebookRequest($fbApp, $this->token , 'GET', '/'.$albumID.'/photos/uploaded?fields=source,images,name');
 
         try{
@@ -73,7 +73,7 @@ Class Photos{
     }
 
     public function bulkRequest($params){
-        $fbApp = $this->helper->instanceFBApp();
+        $fbApp = Helper::instanceFBApp();
         $request = new Facebook\FacebookRequest($fbApp, $this->token , 'POST', '?batch='.urlencode(json_encode($params)));
         $batchData = array();
 

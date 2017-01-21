@@ -64,9 +64,13 @@ class AdminController {
 	 *	@param HTTP Request request
 	 *	@return res
 	 */
-	public static function checkIfAdmin($request){
+	public static function checkIfAdmin($request, $user_id){
 		// Get the admin ID 
-		$adminID = Helper::getID($request, 'userID');
+		if($request)
+			$adminID = Helper::getID($request, 'userID');
+		else 
+			$adminID = $user_id;
+
 		$admin = new Admin();
 		// Check if the user is an admin or not...
 		$fbApp = Helper::getFBService();
@@ -85,5 +89,41 @@ class AdminController {
 	    } catch(Facebook\Exceptions\FacebookResponseException $e){
 	      var_dump($e->getMessage());
 	    }
+	}
+
+	/**
+	 *	Check Token Validity
+	 *			Check the token validity
+	 *	
+	 */
+	public static function checkTokenValidity($userID){
+		// get the token
+		if(!$userID)
+			return;
+
+		$token = Helper::retrieveToken($userID);
+
+		if(!$token)
+			return;
+
+		$fb = Helper::getFBService();
+		$fbApp = Helper::instanceFBApp();
+		$fb->setDefaultAccessToken($token);
+
+		$fbRequest = new Facebook\FacebookRequest($fbApp, $token , 'GET', 'me?fields=id,name');
+
+		try {
+			$res = $fb->getClient()->sendRequest($fbRequest);
+			$resBody = $res->getDecodedBody();
+
+			return true;
+	} catch (Facebook\Exceptions\FacebookResponseException $e){
+			// We imply that the issue is due to the access token
+			return false;
+		}
+	}
+
+	public function changeTheme(){
+		
 	}
 }

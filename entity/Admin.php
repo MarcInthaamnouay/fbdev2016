@@ -19,7 +19,7 @@ class Admin extends Db{
      */
     public function isAdmin($adminID){
             $fb = Helper::getFBService();
-            $fbApp = $this->helper->instanceFBApp();
+            $fbApp = Helper::instanceFBApp();
             $getRoles = new Facebook\FacebookRequest($fbApp, '1418106458217541|951fc8f75cad3716a15efd1f4f053647', 'GET', '/app/roles');
         try{
             $response = $fb->getClient()->sendRequest($getRoles);
