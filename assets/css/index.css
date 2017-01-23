@@ -1,9 +1,3 @@
-/*!
- * Start Bootstrap - Shop Homepage (http://startbootstrap.com/)
- * Copyright 2013-2016 Start Bootstrap
- * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
- */
-
 @font-face {
   font-family: Montserrat-Regular;
   src: url(../fonts/Montserrat-Regular.ttf);
@@ -16,48 +10,77 @@
   font-family: Open-Sans-Regular;
   src: url(../fonts/OpenSans-Regular.ttf);
 }
-@font-face {
-  font-family: Open-Sans-Light;
-  src: url(../fonts/OpenSans-Light.ttf);
-}
-@font-face {
-  font-family: Open-Sans-Bold;
-  src: url(../fonts/OpenSans-Bold.ttf);
+
+body{
+  font-family: Open-Sans-Regular;
 }
 
-html{
-  height: 100%;
-}
-
-body {
-    padding-top: 70px; /* Required padding for .navbar-fixed-top. Remove if using .navbar-static-top. Change if height of navigation changes. */
-    font-family: Open-Sans-Regular;
-    height:100%;
-}
-
-.title-big-tim{
-  font-family: Montserrat-Bold;
-}
-
-.title-tim{
+/* ### NAVBAR ### */
+.navbar-surcharge{
+  margin-bottom:0px;
+  background-color: #f8f8f8;
+  border-color: #e7e7e7;
   font-family: Montserrat-Regular;
 }
-
-
-.thumbnail img {
-    width: 100%;
+.navbar-nav{
+  padding-top: 1px;
+}
+.navbar-inverse .navbar-brand {
+  color:#333333;
+}
+.navbar-inverse .navbar-nav>li>a {
+    color:#333333;
+}
+.navbar-inverse .navbar-nav>li>a:focus, .navbar-inverse .navbar-nav>li>a:hover {
+    color: black;
+    background-color: transparent;
 }
 
-.thumbnail {
-    padding: 0;
+/* ### PAGE CONTENT ### */
+#page-wrapper{
+  margin:0;
+}
+.page-header {
+    font-family: Montserrat-Regular;
 }
 
-.thumbnail .caption-full {
-    padding: 9px;
-    color: #333;
+.panel-default>.panel-heading {
+  background-color: white;
+  font-family: Montserrat-Bold;
+  font-size: 16px;
+  border-color: #e7e7e7;
+}
+.panel-footer {
+    color: black;
+    font-family: Montserrat-Regular;
 }
 
+.stop-icon{
+  opacity: 0.5;
+}
+.start-icon{
+  color:#63D297;
+}
 
-.hidden{
-  display: none;
+.stop-button{
+  color: red;
+  margin-right: 5px;
+}
+.start-button{
+  color: #63D297;
+  margin-right: 5px;
+}
+.export-button{
+  background-color: #A4C2F4;
+  color: white;
+  font-family: Montserrat-Regular;
+  margin-top: 20px;
+}
+.edit-button{
+  background-color: #A4C2F4;
+  color:white;
+}
+.valid-button{
+  background-color:#63D297;
+  color:white;
 }

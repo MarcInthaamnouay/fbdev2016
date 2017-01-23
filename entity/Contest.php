@@ -14,8 +14,16 @@ class Contest extends Db {
         $connection = $this -> connect();
 
         // Query the database
-        $result = $connection -> query("SELECT * FROM contest order by end asc");
-        return $result;
+        try{
+            $stmt = $connection -> prepare("SELECT * FROM contest order by end desc");
+            $stmt->execute();
+
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
     }
 
     public function getCurrentContest() {
@@ -232,6 +240,26 @@ class Contest extends Db {
 
         } catch (PDOException $e){
             return $e;
+        }
+    }
+
+    /**
+     *  Get Single Contest
+     *          Return the data of a single contest based on the ID
+     *  @param int contestID
+     */
+    public function getSingleContest($contestID){
+        $connection = $this -> connect();
+        try{
+            $stmt = $connection->prepare('SELECT * FROM contest INNER JOIN participants ON contest.id = participants.id_contest INNER JOIN user_trace ON participants.id_user = user_trace.id_user WHERE contest.id = :contestID');
+
+            $stmt->bindParam(':contestID', $contestID, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result;
+        } catch(PDOException $e){
+            return $e->getMessage();
         }
     }
 }

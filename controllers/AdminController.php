@@ -11,10 +11,14 @@ class AdminController {
 	private $adminID;
 	private $helper;
 	private $admin;
+	public  $dataContest;
+	public  $tableData;
 
-	function __construct()
+	function __construct($id)
 	{	
 		$this->contest = new Contest();
+		$this->adminID = $id;
+		$this->admin = new Admin();
 	}
 
 	/**
@@ -123,7 +127,66 @@ class AdminController {
 		}
 	}
 
-	public function changeTheme(){
+	/**
+	 *	Get ID
+	 *			Return the adminID to the twig file
+	 *	@return int adminID
+	 */
+	public function getID(){
+		return $this->adminID;
+	}
+
+	/**
+	 *	Get All Contest
+	 *			Return every contest to the user
+	 */
+	public function getAllContest(){
+		return $this->contest->getAllContest();
+	}
+
+	/**
+	 *	Get Current contest
+	 *			Return the current contest to the user
+	 */
+	public function getCurrentContest(){
+		return $this->contest->getCurrentContest();
+	}
+
+	/**
+	 *	Get Date
+	 *			Return the date of today from the contest Services
+	 */
+	public function compareDate($endDate){
+		$now = new DateTime();
+		$endDate = new DateTime($endDate);
 		
+		if($endDate > $now)
+			return true;
+		
+		return false;
+	}
+
+	/**
+	 *	Get Single Contest Data
+	 *			Get Single contest Data return the information about
+	 *			a single contest
+	 */
+	public function getSingleContestData($contestID){
+		$token = Helper::retrieveToken($this->adminID);
+		$res = $this->contest->getSingleContest($contestID);
+		$this->dataContest = $res[0];
+
+		$bulk = array();
+
+		// Preparing the bulk request
+		foreach($res as $contestant){
+			$patternBulk = $contestant['id_user'].'?fields=id,last_name,first_name';
+			array_push($bulk, array(
+				'method' => 'GET',
+				'relative_url' => $patternBulk
+			));
+		}
+		
+		$this->tableData = $this->admin->bulkAdminRequest($bulk, $token, $res);
 	}
 }

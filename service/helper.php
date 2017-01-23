@@ -86,5 +86,31 @@ Class Helper{
             return $e;
         }
     }
+
+    /**
+     *  Get Config Value
+     *          Return the config options from the config.json
+     *  @param String key, a key representing the key present in the JSON
+     */
+    public static function getConfigValue($key){
+        $jsonData = json_decode(file_get_contents("./config.json"));
+        return $jsonData -> $key;
+    }
+
+    /**
+     *  Admin Workflow
+     *          Function which wrap the admin workflow (checking login + token in one function)
+     *  @param userID 
+     *  @return boolean
+     */
+    public static function adminWorkflow($userID){
+        $isAdmin = AdminController::checkIfAdmin(NULL, $userID);
+        $isTokenValid = AdminController::checkTokenValidity($userID);
+
+        if(!$isAdmin || !$isTokenValid)
+            return false;
+
+        return true;
+    } 
 }
 

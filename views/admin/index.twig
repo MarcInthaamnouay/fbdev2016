@@ -1,0 +1,40 @@
+{% extends "./admin/layout.twig" %} 
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">
+                Concours
+                <a class="btn btn-default pull-right" href="/admin/{{controller.getID()}}/creation">
+                    <i class="fa fa-plus" aria-hidden="true"></i> Créer un nouveau concours
+                </a>
+            </h1>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-6">
+        {% for contest in controller.getAllContest() %}
+            <p>{{contest}}</p>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="{% if controller.compareDate(contest.end) %} fa fa-play fa-5x start-icon {% else %} fa fa-stop fa-5x stop-icon {% endif %}"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <h2>Concours {{contest['title']}}</h2>
+                        </div>
+                    </div>
+                </div>
+                <a href="/admin/{{controller.getID()}}/contest/{{contest.id}}">
+                    <div class="panel-footer">
+                        <span class="pull-left">Details</span>
+                        <span class="pull-right"><i class="fa fa-arrow-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="col-lg-3 col-sm-6">
+        
+    </div>
+{% endblock %}

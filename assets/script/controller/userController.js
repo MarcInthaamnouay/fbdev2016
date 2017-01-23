@@ -122,6 +122,42 @@ const userController = (function(){
 
             });
     };
+
+    /**
+     *  Upload Photo From Computer
+     *          Upload photo from computer 
+     *  @private
+     */
+    const uploadPhotoFromComputer = () => {
+
+        const imageRegExp = 'image.*';
+        const formData = new FormData();
+        let selectedFile = document.getElementById('input').files[0];
+
+        // @TODO return a user info to the user that he did not upload the right file..
+        if (!selectedFile.type.match(imageRegExp)){
+            console.log(selectedFile);
+            return;
+        }   
+        
+
+        formData.append('image', selectedFile, 'tamere');
+        formData.append('userID', haveToken.userID);
+        // Now make a request to the back-end
+        
+        const request = new RequestBackend('/upload/photo/computer', 'POST', formData, 'data');
+        request.prepare().execute()
+               .then((success) => {
+                   console.log(success);
+               })
+               .catch((error) => {
+                   console.log(error);
+               });
+
+    };
     // Add a listener to the DOM
-    document.addEventListener('DOMContentLoaded', displayAlbum);
+    document.addEventListener('DOMContentLoaded', () => {
+        displayAlbum();
+        document.getElementById('upload-computer').addEventListener('click', uploadPhotoFromComputer);
+    });
 })(document, window);

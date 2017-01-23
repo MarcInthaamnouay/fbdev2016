@@ -14,6 +14,7 @@ const loginController = (function(){
      */
     const processLogin = function(){
         FB.login(function(response) {
+            console.log(response);
             if (response.authResponse) {
                 const authObj = {
                     token : response.authResponse.accessToken, 

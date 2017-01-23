@@ -6,7 +6,7 @@ function statusChangeCallback(response) {
     if (response.status === 'connected') {
       return;
     } else if (response.status === 'not_authorized') {
-        window.location.href = '/login';
+        
     } else {
         checkIfLogin();
     }
