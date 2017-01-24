@@ -1,0 +1,19 @@
+{
+    "config" : {
+        "load" : {
+            "func" : [
+                "init",
+                "listenContest",
+                "getTimeout"
+            ]
+        }
+    },
+    "creation" : {
+        "load" : {
+            "func" : [
+                "sayHello",
+                "listenCreation"
+            ]
+        }
+    }
+}

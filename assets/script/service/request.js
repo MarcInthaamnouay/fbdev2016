@@ -6,7 +6,7 @@
  *  @param {Object} params [default : {}] 
  */
 class RequestBackend{    
-    constructor(req = "", method = "POST", params = Object.create({}), type = 'json'){
+    constructor(req = "", method = "POST", params = null, type = 'json'){
         this.req = req;
         this.method = method;
         this.params = params;
@@ -42,7 +42,7 @@ class RequestBackend{
         // Check if there're param in our request constructor ...
         if (this.params != null && this.type === 'json')
             config.body = JSON.stringify(this.params);
-        else    
+        else if(this.params != null)
             config.body = this.params;
 
         // Prepare the request

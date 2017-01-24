@@ -46,16 +46,24 @@ class AdminController {
 	 * @return Un message d�crivant l'erreur lors de l'ajour, ou un message de confirmation
 	*/
 	public function addContest($title,$text = null,$lot=null,$infos=null,$start,$end){
+		$title = Helper::getID($request, 'title');
+		$text = Helper::getID($request, 'text');
+		$lot = Helper::getID($requst, 'lot');
+		$infos = Helper::getID($request, 'infos');
+		$end = Helper::getID($request, 'end');
+		$start = new DateTime();
+
 		$returnMsg = '';
-		if(empty($title) || empty($lot) || empty($start) || empty($end) ){
+		if(empty($title) || empty($lot) || empty($end) ){
 			if(empty($title)) $returnMsg .= 'Le titre est manquant. <br />';
 			if(empty($lot)) $returnMsg .= 'Le lot est manquant. <br />';
-			if(empty($start)) $returnMsg .= 'La date de d�but est manquante. <br />';
+			if(empty($start)) $returnMsg .= 'La date de debut est manquante. <br />';
 			if(empty($end)) $returnMsg .= 'La date de fin est manquante. <br />';
 		}
 		else {
+			// First we disactivat the current contest
 			$this->contest->addContest($title,$text,$lot,$infos,$start,$end);
-			$returnMsg .= 'Concours ajout�. <br />';
+			$returnMsg .= true;
 		}
 
 		return $returnMsg;

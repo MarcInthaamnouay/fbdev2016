@@ -92,7 +92,9 @@ $app->post('/upload/photo', function($request, $response, $args){
     $contestID = $contest->getCurrentContest()['id'];
     // Instance our controller with this parameters
     $userController = new UserController();
-    $res = $userController->addToContest($request, intval($contestID));
+    $idUser = intval(Helper::getID($request, 'userID'));
+    $idPhoto = Helper::getID($request, 'photoURL');
+    $res = $userController->addToContest(intval($contestID), $idUser, $idPhoto);
 
     if($res){
         return $response->withJson(array('status' => 'success'), 200);
@@ -120,8 +122,11 @@ $app->post('/token', function($request, $response, $args){
 
 $app->post('/upload/photo/computer', function($request, $response, $args){
     $photo = new PhotoController($request);
-    //$photo->setPhotoFacebook($_FILES['image'], $request->getParams('name'));
-    $photo->setPhotoFacebook($request->getUploadedFiles(), $request->getParams('name'));
+    
+    $message = $request->getParams()['message'];
+    $location = $request->getParams()['location'];
+
+    $photo->setPhotoFacebook($request->getUploadedFiles(), $message, $location);
 });
 
 $app->post('/user/like', function($request, $response, $args){
@@ -138,7 +143,6 @@ $app->post('/user/like', function($request, $response, $args){
             return $response->withJson(array('status' => 'error '.$res), 200);
     }
 });
-
 
 $app->get('/login', function($request, $response, $args){
     return $this->view->render($response, './contest/login.twig');
@@ -234,6 +238,12 @@ $app->get('/admin/{userID}/views', function($request, $response, $args){
     return $this->view->render($response, './index.twig', [
         'controller' => $adminController
     ]);
+});
+
+$app->post('/admin/contest', function($request, $response, $args){
+    $userID = $request->getParams('userID');
+    // $adminController = new AdminController();
+    // $adminController->addConteset($request);
 });
 
 $app->get('/admin/error', function($request, $response, $args){

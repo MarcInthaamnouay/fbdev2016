@@ -54,9 +54,24 @@ const helperModule = (function(){
         }
     }
 
+    /**
+     *  Get Img Data
+     *              Get image from a file input
+     *  @public
+     *  @param {DOMElement} DOMelement
+     *  @return {FormData} formData
+     */
+    const getImgData = function(DOMelement){
+        let file = DOMelement.files[0];
+        let formData = new FormData('image', file);
+
+        return formData;
+    }
+
     return {
         token : getToken,
         addListener : addEvent,
-        fixDate : correctDBDate
+        fixDate : correctDBDate,
+        image : getImgData
     }
 }.bind({}))();

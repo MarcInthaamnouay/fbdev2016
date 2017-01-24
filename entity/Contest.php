@@ -54,14 +54,18 @@ class Contest extends Db {
 
     public function addContest($title,$text,$lot,$infos,$start,$end){
         $connection = $this -> connect();
-        $req = $connection->prepare("INSERT INTO contest (title, text, lot, infos, start, end) VALUES (?, ?, ?, ?, ?, ?)");
-        $req->bindParam(1, $title);
-        $req->bindParam(2, $text);
-        $req->bindParam(3, $lot);
-        $req->bindParam(4, $infos); 
-        $req->bindParam(5, $start);
-        $req->bindParam(6, $end);
-        $req->execute();
+        try{
+            $req = $connection->prepare("INSERT INTO contest (title, text, lot, infos, start, end) VALUES (:title, :texte, :lot, :infos, :start, :end)");
+            $req->bindParam(':title', $title, PDO::PARAM_STR);
+            $req->bindParam(':texte', $text, PDO::PARAM_STR);
+            $req->bindParam(':lot', $lot, PDO::PARAM_STR);
+            $req->bindParam(':infos', $infos, PDO::PARAM_STR); 
+            $req->bindParam(':start', $start, PDO::PARAM_STR);
+            $req->bindParam(':end', $end, PDO::PARAM_STR);
+            $req->execute();
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
     }
 
     public function updateContest($id,$title,$text,$lot,$infos,$start,$end){
