@@ -90,6 +90,7 @@ $app->post('/upload/photo', function($request, $response, $args){
  
     $contest = new Contest();
     $contestID = $contest->getCurrentContest()['id'];
+    
     // Instance our controller with this parameters
     $userController = new UserController();
     $idUser = intval(Helper::getID($request, 'userID'));
@@ -241,9 +242,22 @@ $app->get('/admin/{userID}/views', function($request, $response, $args){
 });
 
 $app->post('/admin/contest', function($request, $response, $args){
-    $userID = $request->getParams('userID');
-    // $adminController = new AdminController();
-    // $adminController->addConteset($request);
+    $adminID = Helper::getID($request,'adminID');
+    $adminWorkflow = Helper::adminWorkflow($adminID);
+    $url = $this->router->pathFor('adminError');
+    $static_path = Helper::getConfigValue('admin_views_params');
+    
+    if(!$adminWorkflow)
+        $response->withStatus(200)->withHeader('Location', $url);
+    else{
+        $adminController = new AdminController($adminID);
+        $res = $adminController->addContest($request);
+
+        if(!is_bool($res))
+            return $response->withJson(array('status' => 'error '.$res));
+        
+        return $response->withJson(array('status' => 'success'));
+    }
 });
 
 $app->get('/admin/error', function($request, $response, $args){

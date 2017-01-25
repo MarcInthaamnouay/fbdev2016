@@ -52,7 +52,7 @@ Class Photos{
      */
     public function getListOfPhotosFromAlbum($albumID){
         $fbApp = Helper::instanceFBApp();
-        $request = new Facebook\FacebookRequest($fbApp, $this->token , 'GET', '/'.$albumID.'/photos/uploaded?fields=source,images,name');
+        $request = new Facebook\FacebookRequest($fbApp, $this->token , 'GET', '/'.$albumID.'/photos/uploaded?fields=id,source,images,name');
 
         try{
             $fb = Helper::getFBService();
@@ -98,13 +98,12 @@ Class Photos{
      *  Upload Photo To User
      *          Uploading a photo from the computer to Facebook
      */
-    public function createAlbum($image){
+    public function createAlbum($image, $message){
         // first we check if an album with the name of berseck already checkIfAlbumExist
         $exist = $this->checkIfAlbumExist();
         
         if(!is_bool($exist)){
-            $this->uploadPhotoAlbum($exist, $image);
-            return;
+            return $this->uploadPhotoAlbum($exist, $image, $message);
         }
             
         $albumData = array('location' => 'france',
@@ -116,7 +115,7 @@ Class Photos{
         $res = $fbRequest->make();
 
         if($res['id'])
-            $this->uploadPhotoAlbum($res['id'], $image);
+            return $this->uploadPhotoAlbum($res['id'], $image, $message);
     }
 
     /**
@@ -136,19 +135,44 @@ Class Photos{
     /**
      *  Upload Photo Album
      */
-    private function uploadPhotoAlbum($albumID, $image){
-        //
-        if(empty($image['image']))
-            return 'expected a photo';
+    private function uploadPhotoAlbum($albumID, $image, $message){
+        if(empty($image['image'])){
+            var_dump('expected a photo');
+        }
             
         $facebookFile = new FacebookFile($image['image']->file);
-        $albumData = array('source' => $facebookFile);
+        $albumData = array(
+                    'source' => $facebookFile,
+                    'message' => $message,
+                );
+
+        var_dump($albumData);
         $request = '/'.$albumID.'/photos';
 
         $fbRequest = new FacebookServices($request, $this->token, 'POST', $albumData);
         $res = $fbRequest->make();
 
-        return $res;
+        // Now that we have upload the photo we can set it directly in the DB
+
+        if(!$res['id'])        
+            throw new Exception('error');
+
+        $imageID = $res['id'];
+        $listOfPhotos = $this->getListOfPhotosFromAlbum($albumID);
+
+        foreach($listOfPhotos['data'] as $photo){
+            if($photo['id'] == $imageID)   
+                $this->setAsImg($photo['source']);
+        }
+    }
+
+
+    private function setAsImg($url){
+        // @TODO review this as we're in a hurry i'm duplicating this.. from the userController
+        $userController = new UserController();
+        $contest = new Contest();
+        $contestID = $contest->getCurrentContest()['id'];
+        $res = $userController->addToContest(intval($contestID), intval($this->userID), $url);
     }
 }
 

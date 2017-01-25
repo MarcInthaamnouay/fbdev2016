@@ -63,7 +63,8 @@ const helperModule = (function(){
      */
     const getImgData = function(DOMelement){
         let file = DOMelement.files[0];
-        let formData = new FormData('image', file);
+        let formData = new FormData();
+        formData.append('image', file);
 
         return formData;
     }

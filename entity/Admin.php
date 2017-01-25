@@ -62,7 +62,6 @@ class Admin extends Db{
 
             foreach($resBody as $key => $value){
                 $res = json_decode($value['body']);
-                echo '<br><br>';
                 if($res->last_name && $res->first_name)
                     array_push($batchData, $res);
             }

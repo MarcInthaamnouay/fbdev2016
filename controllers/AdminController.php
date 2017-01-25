@@ -45,13 +45,18 @@ class AdminController {
 	 * @var end La date de fin du concours
 	 * @return Un message d�crivant l'erreur lors de l'ajour, ou un message de confirmation
 	*/
-	public function addContest($title,$text = null,$lot=null,$infos=null,$start,$end){
-		$title = Helper::getID($request, 'title');
-		$text = Helper::getID($request, 'text');
-		$lot = Helper::getID($requst, 'lot');
-		$infos = Helper::getID($request, 'infos');
-		$end = Helper::getID($request, 'end');
-		$start = new DateTime();
+	public function addContest($request){
+		// we decoded the params that has been pass into the request
+		// (!) Note that the params are passed as a type of multipart. 
+		$decodedParams = json_decode($params);
+		
+		$title = Helper::getID($request, 'name');
+		$end = Helper::getID($request, 'enddate');
+		$start = Helper::getID($request, 'startdate');
+		$text = Helper::getID($request, 'description');
+		$infos = Helper::getID($request, 'labelgift');
+		$lot = Helper::getID($request, 'gift');
+		// start time will serve as the date of craetion of the contest
 
 		$returnMsg = '';
 		if(empty($title) || empty($lot) || empty($end) ){
@@ -62,12 +67,12 @@ class AdminController {
 		}
 		else {
 			// First we disactivat the current contest
-			$this->contest->addContest($title,$text,$lot,$infos,$start,$end);
-			$returnMsg .= true;
+			$res = $this->contest->addContest($title,$text,$lot,$start,$end,$infos);
+			
+			return $res;
 		}
 
 		return $returnMsg;
-	
 	}
 
 	/**
@@ -164,11 +169,8 @@ class AdminController {
 	 *	Get Date
 	 *			Return the date of today from the contest Services
 	 */
-	public function compareDate($endDate){
-		$now = new DateTime();
-		$endDate = new DateTime($endDate);
-		
-		if($endDate > $now)
+	public function isActive($active){		
+		if($active)
 			return true;
 		
 		return false;
@@ -196,5 +198,12 @@ class AdminController {
 		}
 		
 		$this->tableData = $this->admin->bulkAdminRequest($bulk, $token, $res);
+	}
+
+	public function setContestToActive($contestID){
+		// first we get the current contest
+		$currentContest = $this->contest->getCurrentContest();
+
+		if($currentContest['start'] > )
 	}
 }

@@ -6,6 +6,7 @@ class Contest extends Db {
 
     function isUserInContest($idContest,$idUsers) {
         $connection = $this -> connect();
+        $contest = new Contest();
     }
 
     
@@ -35,7 +36,8 @@ class Contest extends Db {
         $now = new DateTime();
         $result = false;
         foreach($results as $row){
-            if(new DateTime($row['start'])<$now && new DateTime($row['end']) >$now)
+            //if(new DateTime($row['start'])<$now && new DateTime($row['end']) >$now)
+            if($row['active'] == 1)
                 $result = $row;
         }
         return $result;
@@ -52,20 +54,86 @@ class Contest extends Db {
         return false;
     }
 
-    public function addContest($title,$text,$lot,$infos,$start,$end){
+    /**
+     *  Get Contest By Id 
+     *          return a contest by id 
+     *  @param contestID 
+     *  @return mixedVar 
+     */
+    public function getContestById($contestID){
         $connection = $this -> connect();
+
+        try {
+            $stmt = $connection -> prepare('SELECT * FROM contest WHERE id = :contestID');
+
+            $stmt->bindParam(':contestID', $contestID);
+            $stmt->execute();
+
+            $res = $stmt->fetchAll();
+        } catch (PDOException $e){
+
+        }
+    }
+
+    /** 
+     *  Add Contest
+     *          Add a contest into the database
+     */
+    public function addContest($title,$text,$lot,$start,$end,$infos){
+        $connection = $this -> connect();
+
         try{
-            $req = $connection->prepare("INSERT INTO contest (title, text, lot, infos, start, end) VALUES (:title, :texte, :lot, :infos, :start, :end)");
-            $req->bindParam(':title', $title, PDO::PARAM_STR);
-            $req->bindParam(':texte', $text, PDO::PARAM_STR);
-            $req->bindParam(':lot', $lot, PDO::PARAM_STR);
-            $req->bindParam(':infos', $infos, PDO::PARAM_STR); 
-            $req->bindParam(':start', $start, PDO::PARAM_STR);
-            $req->bindParam(':end', $end, PDO::PARAM_STR);
-            $req->execute();
-        } catch(PDOException $e){
+             $isDataValid = $this->beforeAddContest($title, $text, $lot, $start, $end, $infos);
+             try{
+                $req = $connection->prepare("INSERT INTO contest (title, text, lot, start, end, titrelot) VALUES (:title, :texte, :lot, :start, :end, :titrelot)");
+                $req->bindParam(':title', $title, PDO::PARAM_STR);
+                $req->bindParam(':texte', $text, PDO::PARAM_STR);
+                $req->bindParam(':lot', $lot, PDO::PARAM_STR);
+                $req->bindParam(':start', $start, PDO::PARAM_STR);
+                $req->bindParam(':end', $end, PDO::PARAM_STR);
+                $req->bindParam(':titrelot', $infos, PDO::PARAM_STR); 
+                $req->execute();
+
+                return true;
+            } catch(PDOException $e){
+                return $e->getMessage();
+            }
+        } catch (Exception $e){
             return $e->getMessage();
         }
+    }
+
+    /**
+     *  Before Add Contest
+     *          Check if there's a contest in the DB
+     *  @param string title
+     *  @param text string
+     *  @param lot string
+     *  @param string start (date)
+     *  @param string end (date)
+     *  @param string infos
+     *  @return boolean
+     */
+    private function beforeAddContest($title,$text,$lot,$start,$end,$infos){
+        $results = $this->getAllContest();
+        $startDate = new DateTime($start);
+        $endDate = new DateTime($end);
+
+        foreach($results as $res){
+            $dbStartTime = new DateTime($res['start']);
+            $dbEndTime = new DateTime($res['end']);
+
+            if ($startDate <= $dbStartTime || $endDate <= $dbEndDate){
+                throw new Exception('date are invalids');
+                return false;
+            } 
+            else if ($startDate > $endDate){
+                throw new Exception('start date is before the end date');
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function updateContest($id,$title,$text,$lot,$infos,$start,$end){

@@ -9,26 +9,20 @@ const adminHelper = {
     checkData(){
         const helper = helperModule;
         const haveToken = helper.token();
-        let contest = {};
         let elements = document.getElementsByClassName('data');
+
+        let contest = {
+            adminID : haveToken.userID
+        };
 
         for(ele of elements){
             if(!ele.value)
                 throw new Error('please fullfill every field');
 
-            if(ele.getAttribute('name') === 'imggift')
-                var contestData = helper.image(ele);
-            else
-                contest[ele.getAttribute('name')] = ele.value;
+            contest[ele.getAttribute('name')] = ele.value;
         }
 
-        console.log(contestData);
-        console.log(contest);
-        // First we need to append the data of our contest object to our imgData
-        contestData.append('params', JSON.stringify(contest));
-        contestData.append('userID', haveToken.userID);
-
-        let req = new RequestBackend('/admin/contest', 'POST', contestData, 'data');
+        let req = new RequestBackend('/admin/contest', 'POST', contest);
         req.prepare().execute()
            .then(res => {
                console.log(res);
