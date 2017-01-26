@@ -26,16 +26,13 @@ const helperModule = (function(){
      */
     const addEvent = function(target = "", callback = function(){}, type = 'class'){
         let element;      
-        console.log('add it');  
 
-        if (type == 'class'){
+        if (type === 'class'){
             element = document.getElementsByClassName(target);
             for(let i = 0; i < element.length; i++){
                 element[i].addEventListener('click', callback);
             }
         } else {
-            console.log('should have add');
-            console.log(target);
             element = document.getElementById(target);
             element.addEventListener('click', callback);
         }   
@@ -75,4 +72,98 @@ const helperModule = (function(){
         fixDate : correctDBDate,
         image : getImgData
     }
+}.bind({}))();
+
+/**
+ *  DOM Helper
+ *          A Helper to set more easily a property to a 
+ *          DOM Element
+ *          Every property are chainable like jQuery
+ *  @chainable
+ */
+const DOMHelper = (function(){
+    let element;
+    let DOMtype;
+
+    /**
+     *  Init
+     *          Set an element for being use after
+     */
+    this.init = (DOMString = '', type) => {
+        DOMtype = type;
+        if (type === 'class')
+            element = document.getElementsByClassName(DOMString);
+        else   
+            element = document.getElementById(DOMString);
+        
+        return this;
+    };
+
+    /**
+     *  Set Style Prop
+     *          Set the style to an element
+     *  @param {String} propName
+     *  @param {mixed} value
+     */
+    this.setStyleProp = (propName, value) => {
+        element.style[propName] = value;
+
+        return this;
+    }
+
+    /**
+     *  Set Prop
+     *          Set a property to a DOM Element
+     *  @public
+     */
+    this.setProp = (propName, value) => {
+        if (DOMtype === 'class'){
+            for(let el of element){
+                el.setAttribute(propName, value);
+            }
+
+            return;
+        }
+
+        element.setAttribute(propName, value);
+    }
+
+    /**
+     *  Rm Prop
+     *          Remove a property
+     *  @param {String} propName
+     */
+    this.rmProp = (propName) => {
+        if (DOMtype === 'class'){
+            for(let el of element){
+                el.removeAttribute(propName);
+            }
+
+            return this;
+        }
+
+        element.removeAttribute(propName);
+
+        return this;
+    };
+    /**
+     *  Set Content
+     *          Set a template to an element
+     *  @param {String} template
+     *  @param {Array} ...params
+     */
+    this.setContent = (template, replace = false) => {
+        console.log('setting content');
+        if (replace){
+            element.innerHTML = template;
+            return this;
+        }
+
+        element.insertAdjacentHTML('beforeend', template)    
+    };
+
+    return {
+        init : this.init
+    }
+
 }.bind({}))();

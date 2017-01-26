@@ -176,6 +176,23 @@ class AdminController {
 		return false;
 	}
 
+	public function checkDateContest(){
+		$current = $this->getCurrentContest();
+		
+		// current data
+		$currentStart = new DateTime($current['start']);
+		$currentEnd = new DateTime($current['end']);
+
+		// target contest
+		$targetStartDate = new DateTime($this->dataContest['start']);
+		$targetEndDate = new DateTime($this->dataContest['end']);
+
+		if($currentStart > $targetStartDate || $currentEnd > $targetEndDate){
+			return false;
+		}
+
+		return true;
+	}
 	/**
 	 *	Get Single Contest Data
 	 *			Get Single contest Data return the information about
@@ -184,7 +201,16 @@ class AdminController {
 	public function getSingleContestData($contestID){
 		$token = Helper::retrieveToken($this->adminID);
 		$res = $this->contest->getSingleContest($contestID);
-		$this->dataContest = $res[0];
+
+
+		if(count($res))
+			$this->dataContest = $res[0];
+		else{
+			$this->dataContest = $this->contest->singleHelper($contestID)[0];
+		}
+			
+
+	//	var_dump($this->dataContest);
 
 		$bulk = array();
 
@@ -200,10 +226,50 @@ class AdminController {
 		$this->tableData = $this->admin->bulkAdminRequest($bulk, $token, $res);
 	}
 
-	public function setContestToActive($contestID){
+	public function setContestToActive($request){
+		$contestID = Helper::getID($request, 'contestID');
 		// first we get the current contest
 		$currentContest = $this->contest->getCurrentContest();
+		$contesetToActivate = $this->contest->singleHelper($contestID)[0];
 
-		if($currentContest['start'] > )
+
+
+		// current data
+		$currentStart = new DateTime($currentContest['start']);
+		$currentEnd = new DateTime($currentContest['end']);
+
+		// target contest
+		$targetStartDate = new DateTime($contesetToActivate['start']);
+		$targetEndDate = new DateTime($contesetToActivate['end']);
+
+		if($currentStart > $targetStartDate || $currentEnd > $targetEndDate){
+			throw new Exception('date error');
+		}
+		
+
+		// we can disactivate and activate a new contest
+		$dis = $this->contest->disactivateContest($currentContest['id']);
+		$ac = $this->contest->activateContest($contesetToActivate['id']);
+
+		if($dis && $ac)
+			return true;
+		else 
+			return false;
+	}
+
+	/**
+	 *	Disable
+	 *			Disactivate a contest
+	 */
+	public function disable($request){
+		$contestID = Helper::getID($request, 'contestID');
+
+		return $this->contest->disactivateContest(intval($contestID));
+	}
+
+	public function getCurrentContestData(){
+		$dateEnd = $this->contest->getCurrentContest();
+
+		return $dateEnd['end'];
 	}
 }

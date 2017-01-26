@@ -3,6 +3,7 @@
         "slim/slim": "^3.0",
         "slim/twig-view": "^2.1",
         "monolog/monolog": "^1.22",
-        "akrabat/rka-slim-session-middleware": "^2.0"
+        "akrabat/rka-slim-session-middleware": "^2.0",
+        "facebook/graph-sdk": "^5.4"
     }
 }

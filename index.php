@@ -90,7 +90,7 @@ $app->post('/upload/photo', function($request, $response, $args){
  
     $contest = new Contest();
     $contestID = $contest->getCurrentContest()['id'];
-    
+
     // Instance our controller with this parameters
     $userController = new UserController();
     $idUser = intval(Helper::getID($request, 'userID'));
@@ -258,6 +258,43 @@ $app->post('/admin/contest', function($request, $response, $args){
         
         return $response->withJson(array('status' => 'success'));
     }
+});
+
+$app->post('/admin/setcontest', function($request, $response, $args){
+    $adminID = Helper::getID($request,'adminID');
+    $adminWorkflow = Helper::adminWorkflow($adminID);
+
+    $url = $this->router->pathFor('adminError');
+
+    if(!$adminWorkflow)
+        $response->withStatus(200)->withHeader('Location', $url);
+    else{
+        $adminController = new AdminController($adminID);
+        $res = $adminController->setContestToActive($request);
+
+        if(!is_bool($res))
+            return $response->withJson(array('status' => 'error '.$res));
+        
+        return $response->withJson(array('status' => 'success'));
+    }
+});
+
+$app->post('/admin/disable', function($request, $response, $args){
+    $adminID = Helper::getID($request,'adminID');
+    $adminWorkflow = Helper::adminWorkflow($adminID);
+
+    if(!$adminWorkflow){
+        $app->getContainer()->get('router')->pathFor('adminError');
+        return;
+    }
+
+    $adminController = new AdminController($adminID);
+    $res = $adminController->disable($request);
+
+    if(!is_bool($res))
+        return $response->withJson(array('status' => 'error '.$res));
+        
+    return $response->withJson(array('status' => 'success'));
 });
 
 $app->get('/admin/error', function($request, $response, $args){

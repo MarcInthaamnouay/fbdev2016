@@ -1,0 +1,13 @@
+{
+    "admin_views_params" : {
+        "asset_path" : "http://berseck.fbdev.fr/assets",
+        "views_path" : "./views/admin/"
+    },
+    "contest_views_params" : {
+        "asset_path" : "./assets/",
+        "views_path" : "./views/contest"
+    },
+    "config" : {
+        
+    }
+}

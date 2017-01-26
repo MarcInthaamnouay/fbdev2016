@@ -9,7 +9,11 @@ class Contest extends Db {
         $contest = new Contest();
     }
 
-    
+    /**
+     *  Get All Contest
+     *          Get all contest
+     *  @public
+     */
     public function getAllContest() {
         // Connect to the database
         $connection = $this -> connect();
@@ -55,25 +59,44 @@ class Contest extends Db {
     }
 
     /**
-     *  Get Contest By Id 
-     *          return a contest by id 
-     *  @param contestID 
-     *  @return mixedVar 
+     *  disactivate Contest
+     *          Disactivate a contest based on it's id
+     *  @param int contestID
+     *  @return string if error
      */
-    public function getContestById($contestID){
+    public function disactivateContest($contestID){
+        $connection = $this -> connect();
+        $date = new DateTime();
+
+        try {
+            $stmt = $connection->prepare('UPDATE contest SET active = 0 WHERE id = :contestID');
+
+            $stmt->bindParam(':contestID', $contestID);
+       //     $stmt->bindParam(':endDate', $date->date);
+            $res = $stmt->execute();
+
+            return (bool) $res;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     *  Activate Contest
+     *          Activate a contest based on it's id
+     */
+     public function activateContest($contestID){
         $connection = $this -> connect();
 
         try {
-            $stmt = $connection -> prepare('SELECT * FROM contest WHERE id = :contestID');
+            $stmt = $connection->prepare('UPDATE contest SET active = 1 WHERE id = :contestID');
 
             $stmt->bindParam(':contestID', $contestID);
-            $stmt->execute();
-
-            $res = $stmt->fetchAll();
-        } catch (PDOException $e){
-
+            $res = $stmt->execute();
+        } catch(PDOException $e){
+            return $e->getMessage();
         }
-    }
+     }
 
     /** 
      *  Add Contest
@@ -329,6 +352,28 @@ class Contest extends Db {
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+            return $result;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     *  Single Helper
+     *          (!) Retrieve the contest if the other function has fail to get the data as the inner join failed to get the information.. THIS MEAN THAT THERE'S NO OTHER DATA IN THE OTHER TABLES...
+     *  @param int contestID
+     */
+    public function singleHelper($contestID){
+        $connection = $this -> connect();
+        try{
+            $stmt = $connection->prepare('SELECT * FROM contest WHERE id = :contestID');
+
+            $stmt->bindParam(':contestID', $contestID, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // @FIX as we use two of this function we might get some issue with the contest id 
+            // therefore we set a id_contest which is equal to the id
+            $result[0]['id_contest'] = $result[0]['id'];
             return $result;
         } catch(PDOException $e){
             return $e->getMessage();

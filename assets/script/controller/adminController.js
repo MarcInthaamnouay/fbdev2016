@@ -6,9 +6,21 @@
  *          onload use the .call(helper <this>) method to apply the this to our Object..
  */
 const adminHelper = {
+    /**
+     * Helper 
+     *      Set the helper module
+     */
+    helper : helperModule,
+    /**
+     * Dom Helper
+     *      A module to help interacting with the dom
+     */
+    domHelper : Object.create(DOMHelper),
+    /**
+     *  Check data before sending to the DB
+     */
     checkData(){
-        const helper = helperModule;
-        const haveToken = helper.token();
+        const haveToken = this.helper.token();
         let elements = document.getElementsByClassName('data');
 
         let contest = {
@@ -22,21 +34,103 @@ const adminHelper = {
             contest[ele.getAttribute('name')] = ele.value;
         }
 
-        let req = new RequestBackend('/admin/contest', 'POST', contest);
-        req.prepare().execute()
-           .then(res => {
-               console.log(res);
-           })
-           .catch(err => {
-               console.log(err)
-           });
+        this.req.call(null, '/admin/contest', 'POST', contest, function(res){
+            console.log(res);
+        });
     }, 
     sayHello(){
         console.log('hello');
     },
+    /**
+     *  Listen Creation
+     *          Listen to the create button
+     */
     listenCreation(){
-        let listenerElement = document.getElementById('create-button');
-        listenerElement.addEventListener('click', this.checkData.bind(this));
+        console.log(this);
+        this.helper.addListener('create-button', this.checkData.bind(this), 'id');
+    },
+    /**
+     *  Disable a contest
+     */
+    listenDeletion(){
+        const haveToken = this.helper.token();
+        let id = document.getElementById('id-contest').getAttribute('data-id');
+        try{
+            this.helper.addListener('disactivate', 
+            this.req.bind(this, '/admin/disable', 'POST', {contestID : id, adminID : haveToken.userID}, 
+            function(res){
+                if (res.status === 'success'){
+                    this.domHelper.init('status-container', 'id')    
+                                  .setContent(`
+                                    <a class="btn btn-default pull-right" id="activate">
+                                        <i class="fa fa-play start-button" aria-hidden="true"></i> Activer le concours
+                                    </a>
+                                  `, true);
+                }
+            }),'id');
+        } catch(e){
+            console.log(e);
+        } 
+    },
+    /**
+     *  Req 
+     *      Send a request to the database
+     *  @param {String} request
+     *  @param {String} method
+     *  @param {Object} param
+     *  @param {Function} callback
+     *  @public
+     */
+    req(request, method, param, callback = {}){
+        let self = this;
+        let req = new RequestBackend(request, method, param);
+        req.prepare().execute()
+           .then(function(res){
+               console.log(res);
+               return callback.call(self, res);
+           })
+           .catch(function(err){
+               return callback.call(self ,err);
+           });
+    },
+    /**
+     *  Activate Contest
+     *          Activate a contest 
+     *  @public
+     */
+    activateContest(){
+        const haveToken = this.helper.token();
+        let id = document.getElementById('id-contest').getAttribute('data-id');
+
+        try{
+            this.helper.addListener('activate', this.req.bind(this, 
+            '/admin/setcontest', 'POST', {contestID : id, adminID : haveToken.userID}, 
+            function(res){
+                console.log(res);
+                if (res.status === 'success'){
+                    console.log('there');
+                    console.log(this.domHelper);
+                    this.domHelper.init('status-container', 'id')    
+                                  .setContent(`
+                                    <a class="btn btn-default pull-right" id="disactivate">
+                                        <i class="fa fa-stop stop-button" aria-hidden="true"></i> Stopper le concours
+                                    </a>
+                                  `, true);
+                }    
+            }), 'id');
+        } catch(e){
+            console.log(e);
+        }
+    },
+    editContest(){
+        this.helper.addListener('editContent', function(){
+            console.log("grs");
+            this.domHelper.init('form-control', 'class')
+                          .rmProp('disabled', false);
+        }.bind(this), 'id');
+    },
+    exportContest(){
+
     }
 };
 
@@ -50,6 +144,8 @@ const adminHelper = {
 const adminController = (function(){
     const href = (window.location.href).split('/');
 
+    // start function at runtime depending of the routes 
+    // It's a sort of Bootloader
     const init = () => {
         console.log(this);
        // we parsed the url and get the config...
@@ -60,6 +156,13 @@ const adminController = (function(){
               // first we parsed the url...
               let routeName = href[href.length - 1];
               let routeConfig = res[routeName];
+
+              if(!routeConfig){
+                  if(parseInt(routeName)){
+                      routeConfig = res['contestID'];
+                  }
+              }
+                
               this.startLoadedFunc(routeConfig, routeName);
           })
           .catch(err => {

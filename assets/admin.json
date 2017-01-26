@@ -15,5 +15,15 @@
                 "listenCreation"
             ]
         }
+    },
+    "contestID" : {
+        "load" : {
+            "func" : [
+                "activateContest",
+                "exportContest",
+                "listenDeletion",
+                "editContest"
+            ]
+        }
     }
 }

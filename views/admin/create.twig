@@ -24,11 +24,11 @@
                             </div>
                             <div class="form-group">
                                 <label>Date de démarrage concours</label>
-                                <input class="form-control data" type="date" placeholder="Enter text" name="startdate">
+                                <input class="form-control data" type="date" placeholder="Enter text" min="{{controller.getCurrentContestData()}}" name="startdate">
                             </div>
                             <div class="form-group">
                                 <label>Date de fin concours</label>
-                                <input class="form-control data" type="date" placeholder="Enter text" name="enddate">
+                                <input class="form-control data" type="date" placeholder="Enter text" min="{{controller.getCurrentContestData()}}" name="enddate">
                             </div>
                             <div class="form-group">
                                 <label>Description du concours</label>
