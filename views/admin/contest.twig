@@ -1,0 +1,104 @@
+{% extends "./admin/layout.twig" %} {% block content %}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">
+            {{controller.dataContest.title}}
+            <div id="status-container">
+            {% if controller.dataContest.active == 0 and  controller.checkDateContest()%}
+                <a class="btn btn-default pull-right" id="activate">
+                    <i class="fa fa-play start-button" aria-hidden="true"></i> Activer le concours
+                </a>
+            {% endif %}
+            {% if controller.dataContest.active == 1 %}
+                <a class="btn btn-default pull-right" id="disactivate">
+                    <i class="fa fa-stop stop-button" aria-hidden="true"></i> Stopper le concours
+                </a>
+            {% endif %}
+            </div>
+        </h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-4">
+        <div class="panel panel-default" data-id="{{controller.dataContest.id_contest}}" id="id-contest">
+            <div class="panel-heading">Paramètres</div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <form role="form">
+                            <div class="form-group">
+                                <p>{{controller.dataContest.id_contest}}</p>
+                                <label>Nom du concours</label>
+                                <input class="form-control data" placeholder="Enter text" value="{{controller.dataContest.title}}"  name="name" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Date de fin du concours</label>
+                                <input type="date" class="form-control data" name="enddate" placeholder="{{controller.dataContest.end}}" value="{{controller.dataContest.end}}" min="{{controller.dataContest.end}}" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Description du concours</label>
+                                <textarea class="form-control data" rows="4" name="description" disabled>{{controller.dataContest.text}}</textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Prix label</label>
+                                <input class="form-control" name="labelgift" placeholder="{{controller.dataContest.titrelot}}" value="Tatouage de votre choix" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label>Lot</label>
+                                <textarea class="form-control data" name="gift" disabled>{{controller.dataContest.lot}}</textarea>
+                            </div>
+                            <button type="reset" class="btn btn-default pull-right edit-button" id="editContent">
+                                <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </button>
+                            <button type="reset" class="btn btn-default pull-right valid-button" id="validContent">
+                                <i class="fa fa-check" aria-hidden="true"></i>
+                            </button>
+                            <button type="reset" class="btn btn-default pull-right stop-button" id="cancelEdit">
+                                <i class="fa fa-times" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Participants
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Firstname</th>
+                            <th>Lastname</th>
+                            <th>Email</th>
+                            <th>Like</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for table_data in controller.tableData %}
+                            <tr>
+                                <td>{{table_data.first_name}}</td>
+                                <td>{{table_data.last_name}}</td>
+                                <td></td>
+                                <td>{{table_data.vote}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!-- /.table-responsive -->
+                <a class="btn btn-default btn-lg btn-block export-button" href="#">
+                    <i class="fa fa-external-link"></i>&nbsp; Exporter les participants
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+    <script src="{{data.asset_path}}/script/helper/helper.js"></script>
+    <script src="{{data.asset_path}}/script/service/request.js"></script>
+	<script src="{{data.asset_path}}/script/controller/adminController.js"></script>
+{% endblock %}

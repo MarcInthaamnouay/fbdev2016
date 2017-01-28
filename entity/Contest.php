@@ -6,16 +6,29 @@ class Contest extends Db {
 
     function isUserInContest($idContest,$idUsers) {
         $connection = $this -> connect();
+        $contest = new Contest();
     }
 
-    
+    /**
+     *  Get All Contest
+     *          Get all contest
+     *  @public
+     */
     public function getAllContest() {
         // Connect to the database
         $connection = $this -> connect();
 
         // Query the database
-        $result = $connection -> query("SELECT * FROM contest order by end asc");
-        return $result;
+        try{
+            $stmt = $connection -> prepare("SELECT * FROM contest order by end desc");
+            $stmt->execute();
+
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
     }
 
     public function getCurrentContest() {
@@ -27,7 +40,8 @@ class Contest extends Db {
         $now = new DateTime();
         $result = false;
         foreach($results as $row){
-            if(new DateTime($row['start'])<$now && new DateTime($row['end']) >$now)
+            //if(new DateTime($row['start'])<$now && new DateTime($row['end']) >$now)
+            if($row['active'] == 1)
                 $result = $row;
         }
         return $result;
@@ -44,23 +58,134 @@ class Contest extends Db {
         return false;
     }
 
-    public function addContest($title,$text,$lot,$infos,$start,$end){
+    /**
+     *  disactivate Contest
+     *          Disactivate a contest based on it's id
+     *  @param int contestID
+     *  @return string if error
+     */
+    public function disactivateContest($contestID){
         $connection = $this -> connect();
-        $req = $connection->prepare("INSERT INTO contest (title, text, lot, infos, start, end) VALUES (?, ?, ?, ?, ?, ?)");
-        $req->bindParam(1, $title);
-        $req->bindParam(2, $text);
-        $req->bindParam(3, $lot);
-        $req->bindParam(4, $infos); 
-        $req->bindParam(5, $start);
-        $req->bindParam(6, $end);
-        $req->execute();
+        $date = new DateTime();
+
+        try {
+            $stmt = $connection->prepare('UPDATE contest SET active = 0 WHERE id = :contestID');
+
+            $stmt->bindParam(':contestID', $contestID);
+       //     $stmt->bindParam(':endDate', $date->date);
+            $res = $stmt->execute();
+
+            return (bool) $res;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
     }
 
-    public function updateContest($id,$title,$text,$lot,$infos,$start,$end){
+    /**
+     *  Activate Contest
+     *          Activate a contest based on it's id
+     */
+     public function activateContest($contestID){
         $connection = $this -> connect();
-        $sql = "UPDATE contest SET title=".$title.", text=".$text.", lot=".$lot.", infos=".$infos.", start=".$start.", end=".$end." WHERE id_user=".$id;
-        $req = $connection->prepare($sql);
-        $req->execute();
+
+        try {
+            $stmt = $connection->prepare('UPDATE contest SET active = 1 WHERE id = :contestID');
+
+            $stmt->bindParam(':contestID', $contestID);
+            $res = $stmt->execute();
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+     }
+
+    /** 
+     *  Add Contest
+     *          Add a contest into the database
+     */
+    public function addContest($title,$text,$lot,$start,$end,$infos){
+        $connection = $this -> connect();
+
+        try{
+             $isDataValid = $this->beforeAddContest($title, $text, $lot, $start, $end, $infos);
+             try{
+                $req = $connection->prepare("INSERT INTO contest (title, text, lot, start, end, titrelot) VALUES (:title, :texte, :lot, :start, :end, :titrelot)");
+                $req->bindParam(':title', $title, PDO::PARAM_STR);
+                $req->bindParam(':texte', $text, PDO::PARAM_STR);
+                $req->bindParam(':lot', $lot, PDO::PARAM_STR);
+                $req->bindParam(':start', $start, PDO::PARAM_STR);
+                $req->bindParam(':end', $end, PDO::PARAM_STR);
+                $req->bindParam(':titrelot', $infos, PDO::PARAM_STR); 
+                $req->execute();
+
+                return true;
+            } catch(PDOException $e){
+                return $e->getMessage();
+            }
+        } catch (Exception $e){
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     *  Before Add Contest
+     *          Check if there's a contest in the DB
+     *  @param string title
+     *  @param text string
+     *  @param lot string
+     *  @param string start (date)
+     *  @param string end (date)
+     *  @param string infos
+     *  @return boolean
+     */
+    private function beforeAddContest($title,$text,$lot,$start,$end,$infos){
+        $results = $this->getAllContest();
+        $startDate = new DateTime($start);
+        $endDate = new DateTime($end);
+
+        foreach($results as $res){
+            $dbStartTime = new DateTime($res['start']);
+            $dbEndTime = new DateTime($res['end']);
+
+            if ($startDate <= $dbStartTime || $endDate <= $dbEndDate){
+                throw new Exception('date are invalids');
+                return false;
+            } 
+            else if ($startDate > $endDate){
+                throw new Exception('start date is before the end date');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     *  Update Contest
+     *          Update a contest 
+     *  @param int id
+     *  @param string title
+     *  @param string text
+     *  @param string lot
+     *  @param string info
+     *  @param string (date) start
+     */
+    public function updateContest($id,$title,$lot,$end,$desc){
+        $connection = $this -> connect();
+
+        try{
+            $stmt = $connection->prepare('UPDATE contest SET title = :title, lot = :lot, end = :end, text = :text WHERE id= :id');
+            
+            $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+            $stmt->bindParam(':lot', $lot, PDO::PARAM_STR);
+            $stmt->bindParam(':end', $end, PDO::PARAM_STR);
+            $stmt->bindParam(':text', $desc, PDO::PARAM_STR);
+            $stmt->bindParam(':id', intval($id), PDO::PARAM_INT);
+
+            return (bool) $stmt->execute();
+
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
     }
 
     public function getContestOfUser($idUser){
@@ -232,6 +357,48 @@ class Contest extends Db {
 
         } catch (PDOException $e){
             return $e;
+        }
+    }
+
+    /**
+     *  Get Single Contest
+     *          Return the data of a single contest based on the ID
+     *  @param int contestID
+     */
+    public function getSingleContest($contestID){
+        $connection = $this -> connect();
+        try{
+            $stmt = $connection->prepare('SELECT * FROM contest INNER JOIN participants ON contest.id = participants.id_contest INNER JOIN user_trace ON participants.id_user = user_trace.id_user WHERE contest.id = :contestID');
+
+            $stmt->bindParam(':contestID', $contestID, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     *  Single Helper
+     *          (!) Retrieve the contest if the other function has fail to get the data as the inner join failed to get the information.. THIS MEAN THAT THERE'S NO OTHER DATA IN THE OTHER TABLES...
+     *  @param int contestID
+     */
+    public function singleHelper($contestID){
+        $connection = $this -> connect();
+        try{
+            $stmt = $connection->prepare('SELECT * FROM contest WHERE id = :contestID');
+
+            $stmt->bindParam(':contestID', $contestID, PDO::PARAM_INT);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // @FIX as we use two of this function we might get some issue with the contest id 
+            // therefore we set a id_contest which is equal to the id
+            $result[0]['id_contest'] = $result[0]['id'];
+            return $result;
+        } catch(PDOException $e){
+            return $e->getMessage();
         }
     }
 }

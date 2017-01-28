@@ -8,6 +8,7 @@ class ComposerStaticInit5c014540331ab1352e2305431b08c783
 {
     public static $files = array (
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
+        'c65d09b6820da036953a371c8c73a9b1' => __DIR__ . '/..' . '/facebook/graph-sdk/src/Facebook/polyfills.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -36,6 +37,7 @@ class ComposerStaticInit5c014540331ab1352e2305431b08c783
         'F' => 
         array (
             'FastRoute\\' => 10,
+            'Facebook\\' => 9,
         ),
     );
 
@@ -71,6 +73,10 @@ class ComposerStaticInit5c014540331ab1352e2305431b08c783
         'FastRoute\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
+        ),
+        'Facebook\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/facebook/graph-sdk/src/Facebook',
         ),
     );
 

@@ -1,0 +1,29 @@
+{
+    "config" : {
+        "load" : {
+            "func" : [
+                "init",
+                "listenContest",
+                "getTimeout"
+            ]
+        }
+    },
+    "creation" : {
+        "load" : {
+            "func" : [
+                "sayHello",
+                "listenCreation"
+            ]
+        }
+    },
+    "contestID" : {
+        "load" : {
+            "func" : [
+                "activateContest",
+                "exportContest",
+                "listenDeletion",
+                "editContest"
+            ]
+        }
+    }
+}

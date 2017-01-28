@@ -1,0 +1,111 @@
+{% extends "./contest/layout.twig" %}
+{% block content %}
+	<div class="content-resizer">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+															<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                  Description
+                                  <i class="glyphicon glyphicon-chevron-right pull-right"></i>
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse collapse">
+                            <div class="panel-body">
+														Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                <br>
+                                <i class="icon-calendar"></i>
+                                &nbsp;&nbsp; 01/02/2017 &nbsp; - &nbsp; 31/02/2017
+                                <br>
+                                <i class="icon-award"></i>
+                                &nbsp;&nbsp; Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.col-lg-12 -->
+
+            <div class="col-md-12">
+              <ul class="nav nav-pills nav-justified">
+                <li role="presentation" class="active-blue" id="#random1">
+                  <a href="#">Random</a>
+                </li>
+                <li role="presentation" id="#allPictures1">
+                  <a href="#" style="background-color: #eee;"> All Pictures</a>
+                </li>
+              </ul>
+            </div>
+            <div class="col-md-12">
+              <div id="random2">
+
+                <div class="thumbnail">
+                  <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+									  <!-- Wrapper for slides -->
+									  <div class="carousel-inner" role="listbox">
+                      {% for contestants in controller.getCurrentPhotos()%}
+                        <div class="item {% if loop.index == 1 %}active{%endif%}" data-id-contestant="{{contestants.id_user}}">
+                          <img class="visuel visuel-generate" src="{{contestants.id_picture}}"/>
+                          <div class="carousel-caption">
+                            ...
+                          </div>
+                        </div>
+                      {% endfor %}
+									  </div>
+									  <!-- Controls -->
+                    <div class="caption text-center">
+                      <div class="buttons-group">
+                        <button type="button" class="btn btn-default arrow-button" href="#carousel-example-generic" role="button" data-slide="prev">
+                          <i class="icon-left"></i>
+                        </button>
+                        &nbsp;
+                        <button type="button" class="btn btn-default like-button" id="like">
+                          <i class="icon-thumbs-up"></i>
+                        </button>
+                        &nbsp;
+                        <button type="button" class="btn btn-default arrow-button"  href="#carousel-example-generic" role="button" data-slide="next">
+                          <i class="icon-right"></i>
+                        </button>
+                      </div>
+                    </div>
+                    
+									</div>
+                </div>
+
+                <div id="allPictures2" class="hidden">
+                    {% for contestants in controller.getCurrentPhotos()%}
+                        <div class="col-sm-4 col-lg-4 col-md-4">
+                            <div class="thumbnail">
+                                <img class="visuel visuel-generate" src="{{contestants.id_picture}}" data-id-contestant="{{contestants.id_user}}"/>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <a href="/upload">
+                  <button type="button" class="btn btn-default btn-lg btn-block participer-button">
+                    <i class="icon-gamepad"></i> Participer
+                  </button>
+                </a>
+              </div>
+              <div class="col-sm-6">
+                <a href="#">
+                  <button type="button" class="btn btn-default btn-lg btn-block share-button">
+                    <i class="icon-facebook"></i> Partager
+                  </button>
+                </a>
+              </div>
+           </div>
+           <br>
+        </div>
+{% endblock %}
+{% block javascript %}
+    <script src="../assets/script/helper/helper.js"></script>
+    <script src="../assets/script/service/request.js"></script>
+    <script src="../assets/script/service/dom.js"></script>
+    <script src="../assets/script/controller/homeController.js"></script>
+{% endblock %}

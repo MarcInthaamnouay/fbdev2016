@@ -79,4 +79,13 @@ class PhotoController{
 
         return $res;
     }
+
+    /**
+     *  Set Photo Request
+     *          Set photo request
+     *  @param request $request
+     */
+    public function setPhotoFacebook($image, $message){
+        $this->photo->createAlbum($image, $message, $location);
+    }
 }

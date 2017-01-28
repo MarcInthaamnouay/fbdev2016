@@ -38,10 +38,7 @@ Class UserController{
      * @var idPhoto L'identifiant de la photo a ajoute a notre concours
      * @return Boolean, vrai dans les cas
      */
-    public function addToContest($request, $idContest){
-        $idUser = intval(Helper::getID($request, 'userID'));
-        $idPhoto = Helper::getID($request, 'photoURL');
-
+    public function addToContest($idContest, $idUser, $idPhoto){
         if(empty($idUser) || empty($idContest) || !is_int($idUser) || empty($idPhoto) || !is_int($idContest)){
             return "invalid params";
         }

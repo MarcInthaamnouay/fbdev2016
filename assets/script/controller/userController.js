@@ -4,9 +4,11 @@
  * @public
  */
 const userController = (function(){
+    const imageRegExp = 'image.*',
+          formData = new FormData();
+
     let helper = helperModule;
     let el = document.getElementById('albums-list');
-    // Check if the access token is present
     const haveToken = helper.token();
     
     if(!haveToken){
@@ -122,6 +124,81 @@ const userController = (function(){
 
             });
     };
+    
+
+    /**
+     *  Stylize Upload
+     *          Create a popup that let you edit your photo to
+     *          send on facebook
+     *  @param {FileUpload} imgFile
+     *  @private
+     */
+    const stylizeUpload = () => {
+        let selectedFile = document.getElementById('input').files[0];
+
+        console.log(selectedFile);
+
+        // @TODO return a user info to the user that he did not upload the right file..
+        if (!selectedFile.type.match(imageRegExp)){
+            console.log('jreect');
+            return;
+        }
+            
+        
+        let reader = new FileReader();
+        reader.onload = (e) => {
+            let makePopup = document.getElementById('albums-list');
+            makePopup.insertAdjacentHTML('beforeend', `
+                <div class="popup">
+                    <div id="image"><img src=${reader.result}></div>
+                    <div id="setInfo">
+                        <input type="text" id="message">
+                        <button type="button" class="btn btn-default btn-lg btn-block share-button" id="upload-computer">
+                        <i class="fa fa-upload"></i> Upload
+                    </button>
+                    </div>
+                    
+                </div>
+            `);
+
+            document.getElementById('upload-computer').addEventListener('click', uploadPhotoFromComputer.bind(null, selectedFile));
+        }
+
+        reader.readAsDataURL(selectedFile);
+    };
+
+
+    /**
+     *  Upload Photo From Computer
+     *          Upload photo from computer 
+     *  @private
+     */
+    const uploadPhotoFromComputer = (selectedFile) => {  
+        let message = document.getElementById('message').value;
+
+        if(!message)
+            return;
+            // display an image...
+            
+        formData.append('image', selectedFile, 'tamere');
+        formData.append('userID', haveToken.userID);
+        formData.append('message', message);
+        formData.append('location', location);
+        // Now make a request to the back-end
+        
+        const request = new RequestBackend('/upload/photo/computer', 'POST', formData, 'data');
+        request.prepare().execute()
+               .then((success) => {
+                   console.log(success);
+               })
+               .catch((error) => {
+                   console.log(error);
+               });
+
+    };
     // Add a listener to the DOM
-    document.addEventListener('DOMContentLoaded', displayAlbum);
-})(document, window);
+    document.addEventListener('DOMContentLoaded', function(){
+        displayAlbum();
+        document.getElementById('input').addEventListener('change', stylizeUpload);
+    });
+}.bind({}))(document, window);
