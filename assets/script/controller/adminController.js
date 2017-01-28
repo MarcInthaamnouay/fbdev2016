@@ -19,7 +19,7 @@ const adminHelper = {
     /**
      *  Check data before sending to the DB
      */
-    checkData(){
+    checkData(isUpdate = false){
         const haveToken = this.helper.token();
         let elements = document.getElementsByClassName('data');
 
@@ -34,9 +34,18 @@ const adminHelper = {
             contest[ele.getAttribute('name')] = ele.value;
         }
 
-        this.req.call(null, '/admin/contest', 'POST', contest, function(res){
-            console.log(res);
-        });
+        if(isUpdate){
+            let id = document.getElementById('id-contest').getAttribute('data-id');
+            contest.id = id;
+            this.req.call(null, '/admin/updateContest', 'POST', contest, function(res){
+                console.log(res);
+                return;
+            });
+        } else {
+            this.req.call(null, '/admin/contest', 'POST', contest, function(res){
+                console.log(res);
+            });
+        }
     }, 
     sayHello(){
         console.log('hello');
@@ -124,9 +133,27 @@ const adminHelper = {
     },
     editContest(){
         this.helper.addListener('editContent', function(){
-            console.log("grs");
             this.domHelper.init('form-control', 'class')
                           .rmProp('disabled', false);
+
+            // change the data
+            this.domHelper.init('validContent', 'id')
+                          .setStyleProp('display', 'block');
+
+            // Add listener to the add button
+            this.helper.addListener('validContent', function(){
+                this.checkData(true);
+            }.bind(this), 'id');
+
+            this.domHelper.init('cancelEdit', 'id')
+                          .setStyleProp('display', 'block');
+
+            // add listener to the cancel button
+            this.helper.addListener('cancelEdit', function(){
+                this.domHelper.init('form-control', 'id')
+                          .setProp('disabled', 'true');
+            }.bind(this), 'id');
+
         }.bind(this), 'id');
     },
     exportContest(){

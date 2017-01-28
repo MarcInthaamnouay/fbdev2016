@@ -159,11 +159,33 @@ class Contest extends Db {
         return true;
     }
 
-    public function updateContest($id,$title,$text,$lot,$infos,$start,$end){
+    /**
+     *  Update Contest
+     *          Update a contest 
+     *  @param int id
+     *  @param string title
+     *  @param string text
+     *  @param string lot
+     *  @param string info
+     *  @param string (date) start
+     */
+    public function updateContest($id,$title,$lot,$end,$desc){
         $connection = $this -> connect();
-        $sql = "UPDATE contest SET title=".$title.", text=".$text.", lot=".$lot.", infos=".$infos.", start=".$start.", end=".$end." WHERE id_user=".$id;
-        $req = $connection->prepare($sql);
-        $req->execute();
+
+        try{
+            $stmt = $connection->prepare('UPDATE contest SET title = :title, lot = :lot, end = :end, text = :text WHERE id= :id');
+            
+            $stmt->bindParam(':title', $title, PDO::PARAM_STR);
+            $stmt->bindParam(':lot', $lot, PDO::PARAM_STR);
+            $stmt->bindParam(':end', $end, PDO::PARAM_STR);
+            $stmt->bindParam(':text', $desc, PDO::PARAM_STR);
+            $stmt->bindParam(':id', intval($id), PDO::PARAM_INT);
+
+            return (bool) $stmt->execute();
+
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
     }
 
     public function getContestOfUser($idUser){

@@ -279,6 +279,25 @@ $app->post('/admin/setcontest', function($request, $response, $args){
     }
 });
 
+$app->post('/admin/updateContest', function($request, $response, $args){
+    $adminID = Helper::getID($request,'adminID');
+    $adminWorkflow = Helper::adminWorkflow($adminID);
+
+    if(!$adminWorkflow){
+       // $app->getContainer()->get('router')->pathFor('adminError');
+    }
+
+    $adminController = new AdminController($adminID);
+    $res = $adminController->updateContest($request);
+
+    var_dump($res);
+
+    if(!is_bool($res))
+        return $response->withJson(array('status' => 'error '.$res));
+        
+    return $response->withJson(array('status' => 'success'));
+});
+
 $app->post('/admin/disable', function($request, $response, $args){
     $adminID = Helper::getID($request,'adminID');
     $adminWorkflow = Helper::adminWorkflow($adminID);

@@ -232,8 +232,6 @@ class AdminController {
 		$currentContest = $this->contest->getCurrentContest();
 		$contesetToActivate = $this->contest->singleHelper($contestID)[0];
 
-
-
 		// current data
 		$currentStart = new DateTime($currentContest['start']);
 		$currentEnd = new DateTime($currentContest['end']);
@@ -267,9 +265,29 @@ class AdminController {
 		return $this->contest->disactivateContest(intval($contestID));
 	}
 
+	/**
+	 *	Get Current Contest Date
+	 *			Get the current contest date
+	 *	@return date $dateEnd
+	 */
 	public function getCurrentContestData(){
 		$dateEnd = $this->contest->getCurrentContest();
 
 		return $dateEnd['end'];
 	}
+
+	/**
+	 *	Update Contest
+	 *			Update a contest
+	 *	@param HTTP request $request
+	 */
+	 public function updateContest($request){
+		 $endDate = Helper::getID($request, 'enddate');
+		 $desc = Helper::getID($request, 'description');
+		 $gift = Helper::getID($request, 'gift');
+		 $title = Helper::getID($request, 'name');
+		 $id = Helper::getID($request, 'id');
+
+		 return $this->contest->updateContest($id, $title, $gift, $endDate, $desc);
+	 }
 }

@@ -80,6 +80,11 @@ body{
   background-color: #A4C2F4;
   color:white;
 }
+
+#validContent, #cancelEdit{
+  display: none;
+}
+
 .valid-button{
   background-color:#63D297;
   color:white;
