@@ -62,16 +62,12 @@ class RequestBackend{
             fetch(innerReq)
                 .then((response) => {
                     response.json()
-                        .then(json => {
-                            if(json.status != undefined)
-                                if(json.status != 'success')
-                                    reject(json.status);
-                            // Otherwise resolve
+                        .then(function(json){
                             resolve(json);
                         })
                         .catch(error => {
                             reject(error);
-                        })
+                        });
                 })
                 .catch((error) => {
                     reject(error);

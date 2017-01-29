@@ -37,12 +37,32 @@ const homeController = (function(){
             });
     }
 
+    const sharePhoto = () => {
+        // first we need to check if the user has the permission
+        helper.checkFBPerm().execute()
+              .then(res => {
+                  if(res.error !== undefined)
+                    return Promise.reject(res.error);
+                
+                  let perm = res.data.find( (data) => {
+                    return data.permission === 'publish_actions'
+                  });
+
+                  if(!perm || perm.status != 'granted')
+                    return Promise.reject('permission not given'); 
+                  })
+              .catch(err => {
+                  helper.errorHandler(err, 'user_posts') 
+              });
+    };
+
     /**
      *  Listen photo event
      *          Add an event to the photos 
      *  @public
      */
     const listenPhoto = function(){
+        helper.addListener('share', sharePhoto, 'id');
         helper.addListener('like', likePhoto, 'id');
     }
 

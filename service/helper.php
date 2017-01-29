@@ -112,5 +112,17 @@ Class Helper{
 
         return true;
     } 
+
+    /**
+     *  Response Handler
+     *
+     */
+     public static function responseHandler($response, $var){
+         if(is_string($var)){
+             return $response->withJson(array('error' => $var));
+         }
+            
+        return $response->withJson($var);
+     }
 }
 

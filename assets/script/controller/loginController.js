@@ -33,9 +33,11 @@ const loginController = (function(){
             } else {
                 console.log('not log');
             }
-        },{scope: 'email,user_likes,user_photos,publish_actions',
+        },{scope: 'email,user_likes',
             return_scopes: true
         });
+        // scope that we might have to ask 
+        //email,user_likes,user_photos,publish_actions
     }
 
     function addListener(){

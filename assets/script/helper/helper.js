@@ -1,4 +1,9 @@
 const helperModule = (function(){
+
+    // type of error that we can have
+    const TOKEN = 'Error validating access token';
+
+
     document.addEventListener('DOMContentLoaded', () => getToken)
     const storage = localStorage.getItem('facebook_oauth_token');
 
@@ -66,11 +71,40 @@ const helperModule = (function(){
         return formData;
     }
 
+    /**
+     *  Fb Permission
+     *          Check if the user has the permission 
+     *          If yes then return otherwise we asked the                    permission
+     */
+    const fbPerm = () => {
+        let udid = getToken();
+        // First we check if the user has the permission by making a request to the backend
+        return req = new RequestBackend('/permissions', 'POST', {userID : udid.userID}).prepare();
+    }
+
+    const handleError = (error, reqscope) => {
+        if (error.indexOf('Error validating access token') !== -1)
+            window.location.href = '/login';
+        else if (error === 'permission not given'){
+            FB.login(response => {
+                console.log(response);
+                if(response.authResponse){
+                    console.log(response.authResponse);
+                }
+            },{ 
+                scope : reqscope,
+                return_scopes : true
+            });
+        }
+    }
+
     return {
         token : getToken,
         addListener : addEvent,
         fixDate : correctDBDate,
-        image : getImgData
+        image : getImgData,
+        checkFBPerm : fbPerm,
+        errorHandler : handleError
     }
 }.bind({}))();
 

@@ -52,4 +52,20 @@ Class UserController{
 
         return $resUpdate;
     }
+
+    /**
+     *  Get Permission 
+     *          Send back the permission
+     */
+    public function getPermission($request){
+        $userID = Helper::getID($request, 'userID');
+        $token = Helper::retrieveToken($userID);
+
+        if($token){
+            $fbReq = new FacebookServices('/'.$userID.'/permissions', $token, 'GET', null);
+            $res = $fbReq->make();
+        }
+
+        return $res;
+    }
 }

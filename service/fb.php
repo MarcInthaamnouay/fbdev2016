@@ -42,6 +42,8 @@ Class FacebookServices{
             return $resBody;
         } catch(Facebook\Exceptions\FacebookResponseException $e){
             return $e->getMessage();
+        } catch(Facebook\Exceptions\FacebookSDKException $e) {
+            return $e->getMessage();
         }
     }
 }

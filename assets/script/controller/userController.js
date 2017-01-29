@@ -30,6 +30,7 @@ const userController = (function(){
             console.log(success);
         })
         .catch(err => {
+            console.log('errr');
             console.log(err);
         });
     }
@@ -198,7 +199,26 @@ const userController = (function(){
     };
     // Add a listener to the DOM
     document.addEventListener('DOMContentLoaded', function(){
-        displayAlbum();
-        document.getElementById('input').addEventListener('change', stylizeUpload);
+        helper.checkFBPerm().execute()
+              .then(res => {
+                // 
+                if(res.error !== undefined)
+                    return Promise.reject(res.error);
+
+                let perm = res.data.find( (data) => {
+                        return data.permission === 'user_photos'
+                });
+
+                if(!perm || perm.status != 'granted')
+                    return Promise.reject('permission not given'); 
+              })
+              .then(displayAlbum)
+              .then(function(){
+                  document.getElementById('input').addEventListener('change', stylizeUpload);
+              })
+              .catch(err => { 
+                  helper.errorHandler(err, 'user_photos');
+                  console.log(err);
+              });
     });
 }.bind({}))(document, window);

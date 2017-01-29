@@ -145,6 +145,13 @@ $app->post('/user/like', function($request, $response, $args){
     }
 });
 
+$app->post('/permissions', function($request, $response, $args){
+    $userController = new UserController();
+    $res = $userController->getPermission($request);
+
+    return Helper::responseHandler($response, $res);
+});
+
 $app->get('/login', function($request, $response, $args){
     return $this->view->render($response, './contest/login.twig');
 });
