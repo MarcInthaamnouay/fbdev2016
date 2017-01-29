@@ -37,7 +37,7 @@ class ContestController {
 	/**
 	 *	Get Current Photos
 	 *			Get the current photos of the contest
-	 *	@param idContest int
+	 *	@return Array $contestData
 	 */
 	 public function getCurrentPhotos(){
 		 $contestID = $this->getCurrentContest()['id'];
@@ -46,6 +46,11 @@ class ContestController {
 		 return $contestData;
 	 }
 
+	 /**
+	  *	 Set Likes
+	  *	 @param HTTPRequest $request
+	  *	 @return boolean res
+	  */
 	 public function setLikes($request){
 		 $id_participant = intval(Helper::getID($request, 'id_contestant'));
 		 $id_user = intval(Helper::getID($request, 'id_user'));

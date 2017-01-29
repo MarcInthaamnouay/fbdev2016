@@ -7,6 +7,7 @@ const homeController = (function(){
     // @private
     // Get our helper module
     let helper = helperModule;
+    const ls = helper.token();
     const date = new Date();
     const month = helper.fixDate(date.getMonth() + 1);
     const day = helper.fixDate(date.getDate());
@@ -37,7 +38,48 @@ const homeController = (function(){
             });
     }
 
-    const sharePhoto = () => {
+    /**
+     *  Share 
+     *          Share a photo with a custom message
+     *  @private
+     */
+    const share = () => {
+        console.log('share');
+        // show the modal
+        let child = DOMHelper.init('active', 'class')
+                               .getChild();
+
+        DOMHelper.init('modal-img', 'id')
+                 .setProp('src', child[0][1].currentSrc); 
+
+        $('#myModal').modal('toggle');
+        helper.addListener('post-share', sharePost.bind(null, child[0][1].currentSrc) ,'id')
+    };
+
+    /**
+     *  Share Post
+     *          Share a post
+     */
+    const sharePost = (imglink) => {
+        // make request
+        const req = new RequestBackend('/user/share', 'POST', {
+            message : document.getElementById('message-modal').value,
+            privacy : document.getElementById('privacy').value,
+            link : imglink,
+            userID : ls.userID
+        }).prepare().execute()
+                  .then(res => {
+                      $('#myModal').modal('toggle');
+
+                      if(res.error !== undefined)
+                            return Promise.reject(res.error);
+                  })
+                  .catch(err => {
+                      console.log(err);
+                  });
+    };
+
+    const shareProcess = () => {
         // first we need to check if the user has the permission
         helper.checkFBPerm().execute()
               .then(res => {
@@ -50,9 +92,11 @@ const homeController = (function(){
 
                   if(!perm || perm.status != 'granted')
                     return Promise.reject('permission not given'); 
-                  })
+              })
+              .then(share)
               .catch(err => {
-                  helper.errorHandler(err, 'user_posts') 
+                  console.log(err);
+                  helper.errorHandler(err, 'publish_actions') 
               });
     };
 
@@ -62,12 +106,13 @@ const homeController = (function(){
      *  @public
      */
     const listenPhoto = function(){
-        helper.addListener('share', sharePhoto, 'id');
+        helper.addListener('share', shareProcess, 'id');
         helper.addListener('like', likePhoto, 'id');
     }
 
     // Listen for the dom ready then add our listener 
     document.addEventListener('DOMContentLoaded', listenPhoto, false);
+    //document.addEventListener('DOMContentLoaded', sharePhoto, false);
     // Return our listener this can be useful for other cases
     return {
         listen : listenPhoto

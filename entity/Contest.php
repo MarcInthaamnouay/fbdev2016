@@ -40,24 +40,12 @@ class Contest extends Db {
         $now = new DateTime();
         $result = false;
         foreach($results as $row){
-            //if(new DateTime($row['start'])<$now && new DateTime($row['end']) >$now)
             if($row['active'] == 1)
                 $result = $row;
         }
         return $result;
     }
-
-     public function haveCurrentContest() {
-        $connection = $this -> connect();
-        $results = $connection -> query("SELECT * FROM contest");
-        $now = new DateTime();
-        foreach($results as $row){
-            if(new DateTime($row['start'])<$now && new DateTime($row['end']) >$now)
-                return true;
-        }
-        return false;
-    }
-
+    
     /**
      *  disactivate Contest
      *          Disactivate a contest based on it's id

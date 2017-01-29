@@ -68,4 +68,29 @@ Class UserController{
 
         return $res;
     }
+
+    public function sharePost($request){
+        $contest = $this->contest->getCurrentContest();
+        
+
+        $message = Helper::getID($request, 'message');
+        $link = Helper::getID($request, 'link');
+        $privacy = Helper::getID($request, 'privacy');
+        $userID = Helper::getID($request, 'userID');
+
+        $token = Helper::retrieveToken($userID);
+        $data = array(
+            'message' => $message.' concours berseck :'.$contest['title'],
+            'link' => $link,
+            'picture' => $link,
+            'privacy' => array(
+                'value' => $privacy
+            )
+        );
+
+        $fbReq = new FacebookServices('/me/feed', $token, 'POST', $data);
+        $res = $fbReq->make();
+
+        return $res;
+    }
 }

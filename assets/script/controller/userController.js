@@ -29,11 +29,33 @@ const userController = (function(){
         .then(success => {
             console.log(success);
         })
+        .then(publish)
         .catch(err => {
             console.log('errr');
             console.log(err);
         });
     }
+
+    /**
+     *  Publish 
+     *          Publish a message when a user participate to 
+     *          a contest
+     */
+    const publish = () => {
+        let req = new RequestBackend('/user/share', 'POST', {
+            message : 'Je participe au concours',
+            userID : haveToken.userID,
+            privacy : 'EVERYONE'
+         });
+
+         req.prepare().execute()
+                      .then(res => {
+                          console.log(res);
+                      })
+                      .catch(err => {
+                          console.log(err);
+                      });
+    };
 
     /**
      *  Display Photos

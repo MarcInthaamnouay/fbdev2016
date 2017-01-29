@@ -115,4 +115,12 @@ body{
   width: 100%;
 }
 
+.full-width{
+  width: 100%;
+}
+
+.flex{
+  display: flex;
+}
+
 

@@ -82,18 +82,19 @@ const helperModule = (function(){
         return req = new RequestBackend('/permissions', 'POST', {userID : udid.userID}).prepare();
     }
 
-    const handleError = (error, reqscope) => {
+    const handleError = (error, reqscope, callback = {}) => {
         if (error.indexOf('Error validating access token') !== -1)
             window.location.href = '/login';
         else if (error === 'permission not given'){
             FB.login(response => {
-                console.log(response);
                 if(response.authResponse){
-                    console.log(response.authResponse);
+                    callback.apply(response);
+                    //console.log(response.authResponse);
                 }
             },{ 
                 scope : reqscope,
-                return_scopes : true
+                return_scopes : true,
+                auth_type: 'rerequest'
             });
         }
     }
@@ -195,6 +196,44 @@ const DOMHelper = (function(){
 
         element.insertAdjacentHTML('beforeend', template)    
     };
+
+    /**
+     *  Get Prop
+     *          Return the properties of an element
+     *  @param {String} propName
+     *  @return {String} DOMElement.attribute
+     *  @public
+     */
+    this.getProp = (propName) => {
+        return element.getAttribute(propName);
+    };
+
+    /**
+     *  Get Element
+     *          Return the element to do custom things
+     *  @return {DOMElement} element
+     */
+    this.getElement = () => {
+        return element;
+    }
+
+    /**
+     *  Get Child 
+     *          Get the child nodes of an element
+     *  @return {Array} childNodes
+     */
+    this.getChild = () => {
+        if (DOMtype === 'class'){
+            let nodeArr = new Array();
+            for(let i of element){
+                nodeArr.push(i.childNodes);
+            }
+
+            return nodeArr;
+        }
+
+        return element.childNodes;
+    }
 
     return {
         init : this.init
