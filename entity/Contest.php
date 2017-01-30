@@ -36,14 +36,17 @@ class Contest extends Db {
         $connection = $this -> connect();
 
         // Query the database
-        $results = $connection -> query("SELECT * FROM contest");
-        $now = new DateTime();
-        $result = false;
-        foreach($results as $row){
-            if($row['active'] == 1)
-                $result = $row;
+        try{
+            $results = $connection -> query("SELECT * FROM contest");
+            $result = false;
+            foreach($results as $row){
+                if($row['active'] == 1)
+                    $result = $row;
+            }
+            return $result;
+        } catch (PDOException $e){
+            return $e->getMessage();
         }
-        return $result;
     }
     
     /**

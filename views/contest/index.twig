@@ -15,13 +15,15 @@
                         </div>
                         <div id="collapseOne" class="panel-collapse collapse collapse">
                             <div class="panel-body">
-														Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                <br>
-                                <i class="icon-calendar"></i>
-                                &nbsp;&nbsp; 01/02/2017 &nbsp; - &nbsp; 31/02/2017
-                                <br>
-                                <i class="icon-award"></i>
-                                &nbsp;&nbsp; Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                                {% if controller.getCurrentContest() %}
+                                  {{controller.resData.text}}
+                                  <br>
+                                  <i class="icon-calendar"></i>
+                                  &nbsp;&nbsp; {{controller.resData.start}} &nbsp; - &nbsp; {{controller.resData.end}}
+                                  <br>
+                                  <i class="icon-award"></i>
+                                  &nbsp;&nbsp; {{controller.resData.titrelot}}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -29,7 +31,7 @@
             </div>
             <!-- /.col-lg-12 -->
 
-            <div class="col-md-12">
+            <div class="col-md-12" id="myBody">
               <ul class="nav nav-pills nav-justified">
                 <li role="presentation" class="active-blue" id="#random1">
                   <a href="#">Random</a>

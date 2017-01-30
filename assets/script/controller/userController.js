@@ -223,7 +223,6 @@ const userController = (function(){
     document.addEventListener('DOMContentLoaded', function(){
         helper.checkFBPerm().execute()
               .then(res => {
-                // 
                 if(res.error !== undefined)
                     return Promise.reject(res.error);
 

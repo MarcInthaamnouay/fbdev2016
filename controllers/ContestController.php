@@ -6,6 +6,7 @@ require_once __DIR__.'/../service/helper.php';
 class ContestController {
 
 	private $contest;
+	public  $resData;
 
 	function __construct()
 	{
@@ -31,6 +32,8 @@ class ContestController {
 	{
 		$result = $this->contest->getCurrentContest();
 		if(count($result) == 0 ) return false;
+
+		$this->resData = $result;
 		return $result;
 	}
 
@@ -42,6 +45,14 @@ class ContestController {
 	 public function getCurrentPhotos(){
 		 $contestID = $this->getCurrentContest()['id'];
 		 $contestData = $this->getDataContest(intval($contestID));
+
+		 if(empty($contestData))
+		 	return array(
+				 array(
+					'id_picture' => '/assets/img/none.png',
+					'id_user' => 'none'
+				 )
+			 );
 
 		 return $contestData;
 	 }

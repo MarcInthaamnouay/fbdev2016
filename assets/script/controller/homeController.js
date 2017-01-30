@@ -19,10 +19,22 @@ const homeController = (function(){
      *  @param {String} photoID
      */
     const likePhoto = function(photoID){
-        const attr = domComponent('active', 'class');
+        const attr = DOMHelper.init('active', 'class');
+
+        // make a feedback to the user that no photo is in the contest
+        if(attr.getProp('data-id-contestant', 0) === 'none'){
+            DOMHelper.init('myBody', 'id')
+                     .setContent(`
+                        <div class="alert alert-warning" id="warning" role="alert">No photos to like</div>
+                     `)
+                     .hide('warning', 300)
+                     .destroy('warning', 600);
+        
+            return;
+        }
 
         const data = {
-            id_contestant : attr.getAttr('data-id-contestant', 0),
+            id_contestant : attr.getProp('data-id-contestant', 0),
             id_user : helper.token().userID,
             date_vote : `${date.getFullYear()}-${month}-${day}`
         };
@@ -44,10 +56,21 @@ const homeController = (function(){
      *  @private
      */
     const share = () => {
-        console.log('share');
+        let element = DOMHelper.init('active', 'class');
+
+        if(element.getProp('data-id-contestant', 0) === 'none'){
+            DOMHelper.init('myBody', 'id')
+                     .setContent(`
+                        <div class="alert alert-warning" id="warning-share" role="alert">No photos to share</div>
+                     `)
+                     .hide('warning-share', 300)
+                     .destroy('warning-share', 600);
+        
+            return;
+        }
+            
         // show the modal
-        let child = DOMHelper.init('active', 'class')
-                               .getChild();
+        let child = element.getChild();
 
         DOMHelper.init('modal-img', 'id')
                  .setProp('src', child[0][1].currentSrc); 

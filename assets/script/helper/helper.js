@@ -157,10 +157,12 @@ const DOMHelper = (function(){
                 el.setAttribute(propName, value);
             }
 
-            return;
+            return this;
         }
 
         element.setAttribute(propName, value);
+
+        return this;
     }
 
     /**
@@ -191,10 +193,11 @@ const DOMHelper = (function(){
         console.log('setting content');
         if (replace){
             element.innerHTML = template;
-            return this;
         }
 
-        element.insertAdjacentHTML('beforeend', template)    
+        element.insertAdjacentHTML('beforeend', template);
+
+        return this;
     };
 
     /**
@@ -204,7 +207,10 @@ const DOMHelper = (function(){
      *  @return {String} DOMElement.attribute
      *  @public
      */
-    this.getProp = (propName) => {
+    this.getProp = (propName, index = 0) => {
+        if(DOMtype === 'class')
+            return element[index].getAttribute(propName);
+
         return element.getAttribute(propName);
     };
 
@@ -234,6 +240,32 @@ const DOMHelper = (function(){
 
         return element.childNodes;
     }
+
+    /**
+     *  Hide 
+     *  @param {String} DOMString
+     *  @param {Number} timeout
+     *  @return {Object} this
+     *  @chainable
+     */
+    this.hide = (DOMString, timeout = 0) => {
+        document.getElementById(DOMString).style.transition = `ease ${timeout}ms`;
+        setTimeout(() => {
+            document.getElementById(DOMString).style.opacity = 0;
+        }, timeout);
+
+        return this;
+    };
+
+    /**
+     *  Destroy an element
+     *      
+     */
+    this.destroy = (DOMString, timeout = 0) => {
+        setTimeout(() => {
+            let el = document.getElementById(DOMString).remove();
+        }, timeout);
+    };
 
     return {
         init : this.init
