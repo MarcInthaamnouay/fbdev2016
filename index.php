@@ -164,13 +164,11 @@ $app->get('/login', function($request, $response, $args){
 });
 
 // @TODO make every admin request to POST
-$app->post('/admin/login', function($request, $response, $args){
-    $isAdmin = AdminController::checkIfAdmin($request);
-
-    if ($isAdmin)
-        return $response->withJson(array('status' => 'success'));
-    else
-        return $response->withJson(array('status' => 'error'));
+$app->get('/admin', function($request, $response, $args){
+    $static_path = Helper::getConfigValue('admin_views_params');
+    return $this->view->render($response, './admin/admin.twig', [
+        'data' => $static_path
+    ]);
 });
 
 $app->get('/admin/{userID}/config', function($request, $response, $args){
@@ -286,10 +284,7 @@ $app->post('/admin/setcontest', function($request, $response, $args){
         $adminController = new AdminController($adminID);
         $res = $adminController->setContestToActive($request);
 
-        if(!is_bool($res))
-            return $response->withJson(array('status' => 'error '.$res));
-        
-        return $response->withJson(array('status' => 'success'));
+        return Helper::responseHandler($response, $res);
     }
 });
 
@@ -304,12 +299,11 @@ $app->post('/admin/updateContest', function($request, $response, $args){
     $adminController = new AdminController($adminID);
     $res = $adminController->updateContest($request);
 
-    var_dump($res);
-
-    if(!is_bool($res))
-        return $response->withJson(array('status' => 'error '.$res));
+    return Helper::responseHandler($response, $res);
+    // if(!is_bool($res))
+    //     return $response->withJson(array('status' => 'error '.$res));
         
-    return $response->withJson(array('status' => 'success'));
+    // return $response->withJson(array('status' => 'success'));
 });
 
 $app->post('/admin/disable', function($request, $response, $args){
@@ -324,10 +318,11 @@ $app->post('/admin/disable', function($request, $response, $args){
     $adminController = new AdminController($adminID);
     $res = $adminController->disable($request);
 
-    if(!is_bool($res))
-        return $response->withJson(array('status' => 'error '.$res));
+    return Helper::responseHandler($response, $res);
+    // if(!is_bool($res))
+    //     return $response->withJson(array('status' => 'error '.$res));
         
-    return $response->withJson(array('status' => 'success'));
+    // return $response->withJson(array('status' => 'success'));
 });
 
 $app->get('/admin/error', function($request, $response, $args){

@@ -12,6 +12,15 @@
     <link href="{{data.asset_path}}/css/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <link href="{{data.asset_path}}/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="{{data.asset_path}}/css/index.css" rel="stylesheet">
+    <script>
+			(function(d, s, id) {
+				var js, fjs = d.getElementsByTagName(s)[0];
+				if (d.getElementById(id)) return;
+				js = d.createElement(s); js.id = id;
+				js.src = "//connect.facebook.net/en_US/sdk.js";
+				fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
+	</script>
 </head>
 
 <body>
@@ -32,10 +41,10 @@
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
                         <li>
-                            <a href="index.html">Concours</a>
+                            <a href="/">Concours</a>
                         </li>
                         <li>
-                            <a href="comment-jouer.html">Comment jouer</a>
+                            <a>Comment jouer</a>
                         </li>
                     </ul>
                 </div>

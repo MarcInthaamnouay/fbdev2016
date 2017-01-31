@@ -120,7 +120,12 @@ Class Helper{
      public static function responseHandler($response, $var){
          if(is_string($var)){
              return $response->withJson(array('error' => $var));
-         }
+         } 
+         if(is_bool($var))
+            if(!$var)
+                return $response->withJson(array('error' => $var));
+            else 
+                return $response->withJson(array('status' => 'ok'));
             
         return $response->withJson($var);
      }

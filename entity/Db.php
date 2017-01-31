@@ -97,24 +97,42 @@ class Db {
         
     }
    
+    /**
+     *  Update User
+     *  @param Int $idUser
+     *  @param String $token
+     *  @return bool | String 
+     */
     public function UpdateUser($idUser,$token) {
         $connection = $this -> connect();
-        $sql = "UPDATE user_trace SET token='".$token."' WHERE id_user=".$idUser;
-        $req = $connection->prepare($sql);
-        $req->execute();
 
-        return $req->rowCount();
+        try{
+            $stmt = $connection->prepare('UPDATE user_trace SET token = :token WHERE id_user = :idUser');
+            $stmt->bindParam(':token', $token);
+            $stmt->bindParam(':idUser', $idUser);
+
+            return (bool) $stmt->execute();
+
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+        
+
     }
 
+    /**
+     *  Add User
+     *      Add a user 
+     *  @param String $token
+     *  @param idUser int
+     */
     public function addUser($token,$idUser) {
         try{
             $connection = $this -> connect();
             $req = $connection->prepare("INSERT INTO user_trace (id_user, token) VALUES (:id_user, :token)");
             $req->bindParam(':id_user', $idUser);
             $req->bindParam(':token', $token);
-            $req->execute();
-
-            return true;
+            return (bool) $req->execute();
         } catch(PDOException $e){
             return $e;
         }

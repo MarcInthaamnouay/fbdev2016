@@ -11,6 +11,11 @@ Class connexion {
 		$this->db = new Db();
 	}
 
+	/** 
+	 *	Check User Exist 
+	 *		Check if the user exist 
+	 *	@param Int idUser
+	 */
 	function checkUserExist($idUser){
 		 $result = $this->db->selectUser($idUser);
 		 if($result->rowCount() == 0) 
@@ -19,15 +24,18 @@ Class connexion {
 		 	return true; 
 	}
 
+	/**
+	 *	Add User 
+	 *		Add a user to the DB
+	 *	@param Int idUser 
+	 *	@param String token
+	 */	
 	function adduser($idUser,$token) {
 		if($this->checkUserExist($idUser) === false){
-			$result = $this->db->addUser($token, $idUser);
-
-			return true;
+			return $this->db->addUser($token, $idUser);
 		}
 		else{
-			$result = $this->db->updateUser($idUser, $token);
-			return true;
+			return $this->db->updateUser($idUser, $token);
 		}
 			
 		return false;
