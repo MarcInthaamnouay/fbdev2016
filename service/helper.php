@@ -67,21 +67,47 @@ Class Helper{
      *  @return token string
      *  @return error message if PDOException
      */
+    // public static function retrieveToken($userID){
+    //      $db = new Db();
+    //     try{
+    //         $con = $db->connect();
+    //         $results = $con->query("SELECT * FROM user_trace WHERE id_user = ".$userID);
+    //         $result = $results->fetch();
+    //         $token = '';
+
+    //         foreach($result as $key => $value){
+    //             if($key == 'token'){
+    //                 $token = $value;
+    //             }
+    //         }
+
+    //         return $token;
+    //     } catch(PDOException $e){
+    //         return $e;
+    //     }
+
+        
+    // }
+
     public static function retrieveToken($userID){
          $db = new Db();
         try{
             $con = $db->connect();
-            $results = $con->query("SELECT * FROM user_trace WHERE id_user = ".$userID);
-            $result = $results->fetch();
-            $token = '';
+            $stmt = $con->prepare("SELECT * FROM user_trace WHERE id_user = :userID");
+            $stmt->bindParam(":userID", $userID);
+            $stmt->execute();
 
-            foreach($result as $key => $value){
-                if($key == 'token'){
-                    $token = $value;
-                }
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            $token = false;
+   
+            if($result['token']){
+                $token = $result['token'];
+                return $token;
             }
+                
+             if(!$token)
+                 return 'error';
 
-            return $token;
         } catch(PDOException $e){
             return $e;
         }
