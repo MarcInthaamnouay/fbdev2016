@@ -107,6 +107,7 @@ class Db {
         $connection = $this -> connect();
 
         try{
+            var_dump("updateUser");
             $stmt = $connection->prepare('UPDATE user_trace SET token = :token WHERE id_user = :idUser');
             $stmt->bindParam(':token', $token);
             $stmt->bindParam(':idUser', $idUser);
@@ -128,6 +129,7 @@ class Db {
      */
     public function addUser($token,$idUser) {
         try{
+            var_dump($idUser);
             $connection = $this -> connect();
             $req = $connection->prepare("INSERT INTO user_trace (id_user, token) VALUES (:id_user, :token)");
             $req->bindParam(':id_user', $idUser);
@@ -135,6 +137,23 @@ class Db {
             return (bool) $req->execute();
         } catch(PDOException $e){
             return $e;
+        }
+    }
+
+    public function getActiveStyle(){
+
+        // CONNECT TO DATABASE
+        $connection = $this -> connect();
+        
+        try{
+            $stmt = $connection -> prepare("SELECT color FROM stylesheet WHERE active=1");
+            $stmt->execute();
+
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result;
+        } catch(PDOException $e){
+            return $e->getMessage();
         }
     }
 }
