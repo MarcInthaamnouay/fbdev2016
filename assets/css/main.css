@@ -79,10 +79,20 @@ a{
 }
 .thumbnail {
     padding: 0;
+    height: 295px;
+    position: relative;
+    overflow: hidden;
 }
 .thumbnail .caption-full {
     padding: 9px;
     color: #333;
+}
+
+.thumbnail .caption{
+  background-color: white;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 
 .buttons-group{
@@ -145,4 +155,13 @@ a{
   margin-top:50px;
   margin-bottom:20px;
   width:250px;
+}
+
+.back-button{
+  position: fixed;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  bottom: 80px;
+  right: 30px;
 }

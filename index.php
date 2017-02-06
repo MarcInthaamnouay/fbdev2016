@@ -45,7 +45,8 @@ $app->get('/', function($request, $response, $args){
 
     $contestController = new ContestController();
     return $this->view->render($response, './contest/index.twig', [
-        'controller' => $contestController
+        'controller' => $contestController,
+        'data' => Helper::getConfigValue('contest_views_params')
     ]);
 });
 
@@ -53,6 +54,7 @@ $app->get('/upload', function($request, $response, $args){
      $userController = new UserController();
     return $this->view->render($response, './contest/upload.twig', [
         'controller' => $userController,
+        'data' => Helper::getConfigValue('contest_views_params')
     ]);
 })->setName('upload');
 
@@ -160,7 +162,9 @@ $app->post('/permissions', function($request, $response, $args){
 });
 
 $app->get('/login', function($request, $response, $args){
-    return $this->view->render($response, './contest/login.twig');
+    return $this->view->render($response, './contest/login.twig', [
+        'data' => Helper::getConfigValue('contest_views_params')
+    ]);
 });
 
 // @TODO make every admin request to POST
@@ -172,7 +176,7 @@ $app->get('/admin', function($request, $response, $args){
 });
 
 $app->get('/admin/{userID}/config', function($request, $response, $args){
-    
+    var_dump('zougouzigouza');
     $adminWorkflow = Helper::adminWorkflow($args['userID']);
     $url = $this->router->pathFor('adminError');
     if(!$adminWorkflow)

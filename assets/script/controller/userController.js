@@ -63,6 +63,8 @@ const userController = (function(){
      *  @private
      */
     const displayPhotos = function(){
+        document.getElementById('albumCollapse').classList.remove('in');
+        document.getElementById('imageCollapse').classList.add('in');
         let grid = document.getElementById('photo-list');
         let album_id = this.getAttribute('data-id');
 
