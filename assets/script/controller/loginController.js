@@ -6,7 +6,6 @@
 const loginController = (function(){
     console.log('fire');
     document.addEventListener('DOMContentLoaded', addListener)
-    const route = (window.location.href).split('/');
 
     /**
      * Process Login 
@@ -14,7 +13,6 @@ const loginController = (function(){
      * @private 
      */
     const processLogin = function(){
-        console.log(FB);
         FB.login(function(response) {
             console.log(response);
             if (response.authResponse) {
@@ -25,15 +23,10 @@ const loginController = (function(){
                 //set the token as a session by using our request service
                 let newRequest = new RequestBackend("/token", "POST", authObj);
                 newRequest.prepare().execute().then(success => {
-                    if(success.error !== undefined) 
-                        return Promise.reject(success.error);
-                        
+                    //console.log(authObj.userID);
+                    console.log(success);
                     localStorage.setItem("facebook_oauth_token", JSON.stringify(authObj));
-
-                    if(route[route.length - 1] === 'login')
-                        window.location.href = `/upload`;
-                    else    
-                        window.location.href = `/admin/${parseInt(response.authResponse.userID)}/config`;
+                    //window.location.href = `/upload`;
                 })  
                 .catch(err => { 
                     console.log(err);
@@ -52,4 +45,6 @@ const loginController = (function(){
         console.log('add bit');
         document.getElementById('button').addEventListener('click', processLogin)
     }
+
+    
 }.bind({}))();

@@ -8,11 +8,16 @@ class Db {
      * 
      * @return bool false on failure / mysqli MySQLi object instance on success
      */
-    public function connect() {    
+    public function connect($boolForPath) {    
         // Try and connect to the database
         if(!isset(self::$connection)) {
-            // Load configuration as an array. Use the actual location of your configuration file
-            $config = parse_ini_file('./conf.inc.php'); 
+            // Load configuration as an array. Use the actual location of your configuration file. If 0 -> normal path if 1-> path for style
+            if($boolForPath){
+                $config = parse_ini_file('./conf.inc.php');     
+            }else{
+                $config = parse_ini_file('../conf.inc.php'); 
+            }
+            
 
             try {
                  self::$connection = new PDO('mysql:dbname='.$config['dbname'].';host='.$config['host'], $config['username'],$config['password']);
@@ -38,7 +43,7 @@ class Db {
      */
     public function query($query) {
         // Connect to the database
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
 
         // Query the database
         $result = $connection -> query($query);
@@ -70,7 +75,7 @@ class Db {
      * @return string Database error message
      */
     public function error() {
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
         return $connection -> error;
     }
 
@@ -81,13 +86,13 @@ class Db {
      * @return string The quoted and escaped string
      */
     public function quote($value) {
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
         return "'" . $connection -> real_escape_string($value) . "'";
     }
 
     public function selectUser($id) {
         try{
-            $connection = $this -> connect();
+            $connection = $this -> connect(true);
             $result = $connection -> query("SELECT * FROM user_trace WHERE id_user = ".$id, PDO::FETCH_ASSOC);
     
             return $result;
@@ -104,9 +109,10 @@ class Db {
      *  @return bool | String 
      */
     public function UpdateUser($idUser,$token) {
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
 
         try{
+            var_dump("updateUser");
             $stmt = $connection->prepare('UPDATE user_trace SET token = :token WHERE id_user = :idUser');
             $stmt->bindParam(':token', $token);
             $stmt->bindParam(':idUser', $idUser);
@@ -128,13 +134,31 @@ class Db {
      */
     public function addUser($token,$idUser) {
         try{
-            $connection = $this -> connect();
+            var_dump($idUser);
+            $connection = $this -> connect(true);
             $req = $connection->prepare("INSERT INTO user_trace (id_user, token) VALUES (:id_user, :token)");
             $req->bindParam(':id_user', $idUser);
             $req->bindParam(':token', $token);
             return (bool) $req->execute();
         } catch(PDOException $e){
             return $e;
+        }
+    }
+
+    public function getActiveStyle(){
+
+        // CONNECT TO DATABASE
+        $connection = $this -> connect(false);
+        
+        try{
+            $stmt = $connection -> prepare("SELECT color FROM stylesheet WHERE active=1");
+            $stmt->execute();
+
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result;
+        } catch(PDOException $e){
+            return $e->getMessage();
         }
     }
 }

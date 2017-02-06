@@ -93,4 +93,10 @@ Class UserController{
 
         return $res;
     }
+
+    public function getColor(){
+        //print_r($this->contest->getActiveStyle());
+        $this->colorData = $this->contest->getActiveStyle()[0]['color'];
+        return $this->colorData;
+    }
 }

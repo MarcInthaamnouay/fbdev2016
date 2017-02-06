@@ -7,6 +7,7 @@ class ContestController {
 
 	private $contest;
 	public  $resData;
+	public $colorData;
 
 	function __construct()
 	{
@@ -71,5 +72,10 @@ class ContestController {
 		 $res = $this->contest->setVote($id_participant, $id_user, $date);
 
 		 return $res;
+	 }
+
+	 public function getColor(){
+	 	$this->colorData = $this->contest->getActiveStyle()[0]['color'];
+	 	return $this->colorData;
 	 }
 }

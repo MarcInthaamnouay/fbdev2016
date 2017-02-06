@@ -119,7 +119,7 @@ $app->post('/token', function($request, $response, $args){
     if($res === true){
         return $response->withJson(array('status' => 'success'), 200);
     } else {
-        return $response->withJson(array('status' => 'error'), 200);
+        return $response->withJson(array('status' => 'error'.$res), 200);
     }
 });
 
@@ -169,10 +169,20 @@ $app->get('/login', function($request, $response, $args){
 
 // @TODO make every admin request to POST
 $app->get('/admin', function($request, $response, $args){
-    $static_path = Helper::getConfigValue('admin_views_params');
-    return $this->view->render($response, './admin/admin.twig', [
-        'data' => $static_path
-    ]);
+   $static_path = Helper::getConfigValue('admin_views_params');
+   return $this->view->render($response, './admin/admin.twig', [
+       'data' => $static_path
+   ]);
+});
+
+// @TODO make every admin request to POST
+$app->post('/admin/login', function($request, $response, $args){
+    $isAdmin = AdminController::checkIfAdmin($request);
+
+    if ($isAdmin)
+        return $response->withJson(array('status' => 'success'));
+    else
+        return $response->withJson(array('status' => 'error'));
 });
 
 $app->get('/admin/{userID}/config', function($request, $response, $args){
@@ -288,7 +298,10 @@ $app->post('/admin/setcontest', function($request, $response, $args){
         $adminController = new AdminController($adminID);
         $res = $adminController->setContestToActive($request);
 
-        return Helper::responseHandler($response, $res);
+        if(!is_bool($res))
+            return $response->withJson(array('status' => 'error '.$res));
+        
+        return $response->withJson(array('status' => 'success'));
     }
 });
 
@@ -303,11 +316,12 @@ $app->post('/admin/updateContest', function($request, $response, $args){
     $adminController = new AdminController($adminID);
     $res = $adminController->updateContest($request);
 
-    return Helper::responseHandler($response, $res);
-    // if(!is_bool($res))
-    //     return $response->withJson(array('status' => 'error '.$res));
+    var_dump($res);
+
+    if(!is_bool($res))
+        return $response->withJson(array('status' => 'error '.$res));
         
-    // return $response->withJson(array('status' => 'success'));
+    return $response->withJson(array('status' => 'success'));
 });
 
 $app->post('/admin/disable', function($request, $response, $args){
@@ -322,11 +336,10 @@ $app->post('/admin/disable', function($request, $response, $args){
     $adminController = new AdminController($adminID);
     $res = $adminController->disable($request);
 
-    return Helper::responseHandler($response, $res);
-    // if(!is_bool($res))
-    //     return $response->withJson(array('status' => 'error '.$res));
+    if(!is_bool($res))
+        return $response->withJson(array('status' => 'error '.$res));
         
-    // return $response->withJson(array('status' => 'success'));
+    return $response->withJson(array('status' => 'success'));
 });
 
 $app->get('/admin/error', function($request, $response, $args){
