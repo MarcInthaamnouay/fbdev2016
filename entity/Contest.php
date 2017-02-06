@@ -5,7 +5,7 @@ require "Db.php";
 class Contest extends Db {
 
     function isUserInContest($idContest,$idUsers) {
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
         $contest = new Contest();
     }
 
@@ -16,7 +16,7 @@ class Contest extends Db {
      */
     public function getAllContest() {
         // Connect to the database
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
 
         // Query the database
         try{
@@ -33,7 +33,7 @@ class Contest extends Db {
 
     public function getCurrentContest() {
         // Connect to the database
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
 
         // Query the database
         try{
@@ -56,7 +56,7 @@ class Contest extends Db {
      *  @return string if error
      */
     public function disactivateContest($contestID){
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
         $date = new DateTime();
 
         try {
@@ -77,7 +77,7 @@ class Contest extends Db {
      *          Activate a contest based on it's id
      */
      public function activateContest($contestID){
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
 
         try {
             $stmt = $connection->prepare('UPDATE contest SET active = 1 WHERE id = :contestID');
@@ -94,7 +94,7 @@ class Contest extends Db {
      *          Add a contest into the database
      */
     public function addContest($title,$text,$lot,$start,$end,$infos){
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
 
         try{
              $isDataValid = $this->beforeAddContest($title, $text, $lot, $start, $end, $infos);
@@ -161,7 +161,7 @@ class Contest extends Db {
      *  @param string (date) start
      */
     public function updateContest($id,$title,$lot,$end,$desc){
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
 
         try{
             $stmt = $connection->prepare('UPDATE contest SET title = :title, lot = :lot, end = :end, text = :text WHERE id= :id');
@@ -180,14 +180,14 @@ class Contest extends Db {
     }
 
     public function getContestOfUser($idUser){
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
         $results = $connection -> query("SELECT * FROM participants WHERE id_user = ".$idUser);
         return $results;
 
     }
 
     public function addPhotoToContest($idContest,$idUser,$idPhoto) {
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
         try{
             $req = $connection->prepare("INSERT INTO participants (id_picture, id_user, id_contest) VALUES (?, ?, ?)");
             $req->bindParam(1, $idPhoto);
@@ -204,7 +204,7 @@ class Contest extends Db {
 
     public function UpdatePhotoToContest($idContest,$idUser,$idPhoto) {
         try{
-            $connection = $this -> connect();
+            $connection = $this -> connect(true);
             $sql = "UPDATE participants SET id_picture='".$idPhoto."', id_contest=".$idContest." WHERE id_user=".$idUser;
             $req = $connection->prepare($sql);
             $req->execute();
@@ -222,7 +222,7 @@ class Contest extends Db {
      *  @return an error message of type String if there's an error
      */
     public function getParticipationsOfContest($idContest){
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
         try{
             $stmt = $connection -> prepare('SELECT * FROM participants WHERE id_contest = :id_contest');
             $stmt->bindParam(':id_contest', $idContest, PDO::PARAM_INT);
@@ -247,7 +247,7 @@ class Contest extends Db {
      *  @return boolean
      */
     private function checkVote($id_participant, $id_user, $contestID){
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
 
         try{
             $stmt = $connection -> prepare('SELECT * FROM vote WHERE id_participant = :id_participant AND id_user = :id_user AND id_contest = :id_contest');
@@ -278,7 +278,7 @@ class Contest extends Db {
      *  @return boolean
      */
     public function setVote($id_participant, $id_user, $date){
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
         // Get our contest ID
         $contest = $this -> getCurrentContest();
         $contestID = $contest['id'];
@@ -316,7 +316,7 @@ class Contest extends Db {
      *  @param contestID
      */
     private function updateCounterVote($id_participant, $contestID){
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
         $counter = 0;
         try{
             // Prepare the request 
@@ -357,7 +357,7 @@ class Contest extends Db {
      *  @param int contestID
      */
     public function getSingleContest($contestID){
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
         try{
             $stmt = $connection->prepare('SELECT * FROM contest INNER JOIN participants ON contest.id = participants.id_contest INNER JOIN user_trace ON participants.id_user = user_trace.id_user WHERE contest.id = :contestID');
 
@@ -377,7 +377,7 @@ class Contest extends Db {
      *  @param int contestID
      */
     public function singleHelper($contestID){
-        $connection = $this -> connect();
+        $connection = $this -> connect(true);
         try{
             $stmt = $connection->prepare('SELECT * FROM contest WHERE id = :contestID');
 
