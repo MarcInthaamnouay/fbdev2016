@@ -145,18 +145,99 @@ class Db {
         }
     }
 
-    public function getActiveStyle(){
+    public function getActiveBackgroundColor(){
 
         // CONNECT TO DATABASE
         $connection = $this -> connect(false);
         
         try{
-            $stmt = $connection -> prepare("SELECT color FROM stylesheet WHERE active=1");
+            $stmt = $connection -> prepare("SELECT backgroundcolor FROM stylesheet WHERE active=1");
             $stmt->execute();
 
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             return $result;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+    }
+
+    public function getActiveFontColor(){
+
+        // CONNECT TO DATABASE
+        $connection = $this -> connect(false);
+        
+        try{
+            $stmt = $connection -> prepare("SELECT fontcolor FROM stylesheet WHERE active=1");
+            $stmt->execute();
+
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+    }
+
+    public function getActiveFontColorHover(){
+
+        // CONNECT TO DATABASE
+        $connection = $this -> connect(false);
+        
+        try{
+            $stmt = $connection -> prepare("SELECT hoverfontcolor FROM stylesheet WHERE active=1");
+            $stmt->execute();
+
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+    }
+
+    public function getActiveBackgroundColorHover(){
+
+        // CONNECT TO DATABASE
+        $connection = $this -> connect(false);
+        
+        try{
+            $stmt = $connection -> prepare("SELECT hoverbackgroundcolor FROM stylesheet WHERE active=1");
+            $stmt->execute();
+
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+    }
+
+    public function disactivateAllStyle(){
+        $connection = $this -> connect(false);
+
+        try {
+            $stmt = $connection->prepare('UPDATE stylesheet SET active = 0');
+
+            $res = $stmt->execute();
+
+            return (bool) $res;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+    }
+
+    public function activateStyle($styleID){
+        $connection = $this -> connect(false);
+
+        try {
+            $stmt = $connection->prepare('UPDATE stylesheet SET active = 1 WHERE id = :styleID');
+
+            $stmt->bindParam(':styleID', $styleID);
+            
+            $res = $stmt->execute();
+
+            return (bool) $res;
         } catch(PDOException $e){
             return $e->getMessage();
         }
