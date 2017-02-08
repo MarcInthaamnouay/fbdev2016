@@ -8,7 +8,7 @@ class Db {
      * 
      * @return bool false on failure / mysqli MySQLi object instance on success
      */
-    public function connect($boolForPath) {    
+    public function connect($boolForPath = true) {    
         // Try and connect to the database
         if(!isset(self::$connection)) {
             // Load configuration as an array. Use the actual location of your configuration file. If 0 -> normal path if 1-> path for style
@@ -112,7 +112,6 @@ class Db {
         $connection = $this -> connect(true);
 
         try{
-            var_dump("updateUser");
             $stmt = $connection->prepare('UPDATE user_trace SET token = :token WHERE id_user = :idUser');
             $stmt->bindParam(':token', $token);
             $stmt->bindParam(':idUser', $idUser);

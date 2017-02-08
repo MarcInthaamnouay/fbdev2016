@@ -147,11 +147,17 @@ $app->post('/user/like', function($request, $response, $args){
     }
 });
 
-$app->post('/user/share', function(Request $request, Response $response, $args){
+$app->post('/user/share', function($request, $response, $args){
     $userController = new UserController();
     $res = $userController->sharePost($request);
 
     return Helper::responseHandler($response, $res);
+});
+
+$app->get('/privacy', function($request, $response, $args){
+    return $this->view->render($response, './contest/privacy.twig', [
+        'data' => Helper::getConfigValue('contest_views_params')
+    ]);
 });
 
 $app->post('/permissions', function($request, $response, $args){
@@ -186,7 +192,6 @@ $app->post('/admin/login', function($request, $response, $args){
 });
 
 $app->get('/admin/{userID}/config', function($request, $response, $args){
-    var_dump('zougouzigouza');
     $adminWorkflow = Helper::adminWorkflow($args['userID']);
     $url = $this->router->pathFor('adminError');
     if(!$adminWorkflow)

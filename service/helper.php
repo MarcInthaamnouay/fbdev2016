@@ -60,35 +60,6 @@ Class Helper{
         return $fbApp;
     }
 
-    /**
-     *  Retrieve Token
-     *              return the token based on the userID
-     *  @param userID string 
-     *  @return token string
-     *  @return error message if PDOException
-     */
-    // public static function retrieveToken($userID){
-    //      $db = new Db();
-    //     try{
-    //         $con = $db->connect();
-    //         $results = $con->query("SELECT * FROM user_trace WHERE id_user = ".$userID);
-    //         $result = $results->fetch();
-    //         $token = '';
-
-    //         foreach($result as $key => $value){
-    //             if($key == 'token'){
-    //                 $token = $value;
-    //             }
-    //         }
-
-    //         return $token;
-    //     } catch(PDOException $e){
-    //         return $e;
-    //     }
-
-        
-    // }
-
     public static function retrieveToken($userID){
          $db = new Db();
         try{
