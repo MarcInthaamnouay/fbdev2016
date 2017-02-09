@@ -83,8 +83,9 @@ const helperModule = (function(){
     }
 
     const handleError = (error, reqscope, callback = {}) => {
-        if (error.indexOf('Error validating access token') !== -1)
-            window.location.href = '/login';
+        if (typeof error === 'string')
+            if (error.indexOf('Error validating access token') !== -1)
+                window.location.href = '/login';
         else if (error === 'permission not given'){
             FB.login(response => {
                 if(response.authResponse){
@@ -96,6 +97,11 @@ const helperModule = (function(){
                 return_scopes : true,
                 auth_type: 'rerequest'
             });
+        } else {
+            swal(
+                error,
+                'error'
+            )
         }
     }
 

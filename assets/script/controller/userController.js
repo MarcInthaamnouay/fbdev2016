@@ -22,18 +22,13 @@ const userController = (function(){
      *  @private
      */
     const sendPhotos = function(){  
-        console.log('click');
         let url = this.src;
         const req = new RequestBackend('/upload/photo', 'POST', {userID : haveToken.userID, photoURL : url});
         req.prepare().execute()
         .then(success => {
             console.log(success);
         })
-        .then(publish)
-        .catch(err => {
-            console.log('errr');
-            console.log(err);
-        });
+        .then(publish.bind(null, url))
     }
 
     /**
@@ -41,20 +36,48 @@ const userController = (function(){
      *          Publish a message when a user participate to 
      *          a contest
      */
-    const publish = () => {
-        let req = new RequestBackend('/user/share', 'POST', {
-            message : 'Je participe au concours',
-            userID : haveToken.userID,
-            privacy : 'EVERYONE'
-         });
+    const publish = (url) => {
+        // First check the permission if there're given 
+        helper.checkFBPerm().execute()
+              .then(res => {
+                if(res.error !== undefined)
+                    return Promise.reject(res.error);
 
-         req.prepare().execute()
-                      .then(res => {
-                          console.log(res);
-                      })
-                      .catch(err => {
-                          console.log(err);
-                      });
+                let perm = res.data.find( (data) => {
+                        return data.permission === 'publish_actions'
+                });
+
+                if(!perm || perm.status != 'granted')
+                    return Promise.reject('permission not given'); 
+              })
+              .then(publishFlow.bind(null, url))
+              .then(hydrateAlert.bind(null, 'message published successfully', 'success'))
+              .catch(err => {
+                helper.errorHandler(err, 'publish_actions');
+              });
+    };
+
+    /**
+     *  Publish Flow 
+     *          Publish an image if the user has authorized the publication
+     */
+    const publishFlow = (url) => {
+        return new Promise((resolve, reject) => {
+            let req = new RequestBackend('/user/share', 'POST', {
+                message : 'Je participe au concours',
+                userID : haveToken.userID,
+                link : url,
+                privacy : 'EVERYONE'
+            });
+
+            req.prepare().execute()
+                .then(res => {
+                    resolve(true);
+                })
+                .catch(err => {
+                    reject(err);
+                });
+        });
     };
 
     /**
@@ -146,7 +169,7 @@ const userController = (function(){
                 }
             })
             .catch(err => {
-
+                console.log(err);
             });
     };
     
@@ -220,6 +243,20 @@ const userController = (function(){
                    console.log(error);
                });
 
+    };
+
+
+    /**
+     *  Hydrate Alert 
+     */
+    const hydrateAlert = (text, type) => {
+        console.log(text);
+        console.log(type);
+        swal(
+            'great',
+            text,
+            type
+        )
     };
     // Add a listener to the DOM
     document.addEventListener('DOMContentLoaded', function(){
