@@ -78,4 +78,8 @@ class ContestController {
 	 	$this->colorData = $this->contest->getActiveStyle()[0]['color'];
 	 	return $this->colorData;
 	 }
+
+	 public function getAllStyle(){
+		return $this->contest->selectAllStyle();
+	}
 }

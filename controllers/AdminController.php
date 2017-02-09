@@ -255,6 +255,10 @@ class AdminController {
 			return false;
 	}
 
+	public function getAllStyle(){
+		print_r($this->contest->selectAllStyle());
+	}
+
 	/**
 	 *	Disable
 	 *			Disactivate a contest
