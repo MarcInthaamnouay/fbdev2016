@@ -252,8 +252,8 @@ class Contest extends Db {
         try{
             $stmt = $connection -> prepare('SELECT * FROM vote WHERE id_participant = :id_participant AND id_user = :id_user AND id_contest = :id_contest');
             
-            $stmt->bindParam(':id_user', $id_user, PDO::PARAM_INT);
-            $stmt->bindParam(':id_participant', $id_participant, PDO::PARAM_INT);
+            $stmt->bindParam(':id_user', $id_user, PDO::PARAM_STR);
+            $stmt->bindParam(':id_participant', $id_participant, PDO::PARAM_STR);
             $stmt->bindParam(':id_contest', $contestID ,PDO::PARAM_INT);
 
             $stmt->execute();
@@ -292,8 +292,8 @@ class Contest extends Db {
         try{
             $stmt = $connection -> prepare('INSERT INTO vote (id_user, id_participant, date_vote, id_contest) VALUES (:id_user, :id_participant, :date_vote, :id_contest)');
 
-            $stmt->bindParam(':id_user', $id_user, PDO::PARAM_INT);
-            $stmt->bindParam(':id_participant', $id_participant, PDO::PARAM_INT);
+            $stmt->bindParam(':id_user', $id_user, PDO::PARAM_STR);
+            $stmt->bindParam(':id_participant', $id_participant, PDO::PARAM_STR);
             $stmt->bindParam(':date_vote', $date, PDO::PARAM_STR);
             $stmt->bindParam(':id_contest', $contestID ,PDO::PARAM_INT);
 
@@ -322,7 +322,7 @@ class Contest extends Db {
             // Prepare the request 
             $stmt = $connection -> prepare('SELECT COUNT(*) AS NumberOfVote FROM vote WHERE id_participant = :id_participant AND id_contest = :id_contest');
             // Bind the param
-            $stmt->bindParam(':id_participant', $id_participant, PDO::PARAM_INT);
+            $stmt->bindParam(':id_participant', $id_participant, PDO::PARAM_STR);
             $stmt->bindParam(':id_contest', $contestID, PDO::PARAM_INT);
             $stmt->execute();
 
@@ -339,7 +339,7 @@ class Contest extends Db {
 
             $updateStmt = $connection -> prepare("UPDATE participants SET vote = :vote_number WHERE id_user = :id_participant");
             // bind the param
-            $updateStmt->bindParam(':id_participant', $id_participant, PDO::PARAM_INT);
+            $updateStmt->bindParam(':id_participant', $id_participant, PDO::PARAM_STR);
             $updateStmt->bindParam(':vote_number', $counter, PDO::PARAM_INT);
             $updateRes = $updateStmt->execute();
 

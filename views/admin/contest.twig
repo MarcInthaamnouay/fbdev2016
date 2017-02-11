@@ -4,7 +4,7 @@
         <h1 class="page-header">
             {{controller.dataContest.title}}
             <div id="status-container">
-            {% if controller.dataContest.active == 0 and  controller.checkDateContest()%}
+            {% if controller.dataContest.active == 0 and controller.checkDateContest()%}
                 <a class="btn btn-default pull-right" id="activate">
                     <i class="fa fa-play start-button" aria-hidden="true"></i> Activer le concours
                 </a>

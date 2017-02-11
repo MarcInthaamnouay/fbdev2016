@@ -79,9 +79,10 @@ Class Photos{
             $resBody = $response->getDecodedBody();
 
             foreach($resBody as $key => $value){
-                //array_push($batchData, array())
                 $res = json_decode($value['body']);
-                array_push($batchData,$res->data[0]);
+
+                 if (count($res->data))
+                     array_push($batchData,$res->data[0]);
             }
 
             return $batchData;

@@ -78,7 +78,7 @@ a{
 }
 .thumbnail {
     padding: 0;
-    height: 295px;
+    height: auto;
     position: relative;
     overflow: hidden;
 }
@@ -190,3 +190,32 @@ a{
 
 }
 
+.vote{
+  position: absolute;
+  background-color: white;
+  height: 25px;
+  text-align: center;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  font-size: 1.3em;
+}
+
+.upload-photo, .upload-photo .thumbnail{
+  height: 300px;
+}
+
+.upload-photo{
+  margin-bottom: 15px;
+}
+
+.fa.fa-arrow-left{
+  text-align: center;
+  color: white;
+  font-size: 2em;
+  position: relative;
+  left: 15px;
+  top: 12px;
+}

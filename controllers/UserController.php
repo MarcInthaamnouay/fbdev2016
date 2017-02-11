@@ -80,8 +80,7 @@ Class UserController{
 
         $token = Helper::retrieveToken($userID);
         $data = array(
-            'message' => $message.' concours berseck :'.$contest['title'],
-            'link' => $link,
+            'link' => 'https://berseck.fbdev.fr/',
             'picture' => $link,
             'privacy' => array(
                 'value' => $privacy

@@ -8,7 +8,7 @@ class Db {
      * 
      * @return bool false on failure / mysqli MySQLi object instance on success
      */
-    public function connect($boolForPath) {    
+    public function connect($boolForPath = true) {    
         // Try and connect to the database
         if(!isset(self::$connection)) {
             // Load configuration as an array. Use the actual location of your configuration file. If 0 -> normal path if 1-> path for style
@@ -112,7 +112,6 @@ class Db {
         $connection = $this -> connect(true);
 
         try{
-            var_dump("updateUser");
             $stmt = $connection->prepare('UPDATE user_trace SET token = :token WHERE id_user = :idUser');
             $stmt->bindParam(':token', $token);
             $stmt->bindParam(':idUser', $idUser);
@@ -134,11 +133,10 @@ class Db {
      */
     public function addUser($token,$idUser) {
         try{
-            var_dump($idUser);
             $connection = $this -> connect(true);
             $req = $connection->prepare("INSERT INTO user_trace (id_user, token) VALUES (:id_user, :token)");
-            $req->bindParam(':id_user', $idUser);
-            $req->bindParam(':token', $token);
+            $req->bindParam(':id_user', $idUser, PDO::PARAM_STR);
+            $req->bindParam(':token', $token, PDO::PARAM_STR);
             return (bool) $req->execute();
         } catch(PDOException $e){
             return $e;

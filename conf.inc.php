@@ -1,7 +1,7 @@
 <?php
 [database]
 username = "root"
-password = ""
+password = "root"
 dbname = "berseck_dev"
 host = "127.0.0.1"
 web_path = "https://berseck.fbdev.fr/front/Test2/"
