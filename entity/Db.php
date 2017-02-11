@@ -136,8 +136,8 @@ class Db {
             var_dump($idUser);
             $connection = $this -> connect(true);
             $req = $connection->prepare("INSERT INTO user_trace (id_user, token) VALUES (:id_user, :token)");
-            $req->bindParam(':id_user', $idUser);
-            $req->bindParam(':token', $token);
+            $req->bindParam(':id_user', $idUser, PDO::PARAM_STR);
+            $req->bindParam(':token', $token, PDO::PARAM_STR);
             return (bool) $req->execute();
         } catch(PDOException $e){
             return $e;

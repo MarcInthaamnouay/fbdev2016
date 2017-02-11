@@ -38,7 +38,8 @@ $container['view'] = function($container){
     return $view;
 };
 
-$app->get('/', function($request, $response, $args){
+
+$app->map(['GET', 'POST'],'/', function($request, $response, $args){
     // Make a call to the contestController
   //  $this->logger->addInfo("Something interesting happened");
     $homeController = new ContestController();
