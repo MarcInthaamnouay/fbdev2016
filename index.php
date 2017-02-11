@@ -71,10 +71,7 @@ $app->post('/albums/photocover', function($request, $response, $args){
     $photoController = new PhotoController($request);
     $res = $photoController->getAlbumCoverPhoto($request);
 
-    if(!is_array($res))
-        return $response->withJson(array('status' => 'error '.$res));
-    
-    return $response->withJson($res);
+    return Helper::responseHandler($response, $res);
 });
 
 $app->post('/photos', function($request, $response, $args){
@@ -99,11 +96,7 @@ $app->post('/upload/photo', function($request, $response, $args){
     $idPhoto = Helper::getID($request, 'photoURL');
     $res = $userController->addToContest(intval($contestID), $idUser, $idPhoto);
 
-    if($res){
-        return $response->withJson(array('status' => 'success'), 200);
-    } else{
-        return $response->withJson(array('status' => 'error '.$res), 200);
-    }
+    return Helper::responseHandler($response, $res);
 });
 
 $app->post('/token', function($request, $response, $args){
@@ -116,11 +109,7 @@ $app->post('/token', function($request, $response, $args){
     $res = $saveToken->adduser($userID, $token);
 
     // @TODO Use is_bool to compare 2 boolean...
-    if($res === true){
-        return $response->withJson(array('status' => 'success'), 200);
-    } else {
-        return $response->withJson(array('status' => 'error'.$res), 200);
-    }
+    return Helper::responseHandler($response, $res);
 });
 
 $app->post('/upload/photo/computer', function($request, $response, $args){
@@ -284,10 +273,7 @@ $app->post('/admin/contest', function($request, $response, $args){
         $adminController = new AdminController($adminID);
         $res = $adminController->addContest($request);
 
-        if(!is_bool($res))
-            return $response->withJson(array('status' => 'error '.$res));
-        
-        return $response->withJson(array('status' => 'success'));
+        return Helper::responseHandler($response, $res);
     }
 });
 
@@ -303,10 +289,7 @@ $app->post('/admin/setcontest', function($request, $response, $args){
         $adminController = new AdminController($adminID);
         $res = $adminController->setContestToActive($request);
 
-        if(!is_bool($res))
-            return $response->withJson(array('status' => 'error '.$res));
-        
-        return $response->withJson(array('status' => 'success'));
+        return Helper::responseHandler($response, $res);
     }
 });
 
@@ -321,12 +304,7 @@ $app->post('/admin/updateContest', function($request, $response, $args){
     $adminController = new AdminController($adminID);
     $res = $adminController->updateContest($request);
 
-    var_dump($res);
-
-    if(!is_bool($res))
-        return $response->withJson(array('status' => 'error '.$res));
-        
-    return $response->withJson(array('status' => 'success'));
+    return Helper::responseHandler($response, $res);
 });
 
 $app->post('/admin/disable', function($request, $response, $args){
@@ -341,10 +319,7 @@ $app->post('/admin/disable', function($request, $response, $args){
     $adminController = new AdminController($adminID);
     $res = $adminController->disable($request);
 
-    if(!is_bool($res))
-        return $response->withJson(array('status' => 'error '.$res));
-        
-    return $response->withJson(array('status' => 'success'));
+    return Helper::responseHandler($response, $res);
 });
 
 $app->get('/admin/error', function($request, $response, $args){

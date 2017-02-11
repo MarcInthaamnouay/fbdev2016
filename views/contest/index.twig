@@ -50,7 +50,7 @@
 									  <div class="carousel-inner" role="listbox">
                       {% for contestants in controller.getCurrentPhotos()%}
                         <div class="item {% if loop.index == 1 %}active{%endif%}" data-id-contestant="{{contestants.id_user}}">
-                          <p class="vote">{{ contestants.vote }} like</p>
+                          <p class="vote">{{ contestants.vote }} <i class="icon-thumbs-up"></i></p>
                           <img class="visuel visuel-generate" src="{{contestants.id_picture}}"/>
                         </div>
                       {% endfor %}

@@ -81,6 +81,15 @@ const userController = (function(){
     };
 
     /**
+     *  Listen Photo 
+     */
+    const listenPhoto = function(){
+        document.getElementById('albumCollapse').classList.add('in');
+        document.getElementById('imageCollapse').classList.remove('in');
+    };
+
+
+    /**
      *  Display Photos
      *              Display photos of an album
      *  @private
@@ -107,6 +116,7 @@ const userController = (function(){
                  grid.insertAdjacentHTML('beforeend', tmpl);
             }
         })
+        .then(helper.addListener.bind(null, 'backb', listenPhoto, 'id'))
         .then(helper.addListener.bind(null, 'userImg', sendPhotos))
         .catch(err => {
             console.log(err);
@@ -127,7 +137,7 @@ const userController = (function(){
                 // push an array of albums that will be use to hydrate the view
                 albumsIDs.push(value.id);
                 // create a template à la volée
-                let tmpl = `<div class="col-xs-12 col-sm-4 col-md-4 col-lg-3">
+                let tmpl = `<div class="col-xs-12 col-sm-4 col-md-4 col-lg-3 upload-photo">
                                 <div class="thumbnail" data-id=${value.id}>
                                     <img src="http://placehold.it/200x200" class="thumb-img">
                                     <div class="caption">
