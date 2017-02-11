@@ -101,6 +101,34 @@
               </div>
            </div>
 
+           <div class="col-lg-12">
+            <ul class="custom-colors">
+              {% set tabStyle= controller.getAllStyle() %}
+              {% for array in tabStyle %}
+                  {% for key, value in array %}
+                    {% if key == "active" and value == 0 %}
+                          <li class="with-button"><button type="button activate-style">ACTIVATE</button></li>
+                    {% elseif key == 'active' and value == 1 %}
+                          <li class="with-button">  <button type="button activate-style" disabled>ACTIVATE</button></li>
+                    {% else %}
+                          {% if key == "backgroundcolor" %}
+                            <li class="with-color"><span class="style-name">Couleur de fond</span> <span class="style-value" style="background-color : {{ value }};"></span></li>
+                          {% elseif key == "hoverbackgroundcolor" %}
+                            <li class="with-color"><span class="style-name">Roll over de fond</span> <span class="style-value" style="background-color : {{ value }};"></span></li>
+                          {% elseif key == "fontcolor" %}
+                            <li class="with-color"><span class="style-name">Couleur de police</span> <span class="style-value" style="background-color : {{ value }};"></span></li>
+                          {% elseif key == "hoverfontcolor" %}
+                            <li class="with-color"><span class="style-name">Roll over de police</span> <span class="style-value" style="background-color : {{ value }};"></span></li>
+                          {% endif %}
+                    {% endif %}
+                    
+                  {% endfor %}
+                </ul>
+                <ul class="custom-colors">
+              {% endfor %}
+              </ul>
+          </div>
+
            <!-- MODAL -->
            <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
               <div class="modal-dialog" role="document">

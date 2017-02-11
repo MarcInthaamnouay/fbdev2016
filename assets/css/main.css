@@ -165,6 +165,31 @@ a{
   right: 30px;
 }
 
+.custom-colors{
+  list-style: none;
+}
+
+.custom-colors li{
+  display:  inline-block;
+  border : 1px solid black;
+}
+
+.custom-colors li.with-color{
+  width:  150px;
+}
+
+.custom-colors li.with-color .style-name{
+  display:  block;
+  text-align:   center;
+}
+
+.custom-colors li.with-color .style-value{
+  display:  block;
+  height:   50px;
+  border-top : 1px solid black;
+
+}
+
 .vote{
   position: absolute;
   background-color: white;

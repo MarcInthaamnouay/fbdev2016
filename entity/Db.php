@@ -240,4 +240,21 @@ class Db {
             return $e->getMessage();
         }
     }
+
+    public function selectAllStyle(){
+
+        // CONNECT TO DATABASE
+        $connection = $this -> connect(false);
+        
+        try{
+            $stmt = $connection -> prepare("SELECT backgroundcolor, hoverbackgroundcolor, fontcolor, hoverfontcolor, active  FROM stylesheet");
+            $stmt->execute();
+
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $result;
+        } catch(PDOException $e){
+            return $e->getMessage();
+        }
+    }
 }
