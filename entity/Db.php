@@ -133,7 +133,6 @@ class Db {
      */
     public function addUser($token,$idUser) {
         try{
-            var_dump($idUser);
             $connection = $this -> connect(true);
             $req = $connection->prepare("INSERT INTO user_trace (id_user, token) VALUES (:id_user, :token)");
             $req->bindParam(':id_user', $idUser, PDO::PARAM_STR);

@@ -89,8 +89,8 @@ const helperModule = (function(){
         else if (error === 'permission not given'){
             FB.login(response => {
                 if(response.authResponse){
-                    callback.apply(response);
-                    //console.log(response.authResponse);
+                    if (typeof callback === 'function')
+                        callback.apply(response);
                 }
             },{ 
                 scope : reqscope,
