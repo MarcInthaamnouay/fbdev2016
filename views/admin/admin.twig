@@ -1,9 +1,13 @@
-{% extends "./contest/layout.twig" %}
+{% extends "./admin/layout.twig" %} 
 {% block content %}
-    <div class="connec">
-        <img src="{{data.asset_path}}/img/user.png"/>
-        <div id="button" class="navbar-inverse"><p>Connectez-vous !</p></div>
+<div class="row">
+    <div class="col-lg-12">
+        <div id="button" style="width : 100px; height: 100px; background-color: white;">Connectez-vous !</div>
     </div>
+    <div class="col-lg-12">
+    	{{controller.getAllStyle()}}
+    </div>
+</div>
 {% endblock %}
 {% block javascript %}
     <script src="{{data.asset_path}}/script/config/app.js"></script>

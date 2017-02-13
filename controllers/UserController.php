@@ -52,4 +52,50 @@ Class UserController{
 
         return $resUpdate;
     }
+
+    /**
+     *  Get Permission 
+     *          Send back the permission
+     */
+    public function getPermission($request){
+        $userID = Helper::getID($request, 'userID');
+        $token = Helper::retrieveToken($userID);
+
+        if($token){
+            $fbReq = new FacebookServices('/'.$userID.'/permissions', $token, 'GET', null);
+            $res = $fbReq->make();
+        }
+
+        return $res;
+    }
+
+    public function sharePost($request){
+        $contest = $this->contest->getCurrentContest();
+        
+
+        $message = Helper::getID($request, 'message');
+        $link = Helper::getID($request, 'link');
+        $privacy = Helper::getID($request, 'privacy');
+        $userID = Helper::getID($request, 'userID');
+
+        $token = Helper::retrieveToken($userID);
+        $data = array(
+            'link' => 'https://berseck.fbdev.fr/',
+            'picture' => $link,
+            'privacy' => array(
+                'value' => $privacy
+            )
+        );
+
+        $fbReq = new FacebookServices('/me/feed', $token, 'POST', $data);
+        $res = $fbReq->make();
+
+        return $res;
+    }
+
+    public function getColor(){
+        //print_r($this->contest->getActiveStyle());
+        $this->colorData = $this->contest->getActiveStyle()[0]['color'];
+        return $this->colorData;
+    }
 }

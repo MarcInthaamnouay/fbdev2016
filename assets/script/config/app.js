@@ -22,18 +22,6 @@ function checkLoginState() {
     });
 }
 
-/**
- *  Check If Login
- *          Check if the user is in the login page
- */
-function checkIfLogin(){
-    if(/login/.test(window.location.href)){
-        return;
-    } else {
-        window.location.href = '/login';
-    }
-}
-
 window.fbAsyncInit = function() {
     FB.init({
       appId      : '1418106458217541',

@@ -4,8 +4,8 @@
  * @public
  */
 const loginController = (function(){
-    console.log('fire');
     document.addEventListener('DOMContentLoaded', addListener)
+    const route = (window.location.href).split('/');
 
     /**
      * Process Login 
@@ -16,30 +16,41 @@ const loginController = (function(){
         FB.login(function(response) {
             console.log(response);
             if (response.authResponse) {
+
                 const authObj = {
                     token : response.authResponse.accessToken, 
                     userID : parseInt(response.authResponse.userID)
                 }
                 //set the token as a session by using our request service
                 let newRequest = new RequestBackend("/token", "POST", authObj);
+
+                // Make a new request toward the back-end
                 newRequest.prepare().execute().then(success => {
-                    console.log(authObj.userID);
+                   if(success.error !== undefined) 
+                        return Promise.reject(success.error);
+                        
                     localStorage.setItem("facebook_oauth_token", JSON.stringify(authObj));
-                    window.location.href = `/upload`;
+
+                    if(route[route.length - 1] === 'login')
+                        window.location.href = `/upload`;
+                    else    
+                        window.location.href = `/admin/${parseInt(response.authResponse.userID)}/config`;
                 })  
                 .catch(err => { 
                     console.log(err);
                 });
+
             } else {
                 console.log('not log');
             }
-        },{scope: 'email,user_likes,user_photos,publish_actions',
+        },{scope: 'email,user_likes',
             return_scopes: true
         });
+        // scope that we might have to ask 
+        //email,user_likes,user_photos,publish_actions
     }
 
     function addListener(){
-        console.log('add bit');
         document.getElementById('button').addEventListener('click', processLogin)
     }
 

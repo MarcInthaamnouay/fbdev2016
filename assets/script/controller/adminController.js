@@ -56,7 +56,7 @@ const adminHelper = {
      */
     listenCreation(){
         console.log(this);
-        this.helper.addListener('create-button', this.checkData.bind(this), 'id');
+        this.helper.addListener('create-button', this.checkData.bind(this, false), 'id');
     },
     /**
      *  Disable a contest

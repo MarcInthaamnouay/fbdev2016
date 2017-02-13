@@ -5,7 +5,7 @@
             <div class="col-lg-12">
                 <div class="panel-group" id="accordion">
                     <div class="panel panel-default">
-                        <div class="panel-heading">
+                        <div class="panel-heading custom-background">
                             <h4 class="panel-title">
 															<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
                                   Description
@@ -15,13 +15,15 @@
                         </div>
                         <div id="collapseOne" class="panel-collapse collapse collapse">
                             <div class="panel-body">
-														Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                <br>
-                                <i class="icon-calendar"></i>
-                                &nbsp;&nbsp; 01/02/2017 &nbsp; - &nbsp; 31/02/2017
-                                <br>
-                                <i class="icon-award"></i>
-                                &nbsp;&nbsp; Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                                {% if controller.getCurrentContest() %}
+                                  {{controller.resData.text}}
+                                  <br>
+                                  <i class="icon-calendar"></i>
+                                  &nbsp;&nbsp; {{controller.resData.start}} &nbsp; - &nbsp; {{controller.resData.end}}
+                                  <br>
+                                  <i class="icon-award"></i>
+                                  &nbsp;&nbsp; {{controller.resData.titrelot}}
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -29,7 +31,7 @@
             </div>
             <!-- /.col-lg-12 -->
 
-            <div class="col-md-12">
+            <div class="col-md-12" id="myBody">
               <ul class="nav nav-pills nav-justified">
                 <li role="presentation" class="active-blue" id="#random1">
                   <a href="#">Random</a>
@@ -48,10 +50,8 @@
 									  <div class="carousel-inner" role="listbox">
                       {% for contestants in controller.getCurrentPhotos()%}
                         <div class="item {% if loop.index == 1 %}active{%endif%}" data-id-contestant="{{contestants.id_user}}">
+                          <p class="vote">{{ contestants.vote }} <i class="icon-thumbs-up"></i></p>
                           <img class="visuel visuel-generate" src="{{contestants.id_picture}}"/>
-                          <div class="carousel-caption">
-                            ...
-                          </div>
                         </div>
                       {% endfor %}
 									  </div>
@@ -93,19 +93,84 @@
                 </a>
               </div>
               <div class="col-sm-6">
-                <a href="#">
-                  <button type="button" class="btn btn-default btn-lg btn-block share-button">
+                <a>
+                  <button type="button" class="btn btn-default btn-lg btn-block share-button" id="share">
                     <i class="icon-facebook"></i> Partager
                   </button>
                 </a>
               </div>
            </div>
-           <br>
+
+           <div class="col-lg-12">
+            <ul class="custom-colors">
+              {% set tabStyle= controller.getAllStyle() %}
+              {% for array in tabStyle %}
+                  {% for key, value in array %}
+                    {% if key == "active" and value == 0 %}
+                          <li class="with-button"><button type="button activate-style">ACTIVATE</button></li>
+                    {% elseif key == 'active' and value == 1 %}
+                          <li class="with-button">  <button type="button activate-style" disabled>ACTIVATE</button></li>
+                    {% else %}
+                          {% if key == "backgroundcolor" %}
+                            <li class="with-color"><span class="style-name">Couleur de fond</span> <span class="style-value" style="background-color : {{ value }};"></span></li>
+                          {% elseif key == "hoverbackgroundcolor" %}
+                            <li class="with-color"><span class="style-name">Roll over de fond</span> <span class="style-value" style="background-color : {{ value }};"></span></li>
+                          {% elseif key == "fontcolor" %}
+                            <li class="with-color"><span class="style-name">Couleur de police</span> <span class="style-value" style="background-color : {{ value }};"></span></li>
+                          {% elseif key == "hoverfontcolor" %}
+                            <li class="with-color"><span class="style-name">Roll over de police</span> <span class="style-value" style="background-color : {{ value }};"></span></li>
+                          {% endif %}
+                    {% endif %}
+                    
+                  {% endfor %}
+                </ul>
+                <ul class="custom-colors">
+              {% endfor %}
+              </ul>
+          </div>
+
+           <!-- MODAL -->
+           <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Modal title</h4>
+                  </div>
+                  <div class="modal-body">
+                    <h1>Share your photo ! </h1>
+                    <!-- image of the contest -->
+                    <div class="col-xs-12 col-md-12">
+                      <a href="#" class="thumbnail">
+                        <img src="" id="modal-img"></img>
+                      </a>
+                    </div>
+                    <!-- Message of the user-->
+                    <div class="input-group full-width flex">
+                      <input type="text" class="form-control" value="Help me to win a contest !" id="message-modal"></input>
+                      <!-- Privacy button -->
+                      <div class="form-group">
+                        <select class="form-control" id="privacy">
+                          <option value="EVERYONE">Everyone</option>
+                          <option value="ALL_FRIENDS">Every friends</option>
+                          <option value="FRIENDS_OF_FRIENDS">Friends</option>
+                          <option value="SELF">Only me</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary custom-background" id="post-share">Post your photo</button>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
         </div>
 {% endblock %}
 {% block javascript %}
-    <script src="../assets/script/helper/helper.js"></script>
-    <script src="../assets/script/service/request.js"></script>
-    <script src="../assets/script/service/dom.js"></script>
-    <script src="../assets/script/controller/homeController.js"></script>
+    <script src="{{data.asset_path}}/script/helper/helper.js"></script>
+    <script src="{{data.asset_path}}/script/service/request.js"></script>
+    <script src="{{data.asset_path}}/script/service/dom.js"></script>
+    <script src="{{data.asset_path}}/script/controller/homeController.js"></script>
 {% endblock %}

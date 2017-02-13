@@ -38,14 +38,16 @@ $container['view'] = function($container){
     return $view;
 };
 
-$app->get('/', function($request, $response, $args){
+
+$app->map(['GET', 'POST'],'/', function($request, $response, $args){
     // Make a call to the contestController
   //  $this->logger->addInfo("Something interesting happened");
     $homeController = new ContestController();
 
     $contestController = new ContestController();
     return $this->view->render($response, './contest/index.twig', [
-        'controller' => $contestController
+        'controller' => $contestController,
+        'data' => Helper::getConfigValue('contest_views_params')
     ]);
 });
 
@@ -53,6 +55,7 @@ $app->get('/upload', function($request, $response, $args){
      $userController = new UserController();
     return $this->view->render($response, './contest/upload.twig', [
         'controller' => $userController,
+        'data' => Helper::getConfigValue('contest_views_params')
     ]);
 })->setName('upload');
 
@@ -69,10 +72,7 @@ $app->post('/albums/photocover', function($request, $response, $args){
     $photoController = new PhotoController($request);
     $res = $photoController->getAlbumCoverPhoto($request);
 
-    if(!is_array($res))
-        return $response->withJson(array('status' => 'error '.$res));
-    
-    return $response->withJson($res);
+    return Helper::responseHandler($response, $res);
 });
 
 $app->post('/photos', function($request, $response, $args){
@@ -97,11 +97,7 @@ $app->post('/upload/photo', function($request, $response, $args){
     $idPhoto = Helper::getID($request, 'photoURL');
     $res = $userController->addToContest(intval($contestID), $idUser, $idPhoto);
 
-    if($res){
-        return $response->withJson(array('status' => 'success'), 200);
-    } else{
-        return $response->withJson(array('status' => 'error '.$res), 200);
-    }
+    return Helper::responseHandler($response, $res);
 });
 
 $app->post('/token', function($request, $response, $args){
@@ -114,11 +110,7 @@ $app->post('/token', function($request, $response, $args){
     $res = $saveToken->adduser($userID, $token);
 
     // @TODO Use is_bool to compare 2 boolean...
-    if($res === true){
-        return $response->withJson(array('status' => 'success'), 200);
-    } else {
-        return $response->withJson(array('status' => 'error'), 200);
-    }
+    return Helper::responseHandler($response, $res);
 });
 
 $app->post('/upload/photo/computer', function($request, $response, $args){
@@ -145,8 +137,38 @@ $app->post('/user/like', function($request, $response, $args){
     }
 });
 
+$app->post('/user/share', function($request, $response, $args){
+    $userController = new UserController();
+    $res = $userController->sharePost($request);
+
+    return Helper::responseHandler($response, $res);
+});
+
+$app->get('/privacy', function($request, $response, $args){
+    return $this->view->render($response, './contest/privacy.twig', [
+        'data' => Helper::getConfigValue('contest_views_params')
+    ]);
+});
+
+$app->post('/permissions', function($request, $response, $args){
+    $userController = new UserController();
+    $res = $userController->getPermission($request);
+
+    return Helper::responseHandler($response, $res);
+});
+
 $app->get('/login', function($request, $response, $args){
-    return $this->view->render($response, './contest/login.twig');
+    return $this->view->render($response, './contest/login.twig', [
+        'data' => Helper::getConfigValue('contest_views_params')
+    ]);
+});
+
+// @TODO make every admin request to POST
+$app->get('/admin', function($request, $response, $args){
+   $static_path = Helper::getConfigValue('admin_views_params');
+   return $this->view->render($response, './admin/admin.twig', [
+       'data' => $static_path
+   ]);
 });
 
 // @TODO make every admin request to POST
@@ -160,7 +182,6 @@ $app->post('/admin/login', function($request, $response, $args){
 });
 
 $app->get('/admin/{userID}/config', function($request, $response, $args){
-    
     $adminWorkflow = Helper::adminWorkflow($args['userID']);
     $url = $this->router->pathFor('adminError');
     if(!$adminWorkflow)
@@ -253,10 +274,7 @@ $app->post('/admin/contest', function($request, $response, $args){
         $adminController = new AdminController($adminID);
         $res = $adminController->addContest($request);
 
-        if(!is_bool($res))
-            return $response->withJson(array('status' => 'error '.$res));
-        
-        return $response->withJson(array('status' => 'success'));
+        return Helper::responseHandler($response, $res);
     }
 });
 
@@ -272,10 +290,7 @@ $app->post('/admin/setcontest', function($request, $response, $args){
         $adminController = new AdminController($adminID);
         $res = $adminController->setContestToActive($request);
 
-        if(!is_bool($res))
-            return $response->withJson(array('status' => 'error '.$res));
-        
-        return $response->withJson(array('status' => 'success'));
+        return Helper::responseHandler($response, $res);
     }
 });
 
@@ -290,12 +305,7 @@ $app->post('/admin/updateContest', function($request, $response, $args){
     $adminController = new AdminController($adminID);
     $res = $adminController->updateContest($request);
 
-    var_dump($res);
-
-    if(!is_bool($res))
-        return $response->withJson(array('status' => 'error '.$res));
-        
-    return $response->withJson(array('status' => 'success'));
+    return Helper::responseHandler($response, $res);
 });
 
 $app->post('/admin/disable', function($request, $response, $args){
@@ -310,10 +320,7 @@ $app->post('/admin/disable', function($request, $response, $args){
     $adminController = new AdminController($adminID);
     $res = $adminController->disable($request);
 
-    if(!is_bool($res))
-        return $response->withJson(array('status' => 'error '.$res));
-        
-    return $response->withJson(array('status' => 'success'));
+    return Helper::responseHandler($response, $res);
 });
 
 $app->get('/admin/error', function($request, $response, $args){

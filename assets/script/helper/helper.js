@@ -1,4 +1,9 @@
 const helperModule = (function(){
+
+    // type of error that we can have
+    const TOKEN = 'Error validating access token';
+
+
     document.addEventListener('DOMContentLoaded', () => getToken)
     const storage = localStorage.getItem('facebook_oauth_token');
 
@@ -66,11 +71,47 @@ const helperModule = (function(){
         return formData;
     }
 
+    /**
+     *  Fb Permission
+     *          Check if the user has the permission 
+     *          If yes then return otherwise we asked the                    permission
+     */
+    const fbPerm = () => {
+        let udid = getToken();
+        // First we check if the user has the permission by making a request to the backend
+        return req = new RequestBackend('/permissions', 'POST', {userID : udid.userID}).prepare();
+    }
+
+    const handleError = (error, reqscope, callback = {}) => {
+        if (typeof error === 'string')
+            if (error.indexOf('Error validating access token') !== -1)
+                window.location.href = '/login';
+        else if (error === 'permission not given'){
+            FB.login(response => {
+                if(response.authResponse){
+                    if (typeof callback === 'function')
+                        callback.apply(response);
+                }
+            },{ 
+                scope : reqscope,
+                return_scopes : true,
+                auth_type: 'rerequest'
+            });
+        } else {
+            swal(
+                error,
+                'error'
+            )
+        }
+    }
+
     return {
         token : getToken,
         addListener : addEvent,
         fixDate : correctDBDate,
-        image : getImgData
+        image : getImgData,
+        checkFBPerm : fbPerm,
+        errorHandler : handleError
     }
 }.bind({}))();
 
@@ -122,10 +163,12 @@ const DOMHelper = (function(){
                 el.setAttribute(propName, value);
             }
 
-            return;
+            return this;
         }
 
         element.setAttribute(propName, value);
+
+        return this;
     }
 
     /**
@@ -156,10 +199,78 @@ const DOMHelper = (function(){
         console.log('setting content');
         if (replace){
             element.innerHTML = template;
-            return this;
         }
 
-        element.insertAdjacentHTML('beforeend', template)    
+        element.insertAdjacentHTML('beforeend', template);
+
+        return this;
+    };
+
+    /**
+     *  Get Prop
+     *          Return the properties of an element
+     *  @param {String} propName
+     *  @return {String} DOMElement.attribute
+     *  @public
+     */
+    this.getProp = (propName, index = 0) => {
+        if(DOMtype === 'class')
+            return element[index].getAttribute(propName);
+
+        return element.getAttribute(propName);
+    };
+
+    /**
+     *  Get Element
+     *          Return the element to do custom things
+     *  @return {DOMElement} element
+     */
+    this.getElement = () => {
+        return element;
+    }
+
+    /**
+     *  Get Child 
+     *          Get the child nodes of an element
+     *  @return {Array} childNodes
+     */
+    this.getChild = () => {
+        if (DOMtype === 'class'){
+            let nodeArr = new Array();
+            for(let i of element){
+                nodeArr.push(i.childNodes);
+            }
+
+            return nodeArr;
+        }
+
+        return element.childNodes;
+    }
+
+    /**
+     *  Hide 
+     *  @param {String} DOMString
+     *  @param {Number} timeout
+     *  @return {Object} this
+     *  @chainable
+     */
+    this.hide = (DOMString, timeout = 0) => {
+        document.getElementById(DOMString).style.transition = `ease ${timeout}ms`;
+        setTimeout(() => {
+            document.getElementById(DOMString).style.opacity = 0;
+        }, timeout);
+
+        return this;
+    };
+
+    /**
+     *  Destroy an element
+     *      
+     */
+    this.destroy = (DOMString, timeout = 0) => {
+        setTimeout(() => {
+            let el = document.getElementById(DOMString).remove();
+        }, timeout);
     };
 
     return {

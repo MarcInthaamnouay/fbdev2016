@@ -33,11 +33,8 @@ Class Photos{
         $fbRequest = new FacebookServices($request, $this->token, 'GET', null);
         $res = $fbRequest->make();
         
-        foreach($res as $key => $value){
-            foreach($value as $v){
-                $t = array_shift($v);
-                array_push($album_array, $v);
-            }
+        foreach($res['data'] as $key => $value){
+            array_push($album_array, $value);
         }
 
         return $album_array;
@@ -82,9 +79,10 @@ Class Photos{
             $resBody = $response->getDecodedBody();
 
             foreach($resBody as $key => $value){
-                //array_push($batchData, array())
                 $res = json_decode($value['body']);
-                array_push($batchData,$res->data[0]);
+
+                 if (count($res->data))
+                     array_push($batchData,$res->data[0]);
             }
 
             return $batchData;

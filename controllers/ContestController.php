@@ -6,6 +6,8 @@ require_once __DIR__.'/../service/helper.php';
 class ContestController {
 
 	private $contest;
+	public  $resData;
+	public $colorData;
 
 	function __construct()
 	{
@@ -31,21 +33,36 @@ class ContestController {
 	{
 		$result = $this->contest->getCurrentContest();
 		if(count($result) == 0 ) return false;
+
+		$this->resData = $result;
 		return $result;
 	}
 
 	/**
 	 *	Get Current Photos
 	 *			Get the current photos of the contest
-	 *	@param idContest int
+	 *	@return Array $contestData
 	 */
 	 public function getCurrentPhotos(){
 		 $contestID = $this->getCurrentContest()['id'];
 		 $contestData = $this->getDataContest(intval($contestID));
 
+		 if(empty($contestData))
+		 	return array(
+				 array(
+					'id_picture' => '/assets/img/none.png',
+					'id_user' => 'none'
+				 )
+			 );
+
 		 return $contestData;
 	 }
 
+	 /**
+	  *	 Set Likes
+	  *	 @param HTTPRequest $request
+	  *	 @return boolean res
+	  */
 	 public function setLikes($request){
 		 $id_participant = intval(Helper::getID($request, 'id_contestant'));
 		 $id_user = intval(Helper::getID($request, 'id_user'));
@@ -56,4 +73,13 @@ class ContestController {
 
 		 return $res;
 	 }
+
+	 public function getColor(){
+	 	$this->colorData = $this->contest->getActiveStyle()[0]['color'];
+	 	return $this->colorData;
+	 }
+
+	 public function getAllStyle(){
+		return $this->contest->selectAllStyle();
+	}
 }
