@@ -69,14 +69,24 @@ const homeController = (function(){
             return;
         }
             
-        // show the modal
-        let child = element.getChild();
+        return new Promise((resolve, reject) => {
+            // show the modal
+            let images = document.getElementsByClassName('visuel');
 
-        DOMHelper.init('modal-img', 'id')
-                 .setProp('src', child[0][1].currentSrc); 
+            if (images.length === 0)
+                reject('no image to share');
 
-        $('#myModal').modal('toggle');
-        helper.addListener('post-share', sharePost.bind(null, child[0][1].currentSrc) ,'id')
+            for(let image of images){
+                if (image.classList.contains('active') || images.length === 1)
+                    var imageToShare = image;
+            }
+
+            DOMHelper.init('modal-img', 'id')
+                    .setProp('src', imageToShare.src); 
+
+            $('#myModal').modal('toggle');
+            resolve(imageToShare);
+        });
     };
 
     /**
@@ -104,23 +114,42 @@ const homeController = (function(){
 
     const shareProcess = () => {
         // first we need to check if the user has the permission
-        helper.checkFBPerm().execute()
-              .then(res => {
-                  if(res.error !== undefined)
-                    return Promise.reject(res.error);
-                
-                  let perm = res.data.find( (data) => {
-                    return data.permission === 'publish_actions'
-                  });
+        // As we use the FB JS sdk to share we might not need the fb api ?
+        share().then(res => {
+            if (FB === undefined || FB === null)
+                throw new Error('Unexpected error while trying to share a post');
+            
+            FB.ui({
+                method : 'share',
+                href : res.src,
+            }, (response) => {
+                console.log(response);
+            });
+        })
+        .catch(err => {
+            console.log(err);
+            console.log('an error happened while sharing the post');
+        });
 
-                  if(!perm || perm.status != 'granted')
-                    return Promise.reject('permission not given'); 
-              })
-              .then(share)
-              .catch(err => {
-                  console.log(err);
-                  helper.errorHandler(err, 'publish_actions') 
-              });
+        
+
+        // helper.checkFBPerm().execute()
+        //       .then(res => {
+        //           if(res.error !== undefined)
+        //             return Promise.reject(res.error);
+                
+        //           let perm = res.data.find( (data) => {
+        //             return data.permission === 'publish_actions'
+        //           });
+
+        //           if(!perm || perm.status != 'granted')
+        //             return Promise.reject('permission not given'); 
+        //       })
+        //       .then(share)
+        //       .catch(err => {
+        //           console.log(err);
+        //           helper.errorHandler(err, 'publish_actions') 
+        //       });
     };
 
     /**

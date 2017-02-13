@@ -85,7 +85,7 @@ const helperModule = (function(){
     const handleError = (error, reqscope, callback = {}, param) => {
         console.log(param);
         if (typeof error === 'string')
-            if (error.indexOf('Error validating access token') !== -1)
+            if (error.indexOf('access token') !== -1 )
                 window.location.href = '/login';
         else if (error === 'permission not given'){
             FB.login(response => {
