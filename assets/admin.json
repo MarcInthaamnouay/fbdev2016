@@ -11,8 +11,8 @@
     "creation" : {
         "load" : {
             "func" : [
-                "sayHello",
-                "listenCreation"
+                "listenCreation",
+                "theme"
             ]
         }
     },
@@ -22,7 +22,8 @@
                 "activateContest",
                 "exportContest",
                 "listenDeletion",
-                "editContest"
+                "editContest",
+                "theme"
             ]
         }
     }

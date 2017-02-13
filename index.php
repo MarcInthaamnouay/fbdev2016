@@ -205,6 +205,7 @@ $app->get('/admin/{userID}/contest/{contestID}', function($request, $response,$a
     else{
         $adminController = new AdminController($args['userID']);
         $adminController->getSingleContestData($args['contestID'], 0);
+        $adminController->getColor();
 
         $static_path = Helper::getConfigValue('admin_views_params');
         return $this->view->render($response, './admin/contest.twig', [

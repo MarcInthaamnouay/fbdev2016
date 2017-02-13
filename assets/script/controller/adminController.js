@@ -17,7 +17,9 @@ const adminHelper = {
      */
     domHelper : Object.create(DOMHelper),
     /**
-     *  Check data before sending to the DB
+     *  Check Data
+     *          Check data before sending to the DB
+     *  @param {Boolean} isUpdate
      */
     checkData(isUpdate = false){
         const haveToken = this.helper.token();
@@ -38,7 +40,6 @@ const adminHelper = {
             let id = document.getElementById('id-contest').getAttribute('data-id');
             contest.id = id;
             this.req.call(null, '/admin/updateContest', 'POST', contest, function(res){
-                console.log(res);
                 return;
             });
         } else {
@@ -47,9 +48,6 @@ const adminHelper = {
             });
         }
     }, 
-    sayHello(){
-        console.log('hello');
-    },
     /**
      *  Listen Creation
      *          Listen to the create button
@@ -60,6 +58,7 @@ const adminHelper = {
     },
     /**
      *  Disable a contest
+     *  @public 
      */
     listenDeletion(){
         const haveToken = this.helper.token();
@@ -131,6 +130,10 @@ const adminHelper = {
             console.log(e);
         }
     },
+    /**
+     * Edit Contest 
+     *          Edit a contest 
+     */
     editContest(){
         this.helper.addListener('editContent', function(){
             this.domHelper.init('form-control', 'class')
@@ -150,14 +153,42 @@ const adminHelper = {
 
             // add listener to the cancel button
             this.helper.addListener('cancelEdit', function(){
-                this.domHelper.init('form-control', 'id')
-                          .setProp('disabled', 'true');
+                this.domHelper.init('form-control', 'class')
+                              .setProp('disabled', 'true');
             }.bind(this), 'id');
 
         }.bind(this), 'id');
     },
+    /**
+     * Export Contest 
+     *          Export a contest 
+     */
     exportContest(){
 
+    },
+    /**
+     *  Theme, let you control the theme 
+     */
+    theme(){
+        let elements = ['bg-color', 'f-color', 'hf-color', 'hb-color'];
+
+        for (let el of elements){
+            let colors = jsColorPicker(`input.${el}`, {
+                customBG: '#222',
+                readOnly: true,
+                // patch: false,
+                init: function(elm, colors) { // colors is a different instance (not connected to colorPicker)
+                    elm.style.backgroundColor = elm.value;
+                    console.log(elm.value);
+                    elm.style.color = colors.rgbaMixCustom.luminance > 0.22 ? '#222' : '#ddd';
+                },
+                renderCallback : function(color, type){
+                    this.input.setAttribute('style', `background-color : #${color.HEX}`);
+                    this.input.value = `#${color.HEX}`;
+                    this.input.setAttribute('value', `#${color.HEX}`);
+                }
+            });
+        }
     }
 };
 
@@ -206,5 +237,6 @@ const adminController = (function(){
 
     document.addEventListener('DOMContentLoaded', init);
 }.bind({}))();
+
 
 

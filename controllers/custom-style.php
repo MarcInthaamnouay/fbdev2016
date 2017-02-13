@@ -31,3 +31,7 @@
 .custom-font-color{
 	color : <?php echo $fontColorCustom; ?> !important;
 }
+
+.custom-border-color{
+	border-color : <?php echo $backgroundCustom; ?> !important;
+}

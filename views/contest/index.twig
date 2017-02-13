@@ -34,10 +34,10 @@
             <div class="col-md-12" id="myBody">
               <ul class="nav nav-pills nav-justified">
                 <li role="presentation" class="active-blue" id="#random1">
-                  <a href="#">Random</a>
+                  <a href="#" class="custom-font-color">Random</a>
                 </li>
                 <li role="presentation" id="#allPictures1">
-                  <a href="#" style="background-color: #eee;"> All Pictures</a>
+                  <a href="#" style="background-color: #eee;" class="custom-font-color"> All Pictures</a>
                 </li>
               </ul>
             </div>
@@ -87,47 +87,19 @@
               </div>
               <div class="col-sm-6">
                 <a href="/upload">
-                  <button type="button" class="btn btn-default btn-lg btn-block participer-button">
+                  <button type="button" class="btn btn-default btn-lg btn-block participer-button custom-border-color">
                     <i class="icon-gamepad"></i> Participer
                   </button>
                 </a>
               </div>
               <div class="col-sm-6">
                 <a>
-                  <button type="button" class="btn btn-default btn-lg btn-block share-button" id="share">
+                  <button type="button" class="btn btn-default btn-lg btn-block share-button custom-background custom-border-color" id="share">
                     <i class="icon-facebook"></i> Partager
                   </button>
                 </a>
               </div>
            </div>
-
-           <div class="col-lg-12">
-            <ul class="custom-colors">
-              {% set tabStyle= controller.getAllStyle() %}
-              {% for array in tabStyle %}
-                  {% for key, value in array %}
-                    {% if key == "active" and value == 0 %}
-                          <li class="with-button"><button type="button activate-style">ACTIVATE</button></li>
-                    {% elseif key == 'active' and value == 1 %}
-                          <li class="with-button">  <button type="button activate-style" disabled>ACTIVATE</button></li>
-                    {% else %}
-                          {% if key == "backgroundcolor" %}
-                            <li class="with-color"><span class="style-name">Couleur de fond</span> <span class="style-value" style="background-color : {{ value }};"></span></li>
-                          {% elseif key == "hoverbackgroundcolor" %}
-                            <li class="with-color"><span class="style-name">Roll over de fond</span> <span class="style-value" style="background-color : {{ value }};"></span></li>
-                          {% elseif key == "fontcolor" %}
-                            <li class="with-color"><span class="style-name">Couleur de police</span> <span class="style-value" style="background-color : {{ value }};"></span></li>
-                          {% elseif key == "hoverfontcolor" %}
-                            <li class="with-color"><span class="style-name">Roll over de police</span> <span class="style-value" style="background-color : {{ value }};"></span></li>
-                          {% endif %}
-                    {% endif %}
-                    
-                  {% endfor %}
-                </ul>
-                <ul class="custom-colors">
-              {% endfor %}
-              </ul>
-          </div>
 
            <!-- MODAL -->
            <div class="modal fade" tabindex="-1" role="dialog" id="myModal">

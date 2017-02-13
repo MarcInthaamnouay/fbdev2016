@@ -5,7 +5,7 @@ require_once __DIR__.'/../entity/Contest.php';
 require_once __DIR__.'/../entity/Admin.php';
 require_once __DIR__.'/../service/helper.php';
 
-class AdminController {
+class AdminController extends Db{
 
 	private $contest;
 	private $adminID;
@@ -13,6 +13,7 @@ class AdminController {
 	private $admin;
 	public  $dataContest;
 	public  $tableData;
+	public  $color;
 
 	function __construct($id)
 	{	
@@ -47,8 +48,7 @@ class AdminController {
 	*/
 	public function addContest($request){
 		// we decoded the params that has been pass into the request
-		// (!) Note that the params are passed as a type of multipart. 
-		$decodedParams = json_decode($params);
+		// (!) Note that the params are passed as a type of multipart.
 		
 		$title = Helper::getID($request, 'name');
 		$end = Helper::getID($request, 'enddate');
@@ -57,6 +57,13 @@ class AdminController {
 		$infos = Helper::getID($request, 'labelgift');
 		$lot = Helper::getID($request, 'gift');
 		// start time will serve as the date of craetion of the contest
+
+		// Defining the colors
+		$color = Helper::getID($request, 'color');
+		$bgcolor = Helper::getID($request, 'bgcolor');
+		$fcolor = Helper::getID($request, 'fcolor');
+		$hfcolor = Helper::getID($request, 'hfcolor');
+		$hbcolor = Helper::getID($request, 'hbcolor');
 
 		$returnMsg = '';
 		if(empty($title) || empty($lot) || empty($end) ){
@@ -67,7 +74,7 @@ class AdminController {
 		}
 		else {
 			// First we disactivat the current contest
-			$res = $this->contest->addContest($title,$text,$lot,$start,$end,$infos);
+			$res = $this->contest->addContest($title,$text,$lot,$start,$end,$infos,$color,$bgcolor,$fcolor,$fcolor,$hfcolor,$hbcolor);
 			
 			return $res;
 		}
@@ -292,6 +299,21 @@ class AdminController {
 		 $title = Helper::getID($request, 'name');
 		 $id = Helper::getID($request, 'id');
 
-		 return $this->contest->updateContest($id, $title, $gift, $endDate, $desc);
+		 // Defining the colors
+		 $color = Helper::getID($request, 'color');
+		 $bgcolor = Helper::getID($request, 'bgcolor');
+		 $fcolor = Helper::getID($request, 'fcolor');
+		 $hfcolor = Helper::getID($request, 'hfcolor');
+		 $hbcolor = Helper::getID($request, 'hbcolor');
+
+		 return $this->contest->updateContest($id, $title, $gift, $endDate, $desc, $color, $bgcolor, $fcolor, $hfcolor, $hbcolor);
 	 }
+
+	 /**
+	  *	 Get Color 
+	  *	 		Get the color of the current contest 
+	  */
+	  public function getColor(){
+		  $this->color = $this->selectAllStyle($this->dataContest['id_contest'])[0];
+	  }
 }

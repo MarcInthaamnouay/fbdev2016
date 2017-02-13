@@ -81,10 +81,46 @@ class Contest extends Db {
 
         try {
             $stmt = $connection->prepare('UPDATE contest SET active = 1 WHERE id = :contestID');
-
+            
             $stmt->bindParam(':contestID', $contestID);
-            $res = $stmt->execute();
+            // disactivate every stylesheet first 
+            $this->desactivateAllColor();
+            $this->colorActivation($contestID);
+            return (bool) $stmt->execute();
         } catch(PDOException $e){
+            return $e->getMessage();
+        }
+     }
+
+     /**
+      *  Activate Color 
+      *  @var int $contestID
+      */
+     public function colorActivation($contestID){
+        $connection = $this->connect();
+
+        try{
+            $stmt = $connection -> prepare('UPDATE stylesheet SET active = 1 WHERE id_contest = :id_contest');
+            $stmt->bindParam(':id_contest', $contestID, PDO::PARAM_INT);
+
+            return (bool) $stmt->execute();
+        } catch (PDOException $e){
+            return $e->getMessage();
+        }
+     }
+
+     /**
+      *  Disactivate every color... 
+      *  @var int $contestID
+      */
+     public function desactivateAllColor(){
+        $connection = $this->connect();
+
+        try{
+            $stmt = $connection -> prepare('UPDATE stylesheet SET active = 0');
+
+            return (bool) $stmt->execute();
+        } catch (PDOException $e){
             return $e->getMessage();
         }
      }
@@ -93,7 +129,7 @@ class Contest extends Db {
      *  Add Contest
      *          Add a contest into the database
      */
-    public function addContest($title,$text,$lot,$start,$end,$infos){
+    public function addContest($title,$text,$lot,$start,$end,$infos,$color,$bgcolor,$fcolor,$hfcolor,$hbcolor){
         $connection = $this -> connect(true);
 
         try{
@@ -106,9 +142,15 @@ class Contest extends Db {
                 $req->bindParam(':start', $start, PDO::PARAM_STR);
                 $req->bindParam(':end', $end, PDO::PARAM_STR);
                 $req->bindParam(':titrelot', $infos, PDO::PARAM_STR); 
-                $req->execute();
 
-                return true;
+                $result = (bool) $req->execute();
+                $id = $connection->lastInsertId();
+
+                if ($result)
+                    return $this->colorHandler($color, $bgcolor, $fcolor, $hfcolor, $hbcolor, 'add', $id);
+                else 
+                    return false;
+
             } catch(PDOException $e){
                 return $e->getMessage();
             }
@@ -137,7 +179,7 @@ class Contest extends Db {
             $dbStartTime = new DateTime($res['start']);
             $dbEndTime = new DateTime($res['end']);
 
-            if ($startDate <= $dbStartTime || $endDate <= $dbEndDate){
+            if ($startDate <= $dbStartTime || $endDate <= $dbEndTime){
                 throw new Exception('date are invalids');
                 return false;
             } 
@@ -160,7 +202,7 @@ class Contest extends Db {
      *  @param string info
      *  @param string (date) start
      */
-    public function updateContest($id,$title,$lot,$end,$desc){
+    public function updateContest($id,$title,$lot,$end,$desc,$color,$bgcolor,$fcolor,$hfcolor,$hbcolor){
         $connection = $this -> connect(true);
 
         try{
@@ -172,9 +214,45 @@ class Contest extends Db {
             $stmt->bindParam(':text', $desc, PDO::PARAM_STR);
             $stmt->bindParam(':id', intval($id), PDO::PARAM_INT);
 
-            return (bool) $stmt->execute();
+            $result =  (bool) $stmt->execute();
+
+            if($result)
+                return $this->colorHandler($color, $bgcolor, $fcolor, $hfcolor, $hbcolor, 'update', $id);
+            else
+                return false;
 
         } catch(PDOException $e){
+            return $e->getMessage();
+        }
+    }
+
+    /**
+     *  Update Color 
+     *  @var String $bgcolor 
+     *  @var String $fcolor
+     *  @var String $hfcolor 
+     *  @var String hbcolor 
+     */
+    protected function colorHandler($color, $bgcolor, $fcolor, $hfcolor, $hbcolor, $reqType, $id){
+        $connection = $this -> connect();
+
+        if ($reqType == 'add')
+            $sql = 'INSERT INTO stylesheet (color, backgroundcolor , fontcolor, hoverfontcolor, hoverbackgroundcolor, active, id_contest) VALUES (:color, :bgcolor, :fcolor, :hfcolor, :hbcolor, 1, :id_contest)';
+        else 
+            $sql = 'UPDATE stylesheet SET color = :color, backgroundcolor = :bgcolor, fontcolor = :fcolor, hoverfontcolor = :hfcolor, hoverbackgroundcolor = :hbcolor WHERE id_contest = :id_contest';
+
+        try {
+            $stmt = $connection->prepare($sql);
+
+            $stmt->bindParam(':color', $color, PDO::PARAM_STR);
+            $stmt->bindParam(':bgcolor', $bgcolor, PDO::PARAM_STR);
+            $stmt->bindParam(':fcolor', $fcolor, PDO::PARAM_STR);
+            $stmt->bindParam(':hfcolor', $hfcolor, PDO::PARAM_STR);
+            $stmt->bindParam(':hbcolor', $hbcolor, PDO::PARAM_STR);
+            $stmt->bindParam(':id_contest', $id, PDO::PARAM_INT);
+
+            return (bool) $stmt->execute();
+        } catch (PDOException $e){
             return $e->getMessage();
         }
     }

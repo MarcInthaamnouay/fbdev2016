@@ -53,7 +53,7 @@ const userController = (function(){
               .then(publishFlow.bind(null, url))
               .then(hydrateAlert.bind(null, 'message published successfully', 'success'))
               .catch(err => {
-                helper.errorHandler(err, 'publish_actions');
+                helper.errorHandler(err, 'publish_actions', publish, url);
               });
     };
 
@@ -287,7 +287,7 @@ const userController = (function(){
                   document.getElementById('input').addEventListener('change', stylizeUpload);
               })
               .catch(err => { 
-                  helper.errorHandler(err, 'user_photos');
+                  helper.errorHandler(err, 'user_photos', displayAlbum);
                   console.log(err);
               });
     });

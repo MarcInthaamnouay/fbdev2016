@@ -82,7 +82,8 @@ const helperModule = (function(){
         return req = new RequestBackend('/permissions', 'POST', {userID : udid.userID}).prepare();
     }
 
-    const handleError = (error, reqscope, callback = {}) => {
+    const handleError = (error, reqscope, callback = {}, param) => {
+        console.log(param);
         if (typeof error === 'string')
             if (error.indexOf('Error validating access token') !== -1)
                 window.location.href = '/login';
@@ -90,7 +91,7 @@ const helperModule = (function(){
             FB.login(response => {
                 if(response.authResponse){
                     if (typeof callback === 'function')
-                        callback.apply(response);
+                        callback.call(null, param);
                 }
             },{ 
                 scope : reqscope,

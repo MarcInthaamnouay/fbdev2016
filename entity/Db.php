@@ -241,13 +241,14 @@ class Db {
         }
     }
 
-    public function selectAllStyle(){
+    public function selectAllStyle($id){
 
         // CONNECT TO DATABASE
         $connection = $this -> connect(false);
         
         try{
-            $stmt = $connection -> prepare("SELECT backgroundcolor, hoverbackgroundcolor, fontcolor, hoverfontcolor, active  FROM stylesheet");
+            $stmt = $connection -> prepare("SELECT backgroundcolor, hoverbackgroundcolor, fontcolor, hoverfontcolor  FROM stylesheet WHERE id_contest = :id");
+            $stmt->bindParam(':id', intval($id), PDO::PARAM_INT);
             $stmt->execute();
 
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
